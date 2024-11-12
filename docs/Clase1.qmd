@@ -1,203 +1,90 @@
 
 ---
-title: "Clase 1 Introduccion al Curso y uso de R"
+title: "Clase 1: Distribución, abundancia y riqueza de especies en ecología"
 format:
   html:
-    toc: false
-    html-math-method: katex
     css: styles.css
 ---
 
-## Temas
+Referencia para la clase 1: 
 
-### Instalacion de R y RStudio
+[Applied Hierarchical Modeling in Ecology](https://doi.org/10.1016/B978-0-12-801378-6.00001-1)
 
-Para descargar e instalar R utilice el siguiente enlace [R base](https://cran.r-project.org/bin/windows/base/)
+En esta primera clase, discutiremos los patrones puntuales, los estimadores de abundancia y ocupación en los diseños para estudiar metapoblaciones, sus parámetros y errores en los modelos aplicados a la ecología. Finalmente, profundizaremos en los modelos jerárquicos para estimar la distribución, abundancia y riqueza de especies.
 
-Para descargar e instalar RStudio utilice el siguiente enlace [RStudio](https://posit.co/download/rstudio-desktop/)
 
-Asegurece de que R base y R studio esten bien instalados antes de comenzar con el curso
+::: {.panel-tabset}
 
-### Interfaz de RStudio
+## PROCESOS PUNTUALES, DISTRIBUCIÓN, ABUNDANCIA Y RIQUEZA DE ESPECIES
 
-### Comandos basicos de R
 
-- Operaciones Básicas
+La distribución y la abundancia son las dos variables de estado fundamentales en ecología (Begon et al., 1986; Krebs, 2009), y la riqueza de especies es la medida más utilizada para evaluar la biodiversidad (Purvis y Hector, 2000; Balmford et al., 2003). Las tres son el foco de una gran cantidad de estudios ecológicos teóricos y, especialmente, de estudios centrados en problemas de manejo o conservación específicos que involucran especies raras o en peligro, animales de caza y especies invasoras. Sin embargo, las tres son solo cantidades derivadas, es decir, resúmenes de una cantidad más fundamental: los patrones de puntos. Los patrones de puntos son el resultado de procesos estocásticos conocidos como procesos puntuales y, como es de esperar, los modelos estadísticos que los describen se llaman modelos de procesos puntuales (PPM; Illian et al., 2008; Wiegand y Moloney, 2014). Los PPM tratan tanto el número como las ubicaciones de puntos discretos como cantidades aleatorias regidas por un campo de intensidad subyacente y continuo. La intensidad es el número esperado de puntos (por ejemplo, animales o plantas) por unidad de área en algún área de estudio y es el parámetro modelado.
 
-```{r}
-# Suma
-resultado_suma <- 2 + 2
+Tanto la distribución como la abundancia son resúmenes espaciales simples de patrones de puntos para una especie animal o vegetal, es decir, agregaciones de un patrón de puntos en alguna área. Para desarrollar una comprensión básica de las relaciones entre un patrón de puntos, la abundancia y la ocurrencia, realizaremos una primera simulación de datos sencilla en el programa R.
 
-# Resta
-resultado_resta <- 2 - 2
+La función `sim.fn` permite experimentar con la relación entre un patrón de puntos, la abundancia y la ocurrencia en función de la intensidad del patrón (que es algo que no se puede controlar en la vida real y es el resultado de la biología) y del tamaño de la cuadrícula, o más específicamente, el tamaño de las celdas que componen esa cuadrícula; esto es algo que puedes ajustar.
 
-# Multiplicación
-resultado_multiplicacion <- 2 * 2
-
-# División
-resultado_division <- 2 / 2
-
-# Potencia
-resultado_potencia <- 2^2
-
-# Raíz Cuadrada
-resultado_raiz_cuadrada <- sqrt(2)
-
-# Logaritmo
-resultado_logaritmo <- log(2)
-
-# Exponencial
-resultado_exponencial <- exp(2)
-
-```
-
-- Creación de Variable Numérica
 
 ```{r}
-un_valor <- 5
-dos_o_mas <- c(1, 4, 7)
-```
+library(AHMbook)
 
-- Creación de Variable Categórica
-
-```{r}
-un_valor_cat <- "Opcion1"
-dos_o_mas_cat <- c("Opcion1", "Opcion2")
-```
-
--  Crear Tablas
-
-```{r}
-tabla1 <- data.frame(
-  VariableA = "A",
-  VariableB = "B",
-  VariableC = 1
-)
-
-tabla2 <- data.frame(
-  VariableA = c("A", "B", "C", "C", "A"),
-  VariableB = c("Uno", "Tres", "Uno", "Dos", "Uno"),
-  VariableC = c(34, 21, 32, 23, 21)
-)
+sim.fn(quad.size = 10, cell.size = 1, intensity =1)
 ```
 
 
-- Guardar tabla
+La función simula ubicaciones de animales o plantas en una cuadrícula de celdas que forma un cuadrante con un tamaño total (unidades totales) igual a `quad.size`, según un proceso de Poisson en el que los individuos se distribuyen al azar en el espacio. Este proceso se caracteriza por una intensidad, o número esperado de plantas o animales ("puntos") por unidad de área. El patrón de puntos resultante se discretiza superponiendo una cuadrícula con celdas cuadradas de longitud `cell.size`. Esta discretización del espacio es lo que permite definir la abundancia en primer lugar y, luego, la presencia/ausencia o ocurrencia. La riqueza de especies, la tercera cantidad crucial mencionada en el título, es la suma de especies que ocurren en un sitio, lo que representa un resumen de los patrones de puntos, no para una sola especie, sino para un conjunto de especies presentes en un sitio.
 
 ```{r}
+set.seed(82)
 
-write.csv(tabla2, "Tabla2.csv")
+tmp <- sim.fn(quad.size = 16, cell.size = 2, intensity = 0.5)
 ```
 
-- Cargar tabla
+En esta simulación, un "sitio" está representado por una celda en toda la cuadrícula. Tal vez puedas imaginar la cuadrícula completa como una región en la que se lleva a cabo tu estudio. Solo una vez que hemos establecido esa discretización del espacio, podemos definir la abundancia (que nos gusta denotar como *N*) o la ocurrencia (presencia/ausencia) la cual nos gusta denotar como *z*). Luego, la abundancia *N* es simplemente el número de puntos que caen en cada "sitio" (es decir, celda): si no hay puntos en una celda, la abundancia es cero; si hay un punto, la abundancia es uno; y así sucesivamente. Además, la presencia/ausencia (*z*) distingue los dos casos en los que no hay puntos en una celda (es decir, *N* = *0*, lo cual representa una ausencia o no ocurrencia) o en los que hay uno o más puntos en la celda (es decir, *N* > *0*, lo cual representa una presencia u ocurrencia). Así, podemos decir que la abundancia es un primer paso en la agregación de un patrón de puntos subyacente dentro de un esquema de discretización espacial, y la ocurrencia es un segundo paso en esta agregación sobre las unidades espaciales. 
 
-```{r}
-TablaNueva <- read.csv("Tabla2.csv")
-```
+Alternativamente, podemos decir que la ocurrencia es un resumen simplificado y con poca información de la abundancia, donde solo se registran dos clases de abundancia: una siendo cero (="ausencia") y la La otra clase mayor a cero (= "presencia"). Así, las relaciones entre un patrón de puntos, abundancia y ocurrencia son determinísticas en un solo sentido: si se conoce el patrón completo y se tiene un esquema de discretización espacial, también se tiene conocimiento completo sobre la abundancia; y si se conoce el patrón espacial de abundancia, también se conoce perfectamente el patrón espacial de ocurrencia. En cambio, el proceso inverso no es tan directo; por ejemplo, al conocer solo un patrón de presencia/ausencia, no puedes inferir perfectamente la distribución subyacente de abundancia, aunque puedes hacer inferencias estadísticas explícitas (He y Gaston, 2000; Royle et al., 2003; Ramsey et al., 2015).
 
+## DISEÑOS DE META-POBLACIONES
 
+Curiosamente, sin conocer la relación entre los procesos puntuales y sus abundancias y ocurrencias interrelacionadas, a las personas siempre les ha gustado discretizar su área de estudio completa en subunidades más pequeñas, o, dicho de otra manera, replicar sus áreas de estudio en el espacio. Esto da lugar a lo que llamamos un "diseño de meta-población" (Royle, 2004a; Kéry y Royle, 2010). "Somos un tanto cautelosos con este término porque no queremos implicar que los animales que viven en tales unidades espaciales discretas necesariamente se comportan según una metapoblación formal (Hanski, 1998; Sutherland et al., 2012, 2014). Más bien, no pudimos encontrar un término mejor y más conciso para el caso extremadamente común en el que se estudia la distribución o abundancia en una colección de sitios espacialmente replicados o donde toda un área de estudio se subdivide en subunidades más pequeñas, a las que típicamente llamamos sitios" (kery and Royle, 2016). Para Kery and Royle, esto es un "diseño de meta-población".
 
+Tales diseños de meta-población, o diseños con poblaciones espacialmente subdivididas, son extremadamente comunes en ecología y todas las ciencias relacionadas. Además, se adoptan prácticamente en todas partes en el monitoreo biológico, donde está claro que no se puede caracterizar el estado del medio ambiente solo con mediciones tomadas en un único sitio. Los diseños de meta-población vienen en una gran variedad, y el número, tamaño y forma de las celdas (subunidades) pueden variar, uno de ellos es el submuestreo espacial es sorprendentemente común en los diseños de meta-población, en los cuales cada sitio (unidad) se subdivide aún más en subunidades espaciales más pequeñas, que nuevamente pueden cubrir todo el sitio o solo una parte del área total de un sitio.
 
-![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
+## Parámetros de Estado y de Tasa
 
-=======
----
-title: "Clase 1 Introduccion al Curso y uso de R"
-format:
-  html:
-    toc: false
-    html-math-method: katex
-    css: styles.css
----
+La abundancia, distribución y riqueza de especies son, quizás, las variables más estudiadas en toda la ecología y campos relacionados. Sin embargo, con mucha frecuencia hay un interés no solo en estas variables de estado, sino también en los parámetros que gobiernan la tasa de cambio de estas cantidades, es decir, que impulsan la dinámica de las poblaciones (variables de tasa). Por ejemplo, la cantidad más importante en el monitoreo de biodiversidad parece ser la "tendencia", es decir, una tasa sostenida de cambio a lo largo del tiempo de alguna cantidad como la abundancia u ocurrencia. Y una tendencia es solo la descripción más simple de la dinámica de la población; la descripción más detallada de la dinámica de una población animal se logra mediante las cuatro tasas vitales: tasa de natalidad, tasa de inmigración, tasa de mortalidad y tasa de emigración, y estas pueden ser estratificadas por edad, sexo o posiblemente otras clases en una población de estudio. 
 
-## Temas
+Una tasa vital que ha recibido un interés particular en la ecología animal y otros campos, como la evolución de la historia de vida (Stearns, 1992), es la probabilidad de supervivencia. Existen teorías bien desarrolladas para estimar la supervivencia a partir de muestras temporales replicadas de animales salvajes marcados, por ejemplo, en el célebre modelo de Cormack-Jolly-Seber (Cormack, 1964; Jolly, 1965; Seber, 1965; Pollock et al., 1990), en su variante para datos de recuperación de anillos (Brownie et al., 1985) y en una multitud de generalizaciones, incluidos los modelos multiestados (Arnason, 1972; Hestbeck et al., 1991; Brownie et al., 1993; Arnason y Schwarz, 1999) y modelos relacionados (Barker, 1997; Pradel et al., 1997; Kendall et al., 2003; Pradel, 2005; Bonner y Schwarz, 2006). 
 
-### Instalacion de R y RStudio
+En ecología animal existe una división bastante marcada entre los modelos y métodos (y curiosamente también entre las personas que aplican estos modelos) que se centran en las variables de estado (por ejemplo, estimar abundancia) o que se enfocan en las variables de tasa (por ejemplo, estimar supervivencia). Esta división es en su mayoría artificial y en gran parte se debe a las limitaciones de los modelos pasados y actuales, así como del software asociado para ajustar estos modelos. Por lo tanto, hasta hace muy poco, existía una gran división en las estadísticas ecológicas entre los modelos para "poblaciones cerradas" (lo que esencialmente significaba estimación de abundancia) y los modelos para "poblaciones abiertas" (lo que, ante todo, significaba estimación de supervivencia). Sin embargo, hoy en día, esta distinción se difumina cada vez más y, especialmente en el contexto de los modelos jerárquicos, se puede ver cuán fácilmente podemos unir lo que hace solo 10 años podría haberse considerado una división profunda. Además, la facilidad con la que podemos ajustar "modelos híbridos abiertos/cerrados" a nuestros datos se debe en gran parte al poder de la maquinaria de ajuste de modelos bayesianos y, en la práctica, al software BUGS (Schofield et al., 2009). Esto es especialmente interesante también para la el modelado de dinámicas poblacionales, como el análisis de viabilidad poblacional (Beissinger, 2002) y la modelización poblacional relacionada (Bockland et al., 2004b, 2007; Schofield y Barker, 2008; Tavecchia et al., 2009; Newman et al., 2006, 2014), incluyendo los modelos de proyección matricial (Caswell, 2001; Link et al., 2003). Finalmente, otro tipo de modelo poblacional en el que la división entre poblaciones abiertas y cerradas se elimina por completo es el fascinante campo de la modelización integrada de poblaciones (IPMs, Baillie, 1991; Besbeas et al., 2002; Brooks et al., 2004; Schaub et al., 2007; Abadi et al., 2010a,b; Schaub y Abadi, 2011).
 
-Para descargar e instalar R utilice el siguiente enlace [R base](https://cran.r-project.org/bin/windows/base/)
+## MODELOS DE ERROR DE MEDICIÓN EN ECOLOGÍA
 
-Para descargar e instalar RStudio utilice el siguiente enlace [RStudio](https://posit.co/download/rstudio-desktop/)
+El error en una medición es la diferencia entre el valor medido y el valor verdadero de alguna cantidad. Probablemente, el tipo de error de medición más conocido en ecología sea el relacionado con la medición de cantidades continuas, como el tamaño corporal, la masa corporal o el contenido de algún contaminante en el aire o el agua. Su medición está probablemente afectada por una gran cantidad de pequeñas causas que actúan de manera aditiva, dando lugar a errores de medición que típicamente siguen una distribución normal. Una consecuencia importante de esto es que las mediciones son imparciales, es decir, en promedio están en el objetivo; los errores positivos y negativos simplemente se cancelan entre sí en el promedio de mediciones repetidas. Este tipo de error de medición parece ser el que la gente tiene en mente cuando piensa en este tema en ecología. Por ejemplo, este tipo de error de medición generalmente se maneja en el residuo de un modelo de regresión.
 
-Asegurece de que R base y R studio esten bien instalados antes de comenzar con el curso
+Sin embargo, las cosas son muy diferentes para los conteos de variables discretas como la abundancia, y esto incluye la variable binaria "presencia/ausencia", es decir, cuando se trata de la agregación de datos de un proceso puntual subyacente. Para ellas, puede haber subestimaciones y sobreestimaciones, y los mecanismos que conducen a los dos tipos de errores no son los mismos, sino que pueden ser muy diferentes. Así, existe un conjunto de mecanismos que lleva a errores falsos negativos, cuando se pasa por alto a un individuo o se omite una especie en un sitio donde ocurre. Este tipo de error no puede describirse razonablemente con una distribución normal, sino que típicamente se describe mediante una distribución binomial o una distribución de Bernoulli. Dado que hay *N* individuos presentes y existe alguna probabilidad p de detectar a cada uno de ellos, el número de individuos detectados (*C*) será binomial:
 
-### Interfaz de RStudio
+$$ C \sim \text{Binomial}(N, p) $$ 
 
-### Comandos basicos de R
+::: {.callout-note}
 
-- Operaciones Básicas
+Modelo de error de medición falso negativo para conteos
 
-```{r}
-# Suma
-resultado_suma <- 2 + 2
+:::
 
-# Resta
-resultado_resta <- 2 - 2
+Aquí, p es la probabilidad de detección o encuentro de un individuo y representa el complemento de la tasa de error falso negativo, es decir, la tasa de error asociada es 1-p. De manera similar, para el estado de presencia/ausencia de una especie en un sitio, z, donde z = 1 denota presencia y z = 0 denota ausencia, podemos especificar el siguiente modelo de error de medición para la medición de presencia/ausencia o para el dato de detección/no detección en un sitio ocupado:
 
-# Multiplicación
-resultado_multiplicacion <- 2 * 2
+$$ y \sim \text{Bernoulli}(p) $$ 
 
-# División
-resultado_division <- 2 / 2
+::: {.callout-note}
 
-# Potencia
-resultado_potencia <- 2^2
+Modelo de error de medición falso negativo para observaciones de detección/no detección.
 
-# Raíz Cuadrada
-resultado_raiz_cuadrada <- sqrt(2)
+:::
 
-# Logaritmo
-resultado_logaritmo <- log(2)
+En cualquiera de los casos, y a diferencia del modelo normal para errores de medición con variables continuas, el promedio de mediciones repetidas no será imparcial con respecto a las cantidades objetivo (N de abundancia o presencia/ausencia). Más bien, el promedio será igual a *Np* para los conteos y igual a *p* para las mediciones de presencia/ausencia (observaciones de detección/no detección) en un sitio ocupado. En contraste, el máximo entre una serie de mediciones se acercará cada vez más a los valores verdaderos *N* o *z* a medida que se aumente el número de mediciones repetidas, y qué tan rápido se acerca el máximo a *N* depende nuevamente de la probabilidad de detección *p*.
 
-# Exponencial
-resultado_exponencial <- exp(2)
-
-```
-
-- Creación de Variable Numérica
-
-```{r}
-un_valor <- 5
-dos_o_mas <- c(1, 4, 7)
-```
-
-- Creación de Variable Categórica
-
-```{r}
-un_valor_cat <- "Opcion1"
-dos_o_mas_cat <- c("Opcion1", "Opcion2")
-```
-
--  Crear Tablas
-
-```{r}
-tabla1 <- data.frame(
-  VariableA = "A",
-  VariableB = "B",
-  VariableC = 1
-)
-
-tabla2 <- data.frame(
-  VariableA = c("A", "B", "C", "C", "A"),
-  VariableB = c("Uno", "Tres", "Uno", "Dos", "Uno"),
-  VariableC = c(34, 21, 32, 23, 21)
-)
-```
-
-
-- Guardar tabla
-
-```{r}
-
-write.csv(tabla2, "Tabla2.csv")
-```
-
-- Cargar tabla
-
-```{r}
-TablaNueva <- read.csv("Tabla2.csv")
-```
-
-
+:::
 
 
 ![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)
