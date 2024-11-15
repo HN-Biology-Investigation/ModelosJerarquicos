@@ -10,6 +10,8 @@ A continuación, encontrará una serie de ejercicios que le ayudarán a compleme
 
 Si tiene alguna consulta, no dude en preguntarnos a través de nuestras redes sociales o correo electrónico (admi@hnbiology.org ; david.murillo@hnbiology.org).
 
+Enviar cada una de las asignaciones con su **Nombre Completo** y en **formato html**
+
 ::: panel-tabset
 
 ## Asignación 1
