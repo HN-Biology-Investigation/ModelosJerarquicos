@@ -1,6 +1,6 @@
 
 ---
-title: "Curso Ecología de Poblaciones Aplicada"
+title: "Curso de Modelos Jerárquicos en Ecología"
 format:
   html:
     toc: false
@@ -16,27 +16,25 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 [Asignaciones](Asiganciones.html)
 
-[Clase 1- Introducción al curso](Clase1.html)
+[Clase 1: Introducción a Modelos Jerárquicos](Clase1.html)
 
-[Clase 2- Crecimiento poblacional](Clase2.html)
+[Clase 2: Modelar abundancia: N-Mixture models]
 
-[Clase 3- Regulación de las poblaciones y tamaño poblacional](Clase3b.html)
+[Clase 3: Modelar abundancia con muestreo de distancia jerárquico]
 
-[Clase 4- Estimadores de abundancia y Uso de Distance](Clase4.html)
+[Clase 4: Modelar densidad con muestreo de distancia jerárquico]
 
-[Clase 5- Uso de Unmarked: Estimación de abundancia por conteo por puntos](Clase7.html)
+[Clase 5: Modelar ocupación de especies en poblaciones cerradas]
 
-[Clase 6- Uso de Unmarked: Estimación de occupacia](Clase6a.html)
+[Clase 6: Modelar ocupación con múltiples especies]
 
-[Clase 7- Uso de Unmarked: Estimación de abundancia por transecto](Clase8.html)
+[Clase 7: Modelar abundancia a partir de datos de presencia/ausencia]
 
-[Clase 8- Introducción a spAbundance y spOccupancy](Clase9.html)
+[Clase 8: Modelar supervivencia aparente o persistencia]
 
-[Clase 9- Uso de Rmark: Supervivencia de nido](Clase5.html)
+[Clase 9: Modelar supervivencia de nido]
 
-[Clase 10- Supervivencia de nido: Enfoque Bayesiano](Clase10b.html)
-
-[Clase 10b- Captura-Recaptura: Enfoque Bayesiano](Clase10c.html)
+[Clase 10: Repaso, Preguntas y respuestas]
 
 
 *No dude en consultarnos ante cualquier inconveniente que surja durante el curso. Puede contactarnos a través de admi@hnbiology.org.*
