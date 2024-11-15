@@ -8,7 +8,7 @@ format:
     css: styles.css
 ---
 
-## Introduccion
+## Introducción
 
 Este curso está diseñado para estudiantes y profesionales en áreas relacionadas con la Ecología, Conservación y Manejo de Recursos, entre otras disciplinas afines.
 
