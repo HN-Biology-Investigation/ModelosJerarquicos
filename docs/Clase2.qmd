@@ -1,0 +1,240 @@
+---
+title: "Clase 2: Modelar Abundancia N-Mixture"
+author: "David Murillo"
+format:
+  html:
+    css: styles.css
+---
+
+Unmarked se destaca como uno de los paquetes más populares para ajustar modelos de abundancia que incorporan variables de detección. A diferencia de Distance, este paquete se caracteriza por su mayor complejidad y una versatilidad notable en la capacidad de ajustar modelos más detallados. Requiere un nivel de conocimiento en R al menos intermedio para aprovechar plenamente su potencial, debido a su complejidad y las múltiples opciones de modelado que ofrece.
+
+En esta clase se obordara como utilizar Unmarked para modelar abundancia de especies para lo cuales se tomaran datos por medio de conteo por puntos. En la clase se explicara desde cero el uso de este paquete y paso a paso como ajustar, seleccionar, validar, interpretar y graficar el modelo, incluso la presancion de los datos para publicaciones cientificas.
+
+En esta clase, exploraremos el uso de Unmarked para modelar la abundancia de especies a partir de datos recopilados mediante conteo por puntos. Desde los fundamentos, explicaremos paso a paso cómo utilizar este paquete, cubriendo el proceso completo: desde el ajuste inicial del modelo hasta la selección, validación e interpretación de los resultados. También abordaremos la presentación de los datos para su inclusión en publicaciones científicas, asegurando un entendimiento completo y la capacidad de aplicar estos modelos de manera efectiva en contextos de investigación y divulgación científica.
+
+::: panel-tabset
+## Cargar base de datos
+
+```{r}
+Aves <- read.csv("data/AvesHabitatUm.csv")
+```
+
+Seleccionar variables necesarias
+
+```{r}
+
+library(tidyverse)
+
+AvesLimpia <- Aves %>% 
+  select(Site, VEGID, Type, ALTITUDE, Area_Basal, Hora, Fecha, Cielo, Viento, Especies, Abundancia) %>% 
+  mutate(Fecha = as.Date(Fecha, format = "%m/%d/%Y")) %>% 
+  mutate(Hora = as.integer(str_replace(Hora, ":", "")))
+  
+AvesOrdenadas <- AvesLimpia %>%
+  arrange(Site, Especies, Fecha, Hora, VEGID, Type, ALTITUDE, Area_Basal) %>%
+  group_by(Site, Especies, Fecha, Hora, VEGID, Type, ALTITUDE, Area_Basal) %>%
+  summarise(Abundancia = max(Abundancia)) %>%
+  group_by(Site, Fecha, Hora,  Especies, VEGID, Type, ALTITUDE, Area_Basal) %>%
+  mutate(Orden = factor(row_number())) %>% 
+  filter(Orden %in% c(1, 2, 3))
+
+CarpusPivot <- AvesOrdenadas %>% 
+  pivot_wider(names_from = Especies, values_from = Abundancia, values_fill = 0) %>% 
+  select(Site, VEGID, Type, ALTITUDE, Area_Basal, Fecha, Hora, Orden, CARPUS)
+
+CarpusPivotOrden <- CarpusPivot %>%
+  arrange(Site, VEGID, Type, ALTITUDE, Area_Basal, CARPUS, Fecha, Hora) %>%
+  group_by(Site,VEGID, Type, ALTITUDE, Area_Basal, CARPUS) %>%
+  mutate(Orden = factor(row_number())) %>% 
+  filter(!is.na(Site))
+  
+
+head(CarpusPivotOrden)
+```
+
+## Formatear base de datos a formato unmarked
+
+Pasar cada replica en columnas diferentes de acuerdo a la especie de ave
+
+```{r}
+
+
+# Crear un conjunto de datos con todos los niveles de Orden por Site
+CARPUSunmarked <- CarpusPivotOrden %>%
+  filter(!is.na(Fecha)) %>% 
+  mutate(Orden = as.numeric(Orden)) %>% 
+  complete(Orden = 1:3) %>%
+  mutate(CARPUS = ifelse(is.na(Fecha), NA, CARPUS),
+         CARPUS = replace_na(CARPUS, 50))
+
+# Pivot_wider
+CARPUSunmarkedReady <- CARPUSunmarked %>%
+  mutate(Fechaord = yday(Fecha)) %>% 
+  group_by(Site, Orden, VEGID, Type, ALTITUDE, Area_Basal) %>%
+  summarise(CARPUS = max(CARPUS),
+            Fechaord = max(Fechaord),
+            Hora = max(Hora)) %>% 
+  ungroup() %>%
+  group_by(Site, VEGID, Type, ALTITUDE, Area_Basal) %>% 
+  pivot_wider(names_from = Orden,
+              values_from = c(Fechaord, Hora, CARPUS),
+              values_fill =  0) %>% 
+  mutate(CARPUS_1 = replace(CARPUS_1, CARPUS_1 == 50, NA)) %>% 
+  mutate(CARPUS_2 = replace(CARPUS_2, CARPUS_2 == 50, NA)) %>% 
+  mutate(CARPUS_3 = replace(CARPUS_3, CARPUS_3 == 50, NA)) 
+
+
+```
+
+## Crear variables de detectabilidad
+
+```{r}
+## Definir ocasiones de deteccion
+CARPUS_y <- CARPUSunmarkedReady[,12:14]
+# y[y > 1] <- 1
+
+
+## Definir los variables asociados a la deteccion:
+
+
+Fecha_CARPUS= list(Fecha=CARPUSunmarkedReady[,6:8]) 
+
+# Y quien realizo la observacion
+
+Hora_CARPUS= list(Hora=CARPUSunmarkedReady[,9:11]) 
+
+
+```
+
+## Crear variables de habitat (covariables)
+
+```{r}
+## Definir los variables de covarianza
+
+CARPUS_siteCovs <- CARPUSunmarkedReady[,c("Type", "ALTITUDE", "Area_Basal")]
+```
+
+## Crear tabla unmarked
+
+```{r}
+
+library(unmarked)
+
+## CREAR DATA FRAME
+CARPUSunmarked_df <- unmarkedFramePCount(y = CARPUS_y, siteCovs = CARPUS_siteCovs, 
+                                    obsCovs=c(Fecha_CARPUS, Hora_CARPUS))
+
+summary(CARPUSunmarked_df)
+
+```
+
+## Ajustar modelo de deteccion
+
+```{r}
+#### MODELAR DETECCION PRIMERO
+
+ModelDet0 <- pcount(~1 ~1, CARPUSunmarked_df) ##Null model
+
+ModelDet1 <- pcount(~Fecha ~1, CARPUSunmarked_df)
+
+ModelDet2 <- pcount(~Hora ~1, CARPUSunmarked_df)
+
+ModelDet3 <- pcount(~Fecha + Hora ~1, CARPUSunmarked_df)
+```
+
+## Seleccion de modelo de deteccion
+
+```{r}
+library(AICcmodavg)
+
+DetModels <- list(ModelDet0, ModelDet1, ModelDet2, ModelDet3)
+
+DetNames <- c("Nulo", "Fecha", "Hora", "Fecha + Hora")
+
+aictab(DetModels, DetNames, sort = TRUE)
+```
+
+## Ajustar modelo de Abundancia
+
+```{r}
+#### MODELAR DETECCION PRIMERO
+
+ModelAbun0 <- pcount(~1 ~ 1, CARPUSunmarked_df) ##Null model
+
+ModelAbun1 <- pcount(~1 ~ Type, CARPUSunmarked_df)
+
+ModelAbun2 <- pcount(~1 ~ ALTITUDE, CARPUSunmarked_df)
+
+ModelAbun3 <- pcount(~1 ~ Area_Basal, CARPUSunmarked_df)
+```
+
+## Seleccion de modelo de abundancia
+
+```{r}
+library(AICcmodavg)
+
+AbunModels <- list(ModelAbun0, ModelAbun1, ModelAbun2, ModelAbun3)
+
+AbunNames <- c("Nulo", "Type", "ALTITUDE", "Area_Basal")
+
+aictab(AbunModels, AbunNames, sort = TRUE)
+```
+
+## Resumen de los resultados
+
+```{r}
+summary(ModelAbun3)
+confint(ModelAbun3, type = "state", level = 0.9)
+```
+
+## Bondad de ajuste
+
+```{r, warning=FALSE, message=FALSE}
+
+
+fitstats <- function(Mod_global2) {
+  observed <- getY(Mod_global2@data)
+  expected <- fitted(Mod_global2)
+  resids <- residuals(Mod_global2)
+  sse <- sum(resids^2,na.rm=TRUE)
+  chisq <- sum((observed - expected)^2 / expected,na.rm=TRUE)
+  freeTuke <- sum((sqrt(observed) - sqrt(expected))^2,na.rm=TRUE)
+  out <- c(SSE=sse, Chisq=chisq, freemanTukey=freeTuke)
+  return(out)
+}
+
+(pb <- parboot(ModelAbun3, fitstats, nsim=100, report=1))
+
+cHat_pb <- pb@t0[2] / mean(pb@t.star[,2])
+
+
+MigGOF <- Nmix.gof.test(ModelAbun3, nsim = 100, report = 3)
+
+
+```
+
+## Prepar data para graficar
+
+```{r}
+CARPUS_arear_basal <- data.frame(Area_Basal = seq(min(CARPUSunmarkedReady$Area_Basal, na.rm = TRUE), max(CARPUSunmarkedReady$Area_Basal, na.rm = TRUE), length.out = 100))
+                                 
+Carpus_pre_area_basal <- predict(ModelAbun3, newdata = CARPUS_arear_basal, type = "state")
+
+Carpus_pre_area_basal$Area_Basal <- CARPUS_arear_basal$Area_Basal 
+```
+
+## Graficar modelo
+
+```{r}
+ggplot(data= Carpus_pre_area_basal, aes(x= Area_Basal, y= Predicted))+
+  geom_ribbon(aes(ymin= lower,
+                  ymax= upper), fill = "lightblue") +
+  geom_line(color= "black") +
+  labs(x = "Area Basal", 
+       y = "Abundancia")+
+  ggtitle("Relacion de Cardenilla pusilla versus el area basal") +
+  theme_classic()
+```
+:::
+
+![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
