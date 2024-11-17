@@ -1,4 +1,3 @@
-
 ---
 title: "Curso de Modelos Jerárquicos en Ecología"
 format:
@@ -18,13 +17,13 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 [Clase 1: Introducción a Modelos Jerárquicos](Clase1.html)
 
-[Clase 2: Modelar abundancia: N-Mixture models]
+[Clase 2: Modelar abundancia: N-Mixture models](Clase2.html)
 
-[Clase 3: Modelar abundancia con muestreo de distancia jerárquico]
+[Clase 3: Modelar abundancia con muestreo de distancia jerárquico](Clase3.html)
 
-[Clase 4: Modelar densidad con muestreo de distancia jerárquico]
+[Clase 4: Modelar densidad con muestreo de distancia jerárquico](Clase4.html)
 
-[Clase 5: Modelar ocupación de especies en poblaciones cerradas]
+[Clase 5: Modelar ocupación de especies en poblaciones cerradas](Clase5.html)
 
 [Clase 6: Modelar ocupación con múltiples especies]
 
