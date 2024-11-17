@@ -1,22 +1,24 @@
 
 ---
-title: "Clase 1: Distribución, abundancia y riqueza de especies en ecología"
+title: "Clase 1: Distribución, abundancia, riqueza de especies y modelos jerárquicos en ecología"
 format:
   html:
     css: styles.css
 ---
 
-Referencia para la clase 1: 
-
-[Applied Hierarchical Modeling in Ecology](https://doi.org/10.1016/B978-0-12-801378-6.00001-1)
 
 En esta primera clase, discutiremos los patrones puntuales, los estimadores de abundancia y ocupación en los diseños para estudiar metapoblaciones, sus parámetros y errores en los modelos aplicados a la ecología. Finalmente, profundizaremos en los modelos jerárquicos para estimar la distribución, abundancia y riqueza de especies.
 
 
 ::: {.panel-tabset}
 
-## PROCESOS PUNTUALES, DISTRIBUCIÓN, ABUNDANCIA Y RIQUEZA DE ESPECIES
+# Distribución, abundancia y riqueza de especies en ecología
 
+Referencia: 
+
+[Applied Hierarchical Modeling in Ecology](https://doi.org/10.1016/B978-0-12-801378-6.00001-1)
+
+## PROCESOS PUNTUALES, DISTRIBUCIÓN, ABUNDANCIA Y RIQUEZA DE ESPECIES
 
 La distribución y la abundancia son las dos variables de estado fundamentales en ecología (Begon et al., 1986; Krebs, 2009), y la riqueza de especies es la medida más utilizada para evaluar la biodiversidad (Purvis y Hector, 2000; Balmford et al., 2003). Las tres son el foco de una gran cantidad de estudios ecológicos teóricos y, especialmente, de estudios centrados en problemas de manejo o conservación específicos que involucran especies raras o en peligro, animales de caza y especies invasoras. Sin embargo, las tres son solo cantidades derivadas, es decir, resúmenes de una cantidad más fundamental: los patrones de puntos. Los patrones de puntos son el resultado de procesos estocásticos conocidos como procesos puntuales y, como es de esperar, los modelos estadísticos que los describen se llaman modelos de procesos puntuales (PPM; Illian et al., 2008; Wiegand y Moloney, 2014). Los PPM tratan tanto el número como las ubicaciones de puntos discretos como cantidades aleatorias regidas por un campo de intensidad subyacente y continuo. La intensidad es el número esperado de puntos (por ejemplo, animales o plantas) por unidad de área en algún área de estudio y es el parámetro modelado.
 
@@ -120,7 +122,59 @@ La implementación en un marco Bayesiano con métodos de cadenas de Markov Monte
 
 Adicionalmente, los modelos jerárquicos representan una "compartimentalización" natural de un sistema grande y complejo en una secuencia de subsistemas más pequeños y, por lo general, mucho menos complejos. (De hecho, el término "modelos secuenciales" podría ser igualmente adecuado para describirlos). Este es un marco ideal para describir conjuntamente el verdadero estado y dinámica de un sistema subyacente de interés, como una población de animales o plantas, o una metapoblación, y los procesos de medición potencialmente complejos con diversos tipos de error, posiblemente heterogéneos.
 
+
+# ¿QUÉ SON LOS MODELOS JERÁRQUICOS Y CÓMO LOS ANALIZAMOS?
+
+Referencia: 
+
+[Applied Hierarchical Modeling in Ecology](https://doi.org/10.1016/B978-0-12-801378-6.00001-1)
+
+En este apartado proporcionamos una definición conceptual del término modelo jerárquico tal como lo utilizamos a lo largo del curso. Usamos este término para describir un conjunto acoplado de modelos ordinarios (o "planos") que están relacionados condicionalmente entre sí. Por condicional nos referimos al sentido de probabilidad condicional: la distribución de probabilidad de una variable aleatoria depende de otra variable aleatoria, generalmente expresada como f(y∣z) o [y∣z], lo que indica que las probabilidades de los resultados de la variable aleatoria y dependen del resultado de la variable aleatoria z.
+
+Típicamente, los modelos contienen un componente para las observaciones o datos y uno o más componentes adicionales para describir variables latentes o resultados de algún proceso ecológico. "Aunque nuestro uso del término modelo jerárquico es algo más específico que en la literatura estadística, consideramos que sirve para proporcionar una unificación conceptual de muchos tipos diferentes de modelos, como los modelos de ocupación (MacKenzie et al., 2002), modelos N-mixture (Royle, 2004b), muestreo por distancias (Royle et al., 2004; Sillett et al., 2012), y muchos otros" (Kéry y Royle 2016).
+
+En el transcurso del curso los temas principales se aboradaran en el análisis de modelos jerárquicos utilizando métodos de inferencia clásica y algunos en bayesiana. Algunos problemas se resuelven más fácilmente, o únicamente, mediante análisis bayesiano con métodos de Markov Canenas de Monte Carlo (MCMC), mientras que otros problemas se resuelven mejor utilizando métodos de verosimilitud clásica. Por ejemplo, los modelos con efectos aleatorios espacialmente correlacionados no pueden analizarse fácilmente con métodos clásicos de verosimilitud, mientras que muchos modelos estándar de mezcla discreta, como los modelos N-mixture, se analizan fácilmente con métodos de verosimilitud, lo que permite realizar selecciones de modelos basadas en el criterio de información de Akaike (AIC).
+
+¿Qué entendemos por "inferencia clásica"? Estrictamente hablando, nos referimos al análisis directo de la verosimilitud, por ejemplo, a la estimación de parámetros mediante máxima verosimilitud. También incluye la perspectiva conceptual de la inferencia frecuentista, en la cual las propiedades de los estimadores y los procedimientos se evalúan promediando sobre posibles realizaciones de los datos. Esto implica que la estimación por verosimilitud se interpreta considerando la consistencia de las estimaciones de máxima verosimilitud (MLEs) o la interpretación de intervalos de confianza.
+
+La inferencia bayesiana es cada vez más familiar para los ecólogos. La diferencia principal entre la inferencia bayesiana y la clásica radica en cómo se utilizan las variables aleatorias para formular modelos. En particular, la inferencia clásica considera los parámetros como cantidades fijas pero desconocidas, mientras que la inferencia bayesiana considera los parámetros como variables aleatorias con una distribución previa, lo que permite basar la inferencia en la distribución posterior, es decir, en la distribución de probabilidad del parámetro desconocido dado los datos.
+
+
+
+
+## MODELOS ESTADÍSTICOS
+
+En la mayoría de los modelos estadísticos, una respuesta medida se trata como una variable aleatoria dotada de una función de densidad de probabilidad (pdf, por sus siglas en inglés) que se asume conocida. Por lo tanto, un modelo estadístico para los datos observados se representa mediante una pdf. La pdf incorpora tanto la aleatoriedad (la parte impredecible) en la respuesta como la tendencia de algunos valores a ocurrir con mayor frecuencia que otros, es decir, la parte de la respuesta que es predecible, al menos en un sentido promedio. Casi siempre, tenemos algunas otras variables que asumimos causan parte de la variabilidad en la respuesta, o al menos están asociadas con la respuesta de una manera estocásticamente predecible. En el modelo estadístico, los parámetros básicos de la pdf se reemplazan por alguna función lineal o no lineal de estas covariables.
+
+## INFERENCIA ESTADÍSTICA
+
+Un uso importante de la probabilidad, es proporcionar una descripción de los sistemas naturales utilizando variables aleatorias y distribuciones de probabilidad. Más específicamente, en este curso nos centramos en usar variables aleatorias para describir los resultados de procesos ecológicos (observados y no observados) y distribuciones de probabilidad como modelos de la variabilidad en estos posibles resultados. Por lo tanto, la probabilidad forma nuestra base conceptual para el modelado en ecología.
+
+Por otro lado, el campo de la estadística se ocupa del problema fundamental de aprender sobre los parámetros de las distribuciones de probabilidad a partir de los resultados observados (es decir, "datos") de alguna variable. Los dos paradigmas dominantes de la inferencia estadística, el Bayesiano y el clásico, comparten un vínculo conceptual común al ser enfoques distintos de la inferencia paramétrica. Esto significa que ambos requieren que hagamos suposiciones explícitas sobre el modelo de probabilidad de las variables aleatorias que describen nuestro sistema. Cualquiera de los paradigmas procede entonces a realizar alguna tarea de inferencia (estimación, predicción, selección de modelos, pruebas) que asume que dichas suposiciones paramétricas son ciertas.
+
+## HIERARCHICAL MODELS (HMs)
+
+Como una definición muy general, podemos decir que un modelo jerárquico (HM), es una secuencia de modelos relacionados ordenados según su estructura de probabilidad condicional. En términos prácticos, esto significa que los HMs tienen uno o más niveles "intermedios" que involucran una variable latente (o efecto aleatorio). Según esta definición, los modelos clásicos de efectos aleatorios son claramente HMs. Por ejemplo, imaginemos una encuesta en un conjunto de unidades espaciales *i*=1,2,…,*M*, en las cuales tomamos *j*=1,2,…*J* observaciones replicadas *yij* de alguna medición ecológica. Naturalmente, podríamos suponer que las mediciones replicadas en la misma unidad son más similares entre sí que aquellas tomadas entre diferentes unidades, y esta es la motivación estándar para incluir un efecto de grupo aleatorio α. Por lo tanto, podríamos especificar el modelo para las observaciones de la siguiente manera:
+
+$$y_{ij}\mid \alpha_i \sim \text{Normal}(\mu + \alpha_i, \sigma^2)$$
+
+donde el efecto aleatorio también tiene una distribución como:
+
+$$\alpha_i\sim \text{Normal}(0, \sigma^2_\alpha)$$
+
+Es importante notar que enfatizamos la dependencia condicional de *yij* en *αi* al expresar el modelo para *yij*. En una notación abreviada, usamos corchetes como *[y∣α*]* para representar el modelo de observación, donde la barra vertical indica la dependencia condicional explícita de una variable (*y* en este caso) en otra (*α* en este caso), *y [α]* representa el modelo para el efecto aleatorio. El HM es, por lo tanto, el par de submodelos *[y∣α]* y *[α]*.
+
+Es importante señalar que no siempre hay una "jerarquía" lógica de arriba hacia abajo involucrada en un modelo jerárquico, como cuando modelamos individuos anidados dentro de poblaciones, etc. En este sentido, un término igualmente válido (o quizás incluso más adecuado) podría ser "modelo secuencial" (SM) en lugar de modelo jerárquico. Sin embargo, dado que el término "modelo jerárquico" es tan común, no lo cambiaríamos.
+
+
+## Modelos Jerárquicos Canónicos en Ecología: 
+
+1) El modelo de ocupación para distribuciones de especies
+
+2) El modelo N-Mixture para abundancia
+
 :::
+
 
 
 ![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)

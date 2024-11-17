@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Clase 1: Distribución, abundancia y riqueza de especies en ecología</title>
+<title>Clase 1: Distribución, abundancia, riqueza de especies y modelos jerárquicos en ecología</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -109,7 +109,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Clase 1: Distribución, abundancia y riqueza de especies en ecología</h1>
+<h1 class="title">Clase 1: Distribución, abundancia, riqueza de especies y modelos jerárquicos en ecología</h1>
 </div>
 
 
@@ -126,13 +126,15 @@ window.Quarto = {
 </header>
 
 
-<p>Referencia para la clase 1:</p>
-<p><a href="https://doi.org/10.1016/B978-0-12-801378-6.00001-1">Applied Hierarchical Modeling in Ecology</a></p>
 <p>En esta primera clase, discutiremos los patrones puntuales, los estimadores de abundancia y ocupación en los diseños para estudiar metapoblaciones, sus parámetros y errores en los modelos aplicados a la ecología. Finalmente, profundizaremos en los modelos jerárquicos para estimar la distribución, abundancia y riqueza de especies.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">PROCESOS PUNTUALES, DISTRIBUCIÓN, ABUNDANCIA Y RIQUEZA DE ESPECIES</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">DISEÑOS DE META-POBLACIONES</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">PARÁMETROS DE ESTADO Y DE TASA</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">MODELOS DE ERROR DE MEDICIÓN EN ECOLOGÍA</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">ERROR FALSO-NEGATIVO y FALSO-POSITIVO</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">MODELOS JERÁRQUICOS PARA DISTRIBUCIÓN, ABUNDANCIA Y RIQUEZA DE ESPECIES</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Distribución, abundancia y riqueza de especies en ecología</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">¿QUÉ SON LOS MODELOS JERÁRQUICOS Y CÓMO LOS ANALIZAMOS?</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Referencia:</p>
+<p><a href="https://doi.org/10.1016/B978-0-12-801378-6.00001-1">Applied Hierarchical Modeling in Ecology</a></p>
+<section id="procesos-puntuales-distribución-abundancia-y-riqueza-de-especies" class="level2">
+<h2 class="anchored" data-anchor-id="procesos-puntuales-distribución-abundancia-y-riqueza-de-especies">PROCESOS PUNTUALES, DISTRIBUCIÓN, ABUNDANCIA Y RIQUEZA DE ESPECIES</h2>
 <p>La distribución y la abundancia son las dos variables de estado fundamentales en ecología (Begon et al., 1986; Krebs, 2009), y la riqueza de especies es la medida más utilizada para evaluar la biodiversidad (Purvis y Hector, 2000; Balmford et al., 2003). Las tres son el foco de una gran cantidad de estudios ecológicos teóricos y, especialmente, de estudios centrados en problemas de manejo o conservación específicos que involucran especies raras o en peligro, animales de caza y especies invasoras. Sin embargo, las tres son solo cantidades derivadas, es decir, resúmenes de una cantidad más fundamental: los patrones de puntos. Los patrones de puntos son el resultado de procesos estocásticos conocidos como procesos puntuales y, como es de esperar, los modelos estadísticos que los describen se llaman modelos de procesos puntuales (PPM; Illian et al., 2008; Wiegand y Moloney, 2014). Los PPM tratan tanto el número como las ubicaciones de puntos discretos como cantidades aleatorias regidas por un campo de intensidad subyacente y continuo. La intensidad es el número esperado de puntos (por ejemplo, animales o plantas) por unidad de área en algún área de estudio y es el parámetro modelado.</p>
 <p>Tanto la distribución como la abundancia son resúmenes espaciales simples de patrones de puntos para una especie animal o vegetal, es decir, agregaciones de un patrón de puntos en alguna área. Para desarrollar una comprensión básica de las relaciones entre un patrón de puntos, la abundancia y la ocurrencia, realizaremos una primera simulación de datos sencilla en el programa R.</p>
 <p>La función <code>sim.fn</code> permite experimentar con la relación entre un patrón de puntos, la abundancia y la ocurrencia en función de la intensidad del patrón (que es algo que no se puede controlar en la vida real y es el resultado de la biología) y del tamaño de la cuadrícula, o más específicamente, el tamaño de las celdas que componen esa cuadrícula; esto es algo que puedes ajustar.</p>
@@ -170,78 +172,72 @@ $mid.pt
  [1] 0.5 1.5 2.5 3.5 4.5 5.5 6.5 7.5 8.5 9.5
 
 $M
-[1] 105
+[1] 100
 
 $u1
-  [1] 0.99431603 7.65041166 1.49540336 6.41571701 1.79528783 3.01219409
-  [7] 4.52377202 7.44757354 3.41649238 8.48278971 8.87232534 9.93111940
- [13] 1.52996446 6.66591256 2.44633707 6.63940739 3.95408448 2.27728337
- [19] 9.29855603 4.06372350 5.25918348 1.84287429 7.93871138 2.67471558
- [25] 9.23393222 9.68493089 1.19667165 8.16887038 8.74070333 4.52196186
- [31] 6.99510363 3.80529057 2.65802670 9.83561054 2.08061450 2.66265944
- [37] 0.29897816 3.46448642 6.36035331 1.70287474 6.84046936 5.13655008
- [43] 3.20279539 7.79411737 3.26757087 1.40710568 7.76319889 0.19705323
- [49] 7.75288540 9.63823135 4.51376194 3.57006936 4.14838101 8.99038763
- [55] 4.26103191 7.22774020 3.34973384 0.05884517 8.32275506 7.10273230
- [61] 9.07463596 1.17287852 8.52897631 1.45572723 3.39017637 4.35541864
- [67] 8.47700904 5.44319263 7.21929142 8.35328444 1.31241693 0.50673979
- [73] 8.70578522 4.99365654 5.60326087 7.05379549 3.09980600 0.86994824
- [79] 5.13692951 6.82808085 6.16781739 3.70342866 8.53124002 4.16380522
- [85] 1.02209731 8.30661470 6.92633049 6.00617260 3.49647571 4.52299232
- [91] 5.20692397 7.25106154 1.86868222 5.25731783 4.27634025 4.32350591
- [97] 2.89091874 3.69808432 2.61647479 9.34075242 4.62959319 4.71053556
-[103] 9.12847020 6.97532778 6.12519130
+  [1] 2.5996815 7.8123227 2.1207608 1.0437745 4.5307476 3.4028333 0.4531352
+  [8] 3.4391943 1.5789370 7.6246401 2.2052125 7.7865962 9.0180334 6.6438229
+ [15] 6.2577242 1.2116477 3.4453255 7.8670593 8.7872352 8.1214469 7.4248731
+ [22] 7.3242342 1.9978668 3.2713271 4.0432588 4.4875956 8.6625608 1.0592868
+ [29] 7.7448801 5.3707219 2.1136035 3.5602238 5.5194894 9.3852590 3.3638773
+ [36] 7.9787281 3.0780002 4.9539738 5.4726672 4.8667890 5.8468951 3.2840942
+ [43] 4.1054701 2.6106387 2.7538989 4.4600051 5.4721443 4.5574429 4.9911124
+ [50] 7.7836188 2.8766375 5.1728471 1.3274813 5.2996123 3.6578676 2.1062540
+ [57] 0.3171577 2.3278432 4.1346879 9.4104450 0.4796399 9.8824287 6.3458398
+ [64] 1.8285574 1.0358008 9.0994801 8.9394213 7.1202585 1.1529136 0.4432826
+ [71] 2.5536447 7.9366228 5.0280421 9.2797649 8.5096716 8.7239657 7.9430226
+ [78] 3.0295667 8.1673138 5.1815164 6.6157242 2.9753459 7.4155551 5.0803462
+ [85] 1.8729035 2.8369297 9.0976374 5.7503666 5.5574178 3.9833756 2.5622369
+ [92] 4.0180488 0.2517380 4.7342086 7.1520875 9.7598230 4.4396292 9.0689058
+ [99] 1.3226763 4.9557081
 
 $u2
-  [1] 4.41981866 5.73982616 4.39699838 4.62211884 9.45804612 9.34735734
-  [7] 6.73479105 5.22884222 0.74300900 2.18608987 3.47129809 3.62336174
- [13] 3.40227036 0.35116285 0.70456952 9.21118108 9.45620098 2.55390574
- [19] 1.45240798 1.47139132 6.37020129 2.24008247 1.23732205 6.81000357
- [25] 6.50125468 7.47854722 3.55482900 9.38858209 8.85935386 1.37162346
- [31] 0.73215058 8.55168753 0.07968231 1.76789039 8.22222262 5.81586757
- [37] 9.57899212 2.74666233 5.17305423 4.13640359 0.14639702 0.88223902
- [43] 1.73568588 5.82787592 8.43645945 8.45279645 2.01787859 0.07997832
- [49] 5.87918407 5.69387179 4.16074896 3.17531563 2.03848982 4.00738104
- [55] 9.77357381 7.47324532 1.40793097 6.01308925 5.85695990 8.10980436
- [61] 1.24328207 4.82200534 9.67319023 7.92132227 1.96883077 0.39480881
- [67] 9.00650466 1.85694799 0.86645997 7.59934655 3.93127325 8.71617843
- [73] 5.72467040 0.56376802 0.41642000 4.17101800 4.26444368 6.79583839
- [79] 5.91631541 0.38469285 9.55833001 7.62067231 4.43527310 3.00674424
- [85] 3.10421032 0.48411814 1.81958544 4.87240157 0.85521729 0.50343410
- [91] 1.72856815 1.82034237 3.96669649 7.57547888 7.44685984 8.65978333
- [97] 7.30627197 7.23775066 9.47467444 3.55416307 4.89879791 3.38825918
-[103] 8.82671630 1.35252516 0.54721985
+  [1] 4.3035909 4.5107891 7.5678050 3.7914525 4.4932240 2.9605251 5.9943747
+  [8] 3.0880726 3.8385099 2.2060422 2.4985278 6.6570640 9.4250380 1.1770833
+ [15] 7.4123651 0.4918272 2.4966874 5.2863390 6.2086975 6.0679539 5.3120640
+ [22] 3.0376967 9.3937055 1.4350890 6.2100057 5.2181267 7.9316989 3.6602291
+ [29] 5.5394576 3.6147776 7.9999539 2.5140724 5.1128687 6.2834548 1.8761982
+ [36] 6.2573900 2.1232598 9.6967765 0.9247375 1.2044561 3.7899913 1.5329633
+ [43] 7.6480205 9.9268236 5.0251553 4.9219216 3.4100166 4.5284782 9.9139274
+ [50] 2.2334702 9.2267620 4.6817487 3.3623716 7.1960534 6.0554890 6.9733826
+ [57] 6.4040918 9.5394961 1.4603463 9.0896055 3.7381680 2.3078948 1.6175992
+ [64] 7.9470442 9.7896167 6.6302601 5.5304352 4.6718516 7.6498069 1.5470171
+ [71] 7.8665886 3.4102188 5.9523609 7.5140585 2.6877974 1.1447546 3.7854670
+ [78] 0.5642505 7.4952359 1.8088712 9.0591719 4.6642628 9.6139005 2.5225148
+ [85] 6.9130937 2.2904072 2.8884818 2.7560669 1.6403958 9.5568874 7.1410510
+ [92] 9.6266758 4.6414278 0.5064214 1.6537049 9.4760807 3.8009148 4.1579750
+ [99] 8.7119927 7.4431328
 
 $N
         
          (0,1] (1,2] (2,3] (3,4] (4,5] (5,6] (6,7] (7,8] (8,9] (9,10]
-  (0,1]      1     0     0     0     1     0     2     0     1      1
-  (1,2]      0     0     1     5     3     0     0     1     1      1
-  (2,3]      2     0     1     0     0     1     1     1     1      1
-  (3,4]      2     3     1     1     1     0     0     2     2      2
-  (4,5]      3     2     1     2     2     0     1     1     1      1
-  (5,6]      2     2     0     0     0     1     1     1     0      0
-  (6,7]      5     2     0     0     2     1     0     0     0      2
-  (7,8]      1     2     1     0     1     4     0     1     1      0
-  (8,9]      1     0     1     1     2     2     0     1     1      3
-  (9,10]     0     3     0     2     0     1     1     1     1      0
+  (0,1]      0     1     0     1     1     1     1     0     0      0
+  (1,2]      1     0     0     4     0     0     1     2     1      2
+  (2,3]      0     0     2     0     2     1     1     4     0      3
+  (3,4]      1     3     4     1     0     0     1     0     0      1
+  (4,5]      1     2     0     1     3     1     1     2     0      3
+  (5,6]      1     2     2     3     1     2     0     1     0      0
+  (6,7]      0     2     0     0     0     0     0     1     0      1
+  (7,8]      0     1     2     3     2     3     2     0     0      1
+  (8,9]      0     1     1     0     0     1     2     2     0      0
+  (9,10]     0     0     2     0     1     0     2     1     0      3
 
 $z
         
          (0,1] (1,2] (2,3] (3,4] (4,5] (5,6] (6,7] (7,8] (8,9] (9,10]
-  (0,1]      1     0     0     0     1     0     1     0     1      1
-  (1,2]      0     0     1     1     1     0     0     1     1      1
-  (2,3]      1     0     1     0     0     1     1     1     1      1
-  (3,4]      1     1     1     1     1     0     0     1     1      1
-  (4,5]      1     1     1     1     1     0     1     1     1      1
-  (5,6]      1     1     0     0     0     1     1     1     0      0
-  (6,7]      1     1     0     0     1     1     0     0     0      1
-  (7,8]      1     1     1     0     1     1     0     1     1      0
-  (8,9]      1     0     1     1     1     1     0     1     1      1
-  (9,10]     0     1     0     1     0     1     1     1     1      0
+  (0,1]      0     1     0     1     1     1     1     0     0      0
+  (1,2]      1     0     0     1     0     0     1     1     1      1
+  (2,3]      0     0     1     0     1     1     1     1     0      1
+  (3,4]      1     1     1     1     0     0     1     0     0      1
+  (4,5]      1     1     0     1     1     1     1     1     0      1
+  (5,6]      1     1     1     1     1     1     0     1     0      0
+  (6,7]      0     1     0     0     0     0     0     1     0      1
+  (7,8]      0     1     1     1     1     1     1     0     0      1
+  (8,9]      0     1     1     0     0     1     1     1     0      0
+  (9,10]     0     0     1     0     1     0     1     1     0      1
 
 $psi
-[1] 0.66</code></pre>
+[1] 0.58</code></pre>
 </div>
 </div>
 <p>La función simula ubicaciones de animales o plantas en una cuadrícula de celdas que forma un cuadrante con un tamaño total (unidades totales) igual a <code>quad.size</code>, según un proceso de Poisson en el que los individuos se distribuyen al azar en el espacio. Este proceso se caracteriza por una intensidad, o número esperado de plantas o animales (“puntos”) por unidad de área. El patrón de puntos resultante se discretiza superponiendo una cuadrícula con celdas cuadradas de longitud <code>cell.size</code>. Esta discretización del espacio es lo que permite definir la abundancia en primer lugar y, luego, la presencia/ausencia o ocurrencia. La riqueza de especies, la tercera cantidad crucial mencionada en el título, es la suma de especies que ocurren en un sitio, lo que representa un resumen de los patrones de puntos, no para una sola especie, sino para un conjunto de especies presentes en un sitio.</p>
@@ -259,17 +255,20 @@ $psi
 </div>
 <p>En esta simulación, un “sitio” está representado por una celda en toda la cuadrícula. Tal vez puedas imaginar la cuadrícula completa como una región en la que se lleva a cabo tu estudio. Solo una vez que hemos establecido esa discretización del espacio, podemos definir la abundancia (que nos gusta denotar como <em>N</em>) o la ocurrencia (presencia/ausencia) la cual nos gusta denotar como <em>z</em>). Luego, la abundancia <em>N</em> es simplemente el número de puntos que caen en cada “sitio” (es decir, celda): si no hay puntos en una celda, la abundancia es cero; si hay un punto, la abundancia es uno; y así sucesivamente. Además, la presencia/ausencia (<em>z</em>) distingue los dos casos en los que no hay puntos en una celda (es decir, <em>N</em> = <em>0</em>, lo cual representa una ausencia o no ocurrencia) o en los que hay uno o más puntos en la celda (es decir, <em>N</em> &gt; <em>0</em>, lo cual representa una presencia u ocurrencia). Así, podemos decir que la abundancia es un primer paso en la agregación de un patrón de puntos subyacente dentro de un esquema de discretización espacial, y la ocurrencia es un segundo paso en esta agregación sobre las unidades espaciales.</p>
 <p>Alternativamente, podemos decir que la ocurrencia es un resumen simplificado y con poca información de la abundancia, donde solo se registran dos clases de abundancia: una siendo cero (=“ausencia”) y la La otra clase mayor a cero (= “presencia”). Así, las relaciones entre un patrón de puntos, abundancia y ocurrencia son determinísticas en un solo sentido: si se conoce el patrón completo y se tiene un esquema de discretización espacial, también se tiene conocimiento completo sobre la abundancia; y si se conoce el patrón espacial de abundancia, también se conoce perfectamente el patrón espacial de ocurrencia. En cambio, el proceso inverso no es tan directo; por ejemplo, al conocer solo un patrón de presencia/ausencia, no puedes inferir perfectamente la distribución subyacente de abundancia, aunque puedes hacer inferencias estadísticas explícitas (He y Gaston, 2000; Royle et al., 2003; Ramsey et al., 2015).</p>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+</section>
+<section id="diseños-de-meta-poblaciones" class="level2">
+<h2 class="anchored" data-anchor-id="diseños-de-meta-poblaciones">DISEÑOS DE META-POBLACIONES</h2>
 <p>Curiosamente, sin conocer la relación entre los procesos puntuales y sus abundancias y ocurrencias interrelacionadas, a las personas siempre les ha gustado discretizar su área de estudio completa en subunidades más pequeñas, o, dicho de otra manera, replicar sus áreas de estudio en el espacio. Esto da lugar a lo que llamamos un “diseño de meta-población” (Royle, 2004a; Kéry y Royle, 2010). “Somos un tanto cautelosos con este término porque no queremos implicar que los animales que viven en tales unidades espaciales discretas necesariamente se comportan según una metapoblación formal (Hanski, 1998; Sutherland et al., 2012, 2014). Más bien, no pudimos encontrar un término mejor y más conciso para el caso extremadamente común en el que se estudia la distribución o abundancia en una colección de sitios espacialmente replicados o donde toda un área de estudio se subdivide en subunidades más pequeñas, a las que típicamente llamamos sitios” (kery and Royle, 2016). Para Kery and Royle, esto es un “diseño de meta-población”.</p>
 <p>Tales diseños de meta-población, o diseños con poblaciones espacialmente subdivididas, son extremadamente comunes en ecología y todas las ciencias relacionadas. Además, se adoptan prácticamente en todas partes en el monitoreo biológico, donde está claro que no se puede caracterizar el estado del medio ambiente solo con mediciones tomadas en un único sitio. Los diseños de meta-población vienen en una gran variedad, y el número, tamaño y forma de las celdas (subunidades) pueden variar, uno de ellos es el submuestreo espacial es sorprendentemente común en los diseños de meta-población, en los cuales cada sitio (unidad) se subdivide aún más en subunidades espaciales más pequeñas, que nuevamente pueden cubrir todo el sitio o solo una parte del área total de un sitio.</p>
-</div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+</section>
+<section id="parámetros-de-estado-y-de-tasa" class="level2">
+<h2 class="anchored" data-anchor-id="parámetros-de-estado-y-de-tasa">PARÁMETROS DE ESTADO Y DE TASA</h2>
 <p>La abundancia, distribución y riqueza de especies son, quizás, las variables más estudiadas en toda la ecología y campos relacionados. Sin embargo, con mucha frecuencia hay un interés no solo en estas variables de estado, sino también en los parámetros que gobiernan la tasa de cambio de estas cantidades, es decir, que impulsan la dinámica de las poblaciones (variables de tasa). Por ejemplo, la cantidad más importante en el monitoreo de biodiversidad parece ser la “tendencia”, es decir, una tasa sostenida de cambio a lo largo del tiempo de alguna cantidad como la abundancia u ocurrencia. Y una tendencia es solo la descripción más simple de la dinámica de la población; la descripción más detallada de la dinámica de una población animal se logra mediante las cuatro tasas vitales: tasa de natalidad, tasa de inmigración, tasa de mortalidad y tasa de emigración, y estas pueden ser estratificadas por edad, sexo o posiblemente otras clases en una población de estudio.</p>
 <p>Una tasa vital que ha recibido un interés particular en la ecología animal y otros campos, como la evolución de la historia de vida (Stearns, 1992), es la probabilidad de supervivencia. Existen teorías bien desarrolladas para estimar la supervivencia a partir de muestras temporales replicadas de animales salvajes marcados, por ejemplo, en el célebre modelo de Cormack-Jolly-Seber (Cormack, 1964; Jolly, 1965; Seber, 1965; Pollock et al., 1990), en su variante para datos de recuperación de anillos (Brownie et al., 1985) y en una multitud de generalizaciones, incluidos los modelos multiestados (Arnason, 1972; Hestbeck et al., 1991; Brownie et al., 1993; Arnason y Schwarz, 1999) y modelos relacionados (Barker, 1997; Pradel et al., 1997; Kendall et al., 2003; Pradel, 2005; Bonner y Schwarz, 2006).</p>
 <p>En ecología animal existe una división bastante marcada entre los modelos y métodos (y curiosamente también entre las personas que aplican estos modelos) que se centran en las variables de estado (por ejemplo, estimar abundancia) o que se enfocan en las variables de tasa (por ejemplo, estimar supervivencia). Esta división es en su mayoría artificial y en gran parte se debe a las limitaciones de los modelos pasados y actuales, así como del software asociado para ajustar estos modelos. Por lo tanto, hasta hace muy poco, existía una gran división en las estadísticas ecológicas entre los modelos para “poblaciones cerradas” (lo que esencialmente significaba estimación de abundancia) y los modelos para “poblaciones abiertas” (lo que, ante todo, significaba estimación de supervivencia). Sin embargo, hoy en día, esta distinción se difumina cada vez más y, especialmente en el contexto de los modelos jerárquicos, se puede ver cuán fácilmente podemos unir lo que hace solo 10 años podría haberse considerado una división profunda. Además, la facilidad con la que podemos ajustar “modelos híbridos abiertos/cerrados” a nuestros datos se debe en gran parte al poder de la maquinaria de ajuste de modelos bayesianos y, en la práctica, al software BUGS (Schofield et al., 2009). Esto es especialmente interesante también para la el modelado de dinámicas poblacionales, como el análisis de viabilidad poblacional (Beissinger, 2002) y la modelización poblacional relacionada (Bockland et al., 2004b, 2007; Schofield y Barker, 2008; Tavecchia et al., 2009; Newman et al., 2006, 2014), incluyendo los modelos de proyección matricial (Caswell, 2001; Link et al., 2003). Finalmente, otro tipo de modelo poblacional en el que la división entre poblaciones abiertas y cerradas se elimina por completo es el fascinante campo de la modelización integrada de poblaciones (IPMs, Baillie, 1991; Besbeas et al., 2002; Brooks et al., 2004; Schaub et al., 2007; Abadi et al., 2010a,b; Schaub y Abadi, 2011).</p>
-</div>
-<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+</section>
+<section id="modelos-de-error-de-medición-en-ecología" class="level2">
+<h2 class="anchored" data-anchor-id="modelos-de-error-de-medición-en-ecología">MODELOS DE ERROR DE MEDICIÓN EN ECOLOGÍA</h2>
 <p>El error en una medición es la diferencia entre el valor medido y el valor verdadero de alguna cantidad. Probablemente, el tipo de error de medición más conocido en ecología sea el relacionado con la medición de cantidades continuas, como el tamaño corporal, la masa corporal o el contenido de algún contaminante en el aire o el agua. Su medición está probablemente afectada por una gran cantidad de pequeñas causas que actúan de manera aditiva, dando lugar a errores de medición que típicamente siguen una distribución normal. Una consecuencia importante de esto es que las mediciones son imparciales, es decir, en promedio están en el objetivo; los errores positivos y negativos simplemente se cancelan entre sí en el promedio de mediciones repetidas. Este tipo de error de medición parece ser el que la gente tiene en mente cuando piensa en este tema en ecología. Por ejemplo, este tipo de error de medición generalmente se maneja en el residuo de un modelo de regresión.</p>
 <p>Sin embargo, las cosas son muy diferentes para los conteos de variables discretas como la abundancia, y esto incluye la variable binaria “presencia/ausencia”, es decir, cuando se trata de la agregación de datos de un proceso puntual subyacente. Para ellas, puede haber subestimaciones y sobreestimaciones, y los mecanismos que conducen a los dos tipos de errores no son los mismos, sino que pueden ser muy diferentes. Así, existe un conjunto de mecanismos que lleva a errores falsos negativos, cuando se pasa por alto a un individuo o se omite una especie en un sitio donde ocurre. Este tipo de error no puede describirse razonablemente con una distribución normal, sino que típicamente se describe mediante una distribución binomial o una distribución de Bernoulli. Dado que hay <em>N</em> individuos presentes y existe alguna probabilidad p de detectar a cada uno de ellos, el número de individuos detectados (<em>C</em>) será binomial:</p>
 <p><span class="math display">\[ C \sim \text{Binomial}(N, p) \]</span></p>
@@ -302,8 +301,9 @@ Note
 </div>
 </div>
 <p>En cualquiera de los casos, y a diferencia del modelo normal para errores de medición con variables continuas, el promedio de mediciones repetidas no será imparcial con respecto a las cantidades objetivo (N de abundancia o presencia/ausencia). Más bien, el promedio será igual a <em>Np</em> para los conteos y igual a <em>p</em> para las mediciones de presencia/ausencia (observaciones de detección/no detección) en un sitio ocupado. En contraste, el máximo entre una serie de mediciones se acercará cada vez más a los valores verdaderos <em>N</em> o <em>z</em> a medida que se aumente el número de mediciones repetidas, y qué tan rápido se acerca el máximo a <em>N</em> depende nuevamente de la probabilidad de detección <em>p</em>.</p>
-</div>
-<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+</section>
+<section id="error-falso-negativo-y-falso-positivo" class="level2">
+<h2 class="anchored" data-anchor-id="error-falso-negativo-y-falso-positivo">ERROR FALSO-NEGATIVO y FALSO-POSITIVO</h2>
 <p>El error de detección de falsos negativos, es el error de detección que se aborda en la gran mayoría de los métodos de captura-recaptura y métodos relacionados. En la base de prácticamente todos estos métodos está el modelo de error de medición binomial o de Bernoulli. Se podría argumentar que los errores de falsos negativos ocurren en casi todos los conjuntos de datos sobre distribución y abundancia, ya sea para animales o plantas.</p>
 <p>Además de los errores de falsos negativos, también podemos tener errores de falsos positivos. Por ejemplo, en términos de abundancia, podríamos sobrecontar, generalmente porque contamos al mismo individuo varias veces o porque confundimos una especie con otra. En términos de ocurrencia, esto significa que creemos haber detectado una especie en un sitio donde en realidad no ocurre o que creemos haberla detectado en un sitio donde sí ocurre, pero lo que observamos no era la especie objetivo; revisar <a href="https://doi.org/10.1890/14-1507.1">Chambert et al.&nbsp;(2015)</a> para más detalles sobre esta distinción.</p>
 <p>Cuando tratamos con datos resumidos en áreas discretizadas a partir de patrones de puntos “simples”, es decir, datos de abundancia u ocurrencia, estos son los dos tipos fundamentales de errores de medición. Sin embargo, además, existen errores de clasificación de estado cuando clasificamos individuos por edad, tamaño u otros estados, como en los modelos de estados múltiples y cuando distinguimos entre diferentes tipos de “ocurrencia”, como la de individuos no reproductivos frente a la de individuos reproductivos, como en los modelos de ocupación de estados múltiples.</p>
@@ -311,8 +311,9 @@ Note
 <p>En ecología, hay otro tipo de error de medición: el que ocurre en las covariables. Este es bastante diferente de los otros tipos de errores de medición mencionados en esta sección, que están asociados con la respuesta en un modelo, no con una covariable en el modelo. El problema de los errores en covariables en modelos de distribución y abundancia es exactamente análogo al de cualquier otro modelo de regresión. Esencialmente, los errores de medición en covariables continuas atenúan la estimación de la pendiente, es decir, hacen que la estimación erróneamente se acerque a cero. Existe una cantidad considerable de literatura estadística sobre este tipo de error de medición <a href="https://www.tandfonline.com/doi/abs/10.1080/01621459.2000.10474347">(Stefanski, 2000)</a>.</p>
 <p>Por lo tanto, generalmente no es suficiente que un modelo ecológico de distribución y abundancia simplemente describa la variabilidad espacial de un proceso y posiblemente también las dinámicas temporales en la abundancia u ocurrencia. Más bien, para lograr inferencias no sesgadas sobre la demografía de la distribución y la abundancia, será necesario modelar explícitamente los procesos de error de medición que subyacen a los datos disponibles. Los estudios que emplean diseños de metapoblación suelen enfrentar dos pasos inferenciales secuenciales (ver Figura 1.1). <img src="booksPictures/Figure1.png" class="img-fluid"> Figura 1.1: Los dos procesos de muestreo en ecología que típicamente subyacen a la medición de la abundancia o la ocurrencia son: primero, el muestreo espacial y, luego, la medición de la cantidad deseada. <em>N</em> y <em>z</em> denotan las cantidades típicas de interés (abundancia y presencia/ausencia, respectivamente), mientras que <em>C</em> e <em>y</em> representan sus mediciones, ya sea un conteo o una medición de detección/no detección, respectivamente.</p>
 <p>El primero es desde la muestra de sitios muestreados hacia una “población” estadística más amplia de sitios en los que estamos interesados. Necesitamos un modelo estadístico para describir la variabilidad entre estos sitios y el muestreo de los sitios relevados para inferir cantidades en toda la región. Y, en segundo lugar, necesitamos otro modelo estadístico para describir la aleatoriedad en el proceso de medición, típicamente para estimar y, por lo tanto, corregir las tasas de error de falsos negativos y falsos positivos. Este procedimiento de muestreo en dos pasos es ubicuo en la ecología y especialmente en el monitoreo de biodiversidad.</p>
-</div>
-<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+</section>
+<section id="modelos-jerárquicos-para-distribución-abundancia-y-riqueza-de-especies" class="level2">
+<h2 class="anchored" data-anchor-id="modelos-jerárquicos-para-distribución-abundancia-y-riqueza-de-especies">MODELOS JERÁRQUICOS PARA DISTRIBUCIÓN, ABUNDANCIA Y RIQUEZA DE ESPECIES</h2>
 <p>Los modelos jerárquicos son una secuencia de modelos de probabilidad ordenados según su estructura de probabilidad condicional, lo que implica que describen variables aleatorias condicionalmente dependientes. En el contexto de los modelos descritos y analizados en este curso, utilizaremos modelos jerárquicos para representar tanto el verdadero estado de la naturaleza, que no es observable (o solo parcialmente observable), como los errores de medición.</p>
 <p>Típicamente, nuestros modelos jerárquicos incluyen un submodelo para el estado verdadero de interés y otro para los errores de medición, aunque en algunos casos puede haber más de un submodelo para cualquiera de estos aspectos. En el caso más común, donde el modelo aborda únicamente errores de detección falsos negativos, el nivel “inferior” del modelo jerárquico (donde se encuentran los datos) es una distribución binomial (o Bernoulli) donde la “probabilidad de éxito” se interpreta como la probabilidad de detección. En cierto sentido, esto convierte a la mayoría de los modelos presentados en este curso en una versión sofisticada de una regresión logística, pero con estructuras de efectos aleatorios posiblemente muy complejas. Otros aspectos del patrón espacio-temporal de ocurrencia o abundancia, o de cómo observamos esos patrones, pueden ser representados mediante niveles adicionales en el modelo, especialmente agrupaciones por sitio, especie, etc.</p>
 <p>Los modelos jerárquicos son una herramienta para realizar inferencias sobre distribución, abundancia, riqueza de especies y otras cantidades demográficas relacionadas en poblaciones, metapoblaciones, comunidades y metacomunidades. Son ideales para integrar, en un solo modelo, múltiples conjuntos de datos, múltiples fuentes de variabilidad (espacial, temporal y espacio-temporal) y múltiples escalas de medición. Además, permiten propagar rigurosamente la incertidumbre combinada hacia cada estimación derivada del modelo. Su implementación en un marco Bayesiano con métodos de cadenas de Markov Monte Carlo (MCMC) ofrece una potencia casi ilimitada para su aplicación a datos reales.</p>
@@ -330,6 +331,41 @@ Note
 </div>
 </div>
 <p>Adicionalmente, los modelos jerárquicos representan una “compartimentalización” natural de un sistema grande y complejo en una secuencia de subsistemas más pequeños y, por lo general, mucho menos complejos. (De hecho, el término “modelos secuenciales” podría ser igualmente adecuado para describirlos). Este es un marco ideal para describir conjuntamente el verdadero estado y dinámica de un sistema subyacente de interés, como una población de animales o plantas, o una metapoblación, y los procesos de medición potencialmente complejos con diversos tipos de error, posiblemente heterogéneos.</p>
+</section>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Referencia:</p>
+<p><a href="https://doi.org/10.1016/B978-0-12-801378-6.00001-1">Applied Hierarchical Modeling in Ecology</a></p>
+<p>En este apartado proporcionamos una definición conceptual del término modelo jerárquico tal como lo utilizamos a lo largo del curso. Usamos este término para describir un conjunto acoplado de modelos ordinarios (o “planos”) que están relacionados condicionalmente entre sí. Por condicional nos referimos al sentido de probabilidad condicional: la distribución de probabilidad de una variable aleatoria depende de otra variable aleatoria, generalmente expresada como f(y∣z) o [y∣z], lo que indica que las probabilidades de los resultados de la variable aleatoria y dependen del resultado de la variable aleatoria z.</p>
+<p>Típicamente, los modelos contienen un componente para las observaciones o datos y uno o más componentes adicionales para describir variables latentes o resultados de algún proceso ecológico. “Aunque nuestro uso del término modelo jerárquico es algo más específico que en la literatura estadística, consideramos que sirve para proporcionar una unificación conceptual de muchos tipos diferentes de modelos, como los modelos de ocupación (MacKenzie et al., 2002), modelos N-mixture (Royle, 2004b), muestreo por distancias (Royle et al., 2004; Sillett et al., 2012), y muchos otros” (Kéry y Royle 2016).</p>
+<p>En el transcurso del curso los temas principales se aboradaran en el análisis de modelos jerárquicos utilizando métodos de inferencia clásica y algunos en bayesiana. Algunos problemas se resuelven más fácilmente, o únicamente, mediante análisis bayesiano con métodos de Markov Canenas de Monte Carlo (MCMC), mientras que otros problemas se resuelven mejor utilizando métodos de verosimilitud clásica. Por ejemplo, los modelos con efectos aleatorios espacialmente correlacionados no pueden analizarse fácilmente con métodos clásicos de verosimilitud, mientras que muchos modelos estándar de mezcla discreta, como los modelos N-mixture, se analizan fácilmente con métodos de verosimilitud, lo que permite realizar selecciones de modelos basadas en el criterio de información de Akaike (AIC).</p>
+<p>¿Qué entendemos por “inferencia clásica”? Estrictamente hablando, nos referimos al análisis directo de la verosimilitud, por ejemplo, a la estimación de parámetros mediante máxima verosimilitud. También incluye la perspectiva conceptual de la inferencia frecuentista, en la cual las propiedades de los estimadores y los procedimientos se evalúan promediando sobre posibles realizaciones de los datos. Esto implica que la estimación por verosimilitud se interpreta considerando la consistencia de las estimaciones de máxima verosimilitud (MLEs) o la interpretación de intervalos de confianza.</p>
+<p>La inferencia bayesiana es cada vez más familiar para los ecólogos. La diferencia principal entre la inferencia bayesiana y la clásica radica en cómo se utilizan las variables aleatorias para formular modelos. En particular, la inferencia clásica considera los parámetros como cantidades fijas pero desconocidas, mientras que la inferencia bayesiana considera los parámetros como variables aleatorias con una distribución previa, lo que permite basar la inferencia en la distribución posterior, es decir, en la distribución de probabilidad del parámetro desconocido dado los datos.</p>
+<section id="modelos-estadísticos" class="level2">
+<h2 class="anchored" data-anchor-id="modelos-estadísticos">MODELOS ESTADÍSTICOS</h2>
+<p>En la mayoría de los modelos estadísticos, una respuesta medida se trata como una variable aleatoria dotada de una función de densidad de probabilidad (pdf, por sus siglas en inglés) que se asume conocida. Por lo tanto, un modelo estadístico para los datos observados se representa mediante una pdf. La pdf incorpora tanto la aleatoriedad (la parte impredecible) en la respuesta como la tendencia de algunos valores a ocurrir con mayor frecuencia que otros, es decir, la parte de la respuesta que es predecible, al menos en un sentido promedio. Casi siempre, tenemos algunas otras variables que asumimos causan parte de la variabilidad en la respuesta, o al menos están asociadas con la respuesta de una manera estocásticamente predecible. En el modelo estadístico, los parámetros básicos de la pdf se reemplazan por alguna función lineal o no lineal de estas covariables.</p>
+</section>
+<section id="inferencia-estadística" class="level2">
+<h2 class="anchored" data-anchor-id="inferencia-estadística">INFERENCIA ESTADÍSTICA</h2>
+<p>Un uso importante de la probabilidad, es proporcionar una descripción de los sistemas naturales utilizando variables aleatorias y distribuciones de probabilidad. Más específicamente, en este curso nos centramos en usar variables aleatorias para describir los resultados de procesos ecológicos (observados y no observados) y distribuciones de probabilidad como modelos de la variabilidad en estos posibles resultados. Por lo tanto, la probabilidad forma nuestra base conceptual para el modelado en ecología.</p>
+<p>Por otro lado, el campo de la estadística se ocupa del problema fundamental de aprender sobre los parámetros de las distribuciones de probabilidad a partir de los resultados observados (es decir, “datos”) de alguna variable. Los dos paradigmas dominantes de la inferencia estadística, el Bayesiano y el clásico, comparten un vínculo conceptual común al ser enfoques distintos de la inferencia paramétrica. Esto significa que ambos requieren que hagamos suposiciones explícitas sobre el modelo de probabilidad de las variables aleatorias que describen nuestro sistema. Cualquiera de los paradigmas procede entonces a realizar alguna tarea de inferencia (estimación, predicción, selección de modelos, pruebas) que asume que dichas suposiciones paramétricas son ciertas.</p>
+</section>
+<section id="hierarchical-models-hms" class="level2">
+<h2 class="anchored" data-anchor-id="hierarchical-models-hms">HIERARCHICAL MODELS (HMs)</h2>
+<p>Como una definición muy general, podemos decir que un modelo jerárquico (HM), es una secuencia de modelos relacionados ordenados según su estructura de probabilidad condicional. En términos prácticos, esto significa que los HMs tienen uno o más niveles “intermedios” que involucran una variable latente (o efecto aleatorio). Según esta definición, los modelos clásicos de efectos aleatorios son claramente HMs. Por ejemplo, imaginemos una encuesta en un conjunto de unidades espaciales <em>i</em>=1,2,…,<em>M</em>, en las cuales tomamos <em>j</em>=1,2,…<em>J</em> observaciones replicadas <em>yij</em> de alguna medición ecológica. Naturalmente, podríamos suponer que las mediciones replicadas en la misma unidad son más similares entre sí que aquellas tomadas entre diferentes unidades, y esta es la motivación estándar para incluir un efecto de grupo aleatorio α. Por lo tanto, podríamos especificar el modelo para las observaciones de la siguiente manera:</p>
+<p><span class="math display">\[y_{ij}\mid \alpha_i \sim \text{Normal}(\mu + \alpha_i, \sigma^2)\]</span></p>
+<p>donde el efecto aleatorio también tiene una distribución como:</p>
+<p><span class="math display">\[\alpha_i\sim \text{Normal}(0, \sigma^2_\alpha)\]</span></p>
+<p>Es importante notar que enfatizamos la dependencia condicional de <em>yij</em> en <em>αi</em> al expresar el modelo para <em>yij</em>. En una notación abreviada, usamos corchetes como <em>[y∣α*]</em> para representar el modelo de observación, donde la barra vertical indica la dependencia condicional explícita de una variable (<em>y</em> en este caso) en otra (<em>α</em> en este caso), <em>y [α]</em> representa el modelo para el efecto aleatorio. El HM es, por lo tanto, el par de submodelos <em>[y∣α]</em> y <em>[α]</em>.</p>
+<p>Es importante señalar que no siempre hay una “jerarquía” lógica de arriba hacia abajo involucrada en un modelo jerárquico, como cuando modelamos individuos anidados dentro de poblaciones, etc. En este sentido, un término igualmente válido (o quizás incluso más adecuado) podría ser “modelo secuencial” (SM) en lugar de modelo jerárquico. Sin embargo, dado que el término “modelo jerárquico” es tan común, no lo cambiaríamos.</p>
+</section>
+<section id="modelos-jerárquicos-canónicos-en-ecología" class="level2">
+<h2 class="anchored" data-anchor-id="modelos-jerárquicos-canónicos-en-ecología">Modelos Jerárquicos Canónicos en Ecología:</h2>
+<ol type="1">
+<li><p>El modelo de ocupación para distribuciones de especies</p></li>
+<li><p>El modelo N-Mixture para abundancia</p></li>
+</ol>
+</section>
 </div>
 </div>
 </div>
