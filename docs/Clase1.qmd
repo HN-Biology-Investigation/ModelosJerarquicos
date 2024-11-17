@@ -1,4 +1,3 @@
-
 ---
 title: "Clase 1: Distribución, abundancia, riqueza de especies y modelos jerárquicos en ecología"
 format:
