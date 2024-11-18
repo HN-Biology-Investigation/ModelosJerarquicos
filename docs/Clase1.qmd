@@ -47,7 +47,7 @@ Alternativamente, podemos decir que la ocurrencia es un resumen simplificado y c
 
 ## DISEÑOS DE META-POBLACIONES
 
-Curiosamente, sin conocer la relación entre los procesos puntuales y sus abundancias y ocurrencias interrelacionadas, a las personas siempre les ha gustado discretizar su área de estudio completa en subunidades más pequeñas, o, dicho de otra manera, replicar sus áreas de estudio en el espacio. Esto da lugar a lo que llamamos un "diseño de meta-población" (Royle, 2004a; Kéry y Royle, 2010). "Somos un tanto cautelosos con este término porque no queremos implicar que los animales que viven en tales unidades espaciales discretas necesariamente se comportan según una metapoblación formal (Hanski, 1998; Sutherland et al., 2012, 2014). Más bien, no pudimos encontrar un término mejor y más conciso para el caso extremadamente común en el que se estudia la distribución o abundancia en una colección de sitios espacialmente replicados o donde toda un área de estudio se subdivide en subunidades más pequeñas, a las que típicamente llamamos sitios" (kery and Royle, 2016). Para Kery and Royle, esto es un "diseño de meta-población".
+Curiosamente, sin conocer la relación entre los procesos puntuales y sus abundancias y ocurrencias interrelacionadas, a las personas siempre les ha gustado discretizar su área de estudio completa en subunidades más pequeñas, o, dicho de otra manera, replicar sus áreas de estudio en el espacio. Esto da lugar a lo que llamamos un "diseño de meta-población" (Royle, 2004a; Kéry y Royle, 2010). *"Somos un tanto cautelosos con este término porque no queremos implicar que los animales que viven en tales unidades espaciales discretas necesariamente se comportan según una metapoblación formal (Hanski, 1998; Sutherland et al., 2012, 2014). Más bien, no pudimos encontrar un término mejor y más conciso para el caso extremadamente común en el que se estudia la distribución o abundancia en una colección de sitios espacialmente replicados o donde toda un área de estudio se subdivide en subunidades más pequeñas, a las que típicamente llamamos sitios"* (kery and Royle, 2016).
 
 Tales diseños de meta-población, o diseños con poblaciones espacialmente subdivididas, son extremadamente comunes en ecología y todas las ciencias relacionadas. Además, se adoptan prácticamente en todas partes en el monitoreo biológico, donde está claro que no se puede caracterizar el estado del medio ambiente solo con mediciones tomadas en un único sitio. Los diseños de meta-población vienen en una gran variedad, y el número, tamaño y forma de las celdas (subunidades) pueden variar, uno de ellos es el submuestreo espacial es sorprendentemente común en los diseños de meta-población, en los cuales cada sitio (unidad) se subdivide aún más en subunidades espaciales más pequeñas, que nuevamente pueden cubrir todo el sitio o solo una parte del área total de un sitio.
 
@@ -73,7 +73,7 @@ Modelo de error de medición falso negativo para conteos
 
 :::
 
-Aquí, p es la probabilidad de detección o encuentro de un individuo y representa el complemento de la tasa de error falso negativo, es decir, la tasa de error asociada es 1-p. De manera similar, para el estado de presencia/ausencia de una especie en un sitio, z, donde z = 1 denota presencia y z = 0 denota ausencia, podemos especificar el siguiente modelo de error de medición para la medición de presencia/ausencia o para el dato de detección/no detección en un sitio ocupado:
+Aquí, p es la probabilidad de detección o encuentro de un individuo y representa el complemento de la tasa de error falso negativo, es decir, la tasa de error asociada es *1-p*. De manera similar, para el estado de presencia/ausencia de una especie en un sitio, *z*, donde *z* = 1 denota presencia y *z* = 0 denota ausencia, podemos especificar el siguiente modelo de error de medición para la medición de presencia/ausencia o para el dato de detección/no detección en un sitio ocupado:
 
 $$ y \sim \text{Bernoulli}(p) $$ 
 
@@ -83,7 +83,7 @@ Modelo de error de medición falso negativo para observaciones de detección/no 
 
 :::
 
-En cualquiera de los casos, y a diferencia del modelo normal para errores de medición con variables continuas, el promedio de mediciones repetidas no será imparcial con respecto a las cantidades objetivo (N de abundancia o presencia/ausencia). Más bien, el promedio será igual a *Np* para los conteos y igual a *p* para las mediciones de presencia/ausencia (observaciones de detección/no detección) en un sitio ocupado. En contraste, el máximo entre una serie de mediciones se acercará cada vez más a los valores verdaderos *N* o *z* a medida que se aumente el número de mediciones repetidas, y qué tan rápido se acerca el máximo a *N* depende nuevamente de la probabilidad de detección *p*.
+En cualquiera de los casos, y a diferencia del modelo normal para errores de medición con variables continuas, el promedio de mediciones repetidas no será imparcial con respecto a las cantidades objetivo (*N* de abundancia o presencia/ausencia). Más bien, el promedio será igual a *Np* para los conteos y igual a *p* para las mediciones de presencia/ausencia (observaciones de detección/no detección) en un sitio ocupado. En contraste, el máximo entre una serie de mediciones se acercará cada vez más a los valores verdaderos *N* o *z* a medida que se aumente el número de mediciones repetidas, y qué tan rápido se acerca el máximo a *N* depende nuevamente de la probabilidad de detección *p*.
 
 
 ## ERROR FALSO-NEGATIVO y FALSO-POSITIVO
@@ -171,6 +171,159 @@ Es importante señalar que no siempre hay una "jerarquía" lógica de arriba hac
 1) El modelo de ocupación para distribuciones de especies
 
 2) El modelo N-Mixture para abundancia
+
+# Actividades
+
+- 1) Instalar el paquete `unmarked`, `jagsUI`, `MuMIn`, `AICcmodavg`
+
+- 2) Ejecutar los siguientes comandos 
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+library(unmarked)
+
+set.seed(35)
+nSites <- 100
+nVisits <- 3
+x <- rnorm(nSites)               # a covariate
+beta0 <- 0
+beta1 <- 1
+lambda <- exp(beta0 + beta1*x)   # expected counts at each site
+N <- rpois(nSites, lambda)       # latent abundance
+y <- matrix(NA, nSites, nVisits)
+p <- c(0.3, 0.6, 0.8)            # detection prob for each visit
+for(j in 1:nVisits) {
+  y[,j] <- rbinom(nSites, N, p[j])
+  }
+
+# Organize data
+visitMat <- matrix(as.character(1:nVisits), nSites, nVisits, byrow=TRUE)
+
+umf <- unmarkedFramePCount(y=y, siteCovs=data.frame(x=x),
+    obsCovs=list(visit=visitMat))
+summary(umf)
+
+# Fit a model
+fm1 <- pcount(~visit-1 ~ x, umf, K=50)
+fm1
+```
+
+
+```{r}
+plogis(coef(fm1, type="det")) # Should be close to p
+
+```
+
+
+- 3) Ejecutar el siguiente comando
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+library(jagsUI)
+
+#Load data (built into R)
+  
+data(longley)
+head(longley)
+  
+#Separate data objects
+  
+gnp <- longley$GNP
+employed <- longley$Employed
+n <- length(employed)
+
+#Input data objects must be numeric, and must be
+#scalars, vectors, matrices, or arrays.
+  
+#Package together
+data <- list(gnp=gnp,employed=employed,n=n)
+    
+######################################
+##      2. Write model file         ##
+######################################
+
+#Write a model in the BUGS language
+
+#Generate model file directly in R
+#(could also read in existing model file)
+
+#Identify filepath of model file
+modfile <- tempfile()
+
+#Write model to file
+writeLines("
+model{
+
+  #Likelihood
+  for (i in 1:n){ 
+
+    employed[i] ~ dnorm(mu[i], tau)     
+    mu[i] <- alpha + beta*gnp[i]
+
+  }
+    
+  #Priors
+  alpha ~ dnorm(0, 0.00001)
+  beta ~ dnorm(0, 0.00001)
+  sigma ~ dunif(0,1000)
+  tau <- pow(sigma,-2)
+
+}
+", con=modfile)
+  
+######################################
+##    3. Initialize Parameters      ##
+######################################
+  
+#Best to generate initial values using function
+
+inits <- function(){  
+  list(alpha=rnorm(1,0,1),beta=rnorm(1,0,1),sigma=runif(1,0,3))  
+}
+  
+#In many cases, JAGS can pick initial values automatically;
+#you can leave argument inits=NULL to allow this.
+
+######################################
+##  4. Set parameters to monitor    ##
+######################################
+
+#Choose parameters you want to save output for
+#Only parameters in this list will appear in output object
+#(deviance is added automatically if DIC=TRUE)
+
+#List must be specified as a character vector
+
+params <- c('alpha','beta','sigma')
+
+######################################
+##        5. Run Analysis           ##
+######################################
+
+#Call jags function; specify number of chains, number of adaptive iterations,
+#the length of the burn-in period, total iterations, and the thin rate.
+
+out <- jags(data = data,
+            inits = inits,
+            parameters.to.save = params,
+            model.file = modfile,
+            n.chains = 3,
+            n.adapt = 100,
+            n.iter = 1000,
+            n.burnin = 500,
+            n.thin = 2)
+
+#Arguments will be passed to JAGS; you will see progress bars
+#and other information
+
+#Examine output summary
+```
+
+
+```{r}
+out
+```
+
+
+
 
 :::
 

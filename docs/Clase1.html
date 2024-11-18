@@ -128,7 +128,7 @@ window.Quarto = {
 
 <p>En esta primera clase, discutiremos los patrones puntuales, los estimadores de abundancia y ocupación en los diseños para estudiar metapoblaciones, sus parámetros y errores en los modelos aplicados a la ecología. Finalmente, profundizaremos en los modelos jerárquicos para estimar la distribución, abundancia y riqueza de especies.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Distribución, abundancia y riqueza de especies en ecología</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">¿QUÉ SON LOS MODELOS JERÁRQUICOS Y CÓMO LOS ANALIZAMOS?</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Distribución, abundancia y riqueza de especies en ecología</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">¿QUÉ SON LOS MODELOS JERÁRQUICOS Y CÓMO LOS ANALIZAMOS?</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Actividades</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <p>Referencia:</p>
@@ -172,70 +172,73 @@ $mid.pt
  [1] 0.5 1.5 2.5 3.5 4.5 5.5 6.5 7.5 8.5 9.5
 
 $M
-[1] 92
+[1] 98
 
 $u1
- [1] 9.0936842 4.1069509 1.6681794 7.2262653 5.2705694 3.6181570 5.0028520
- [8] 7.9331745 3.9630977 5.5807939 8.4422599 1.1385293 1.3573126 2.3948624
-[15] 4.1776628 0.9484556 0.2828182 3.9538805 0.4598094 1.9633006 9.8752533
-[22] 1.9489060 4.5872456 1.8022555 8.7998425 6.9999625 9.9618603 8.9235576
-[29] 6.2759688 1.0893064 5.9986510 0.6676330 6.9441132 3.0783961 9.8356260
-[36] 5.5552910 9.5506842 2.2169082 9.8469810 5.2119846 6.0798964 5.2829721
-[43] 5.8119718 6.5696111 5.7180277 9.9112929 7.4154689 0.1406887 1.9245961
-[50] 9.2447815 6.1995863 1.5435748 8.2694020 2.7266799 6.4589751 4.2222760
-[57] 8.5178937 9.7384019 3.4304381 6.8980530 4.0475131 6.9439730 9.6631836
-[64] 4.2764464 4.7536558 7.0236289 9.4993261 8.7230437 4.9279080 4.5571814
-[71] 5.3836709 7.6880270 1.5390426 9.1416371 4.8759737 0.2060825 7.7586476
-[78] 8.7960708 2.8959528 2.8189849 6.2289609 4.0595907 4.0523405 6.6593428
-[85] 7.9696678 7.0854745 0.9896763 4.1080867 9.3456773 6.3082120 5.9370656
-[92] 9.5122129
+ [1] 9.6747481 0.5600180 8.6421493 2.6040846 6.2159176 7.5469158 5.4175551
+ [8] 5.3262167 6.8489597 3.6992375 3.1150337 1.6943543 8.4120278 0.8351315
+[15] 5.4851800 1.6801517 4.5054292 0.3567548 2.6543775 3.4023373 9.2553302
+[22] 4.2592710 5.6600599 7.9888794 8.3392539 4.3258706 6.0557237 4.2598526
+[29] 3.6320446 8.2456905 2.2782948 4.1479985 3.3568512 6.2719069 9.6522068
+[36] 0.2633407 9.6574681 6.1203302 3.3445880 0.8945236 4.0250224 2.8599465
+[43] 8.7808829 9.9133834 5.8799242 2.4585867 0.8696410 4.6027617 6.3774822
+[50] 3.0631329 7.1605878 3.4948714 0.7499810 1.9123972 9.2006248 8.3038745
+[57] 6.4734064 3.7500651 9.4558940 3.7648969 2.2738776 4.9182861 5.9719964
+[64] 2.5242295 0.6513484 2.6543188 8.1857640 4.3672033 2.3234256 3.0794531
+[71] 4.0571587 9.8784046 8.6410596 2.9529055 8.3105000 8.8657193 3.3334765
+[78] 6.0815276 9.2782648 1.2830231 0.4891028 5.4461121 6.4545011 6.7429593
+[85] 9.3600138 5.1073215 5.2616215 7.7637151 3.3072955 3.5837728 0.3254906
+[92] 8.8883921 0.2381907 1.3663289 0.1780140 9.1483421 0.4284172 7.2503288
 
 $u2
- [1] 8.0183208 8.6201690 0.8094130 0.1705927 5.9132986 4.4672862 5.3502781
- [8] 9.2873972 9.0144706 3.4842537 1.8701639 9.1022799 1.4014345 1.2120343
-[15] 9.1723516 2.1733189 8.4104277 6.7488610 6.8868971 2.3479568 0.2768566
-[22] 0.7440625 2.5500301 6.9493096 7.2395867 4.4041696 4.7414309 5.3146201
-[29] 7.0718109 4.1895061 7.8488036 3.5988072 2.0801829 3.1326689 7.2374117
-[36] 0.8775511 5.7208119 5.2857125 9.3650276 7.9347941 7.2932375 9.2723419
-[43] 7.0443451 7.5821874 9.7759972 6.1459102 6.9850504 1.6584038 7.8202492
-[50] 8.8286357 1.8996481 2.5482521 6.1003958 0.9383547 1.7374613 6.0754326
-[57] 9.9199426 4.3000490 2.1556131 9.6590744 7.5943196 6.4986528 9.0525368
-[64] 7.0078325 6.4854322 4.0375428 4.8206990 6.5452660 6.9773950 6.4535070
-[71] 4.5898676 1.8987526 9.2446670 4.7500445 5.6785961 6.3695535 4.0931074
-[78] 4.4339275 1.1984138 2.7005013 6.8779386 2.2211643 2.0096173 3.3211319
-[85] 1.8622477 4.5690101 9.8998173 8.0132896 6.6883432 4.0934328 2.3281703
-[92] 5.3034328
+ [1] 2.96747999 0.05300952 1.68054615 9.15081356 6.89113559 5.03107382
+ [7] 5.84739345 3.05629783 3.81123410 2.07844040 2.86179697 8.41831009
+[13] 2.25533582 1.53599347 1.93611739 7.28501726 3.75492440 9.57928847
+[19] 5.64364931 8.06710410 1.49476416 5.53527423 2.09868488 8.01182694
+[25] 0.71444213 9.36719288 6.82725866 2.50377980 4.74446169 6.83726124
+[31] 5.82293625 7.00404827 6.17012469 0.28979221 0.67225365 1.69957006
+[37] 9.35645873 2.61105851 8.21535190 1.92327274 0.84011007 4.04194865
+[43] 0.06079161 5.93121184 6.60422862 0.15864373 5.75213541 6.40889766
+[49] 9.78348062 0.54647891 7.44817405 7.30492677 8.79212508 9.02698260
+[55] 8.23629032 9.51377691 6.65302896 8.20506731 4.59053164 4.12623290
+[61] 1.60891189 3.53848659 4.08845603 1.11511889 7.11639702 4.96105915
+[67] 0.45907384 4.24438820 9.50042360 8.31159038 2.46295351 1.79985506
+[73] 6.32087535 8.82676217 6.83265032 8.85931579 0.07392735 2.28309054
+[79] 8.74348987 0.77748643 2.65761370 9.07936483 0.30318571 3.86161259
+[85] 1.86465140 5.60705211 1.14860896 2.44202457 3.57426132 0.36107336
+[91] 8.39223494 7.61211277 0.27507456 0.19468631 2.90176083 8.45568254
+[97] 3.58341193 6.42481176
 
 $N
         
          (0,1] (1,2] (2,3] (3,4] (4,5] (5,6] (6,7] (7,8] (8,9] (9,10]
-  (0,1]      0     1     1     1     0     0     2     0     1      1
-  (1,2]      2     1     2     0     1     0     1     1     0      2
-  (2,3]      1     2     1     0     0     1     0     0     0      0
-  (3,4]      0     0     1     1     1     0     1     0     0      1
-  (4,5]      0     0     3     0     0     1     4     2     2      1
-  (5,6]      1     0     1     1     1     2     0     3     0      2
-  (6,7]      0     2     1     1     2     0     2     3     0      1
-  (7,8]      1     2     0     0     3     0     1     0     0      1
-  (8,9]      0     1     0     0     1     1     2     1     0      1
-  (9,10]     1     0     0     0     4     2     2     1     2      2
+  (0,1]      2     3     2     1     0     1     0     1     2      1
+  (1,2]      2     0     0     0     0     0     0     1     1      1
+  (2,3]      1     2     0     0     2     2     0     0     1      2
+  (3,4]      3     0     2     1     2     0     1     1     4      0
+  (4,5]      1     0     2     2     1     1     1     1     0      1
+  (5,6]      0     2     1     1     1     2     1     0     0      1
+  (6,7]      2     0     2     2     0     0     3     0     0      1
+  (7,8]      0     0     1     0     0     1     1     1     1      0
+  (8,9]      3     1     1     0     0     0     3     1     1      1
+  (9,10]     1     3     1     0     1     1     0     0     3      1
 
 $z
         
          (0,1] (1,2] (2,3] (3,4] (4,5] (5,6] (6,7] (7,8] (8,9] (9,10]
-  (0,1]      0     1     1     1     0     0     1     0     1      1
-  (1,2]      1     1     1     0     1     0     1     1     0      1
-  (2,3]      1     1     1     0     0     1     0     0     0      0
-  (3,4]      0     0     1     1     1     0     1     0     0      1
-  (4,5]      0     0     1     0     0     1     1     1     1      1
-  (5,6]      1     0     1     1     1     1     0     1     0      1
-  (6,7]      0     1     1     1     1     0     1     1     0      1
-  (7,8]      1     1     0     0     1     0     1     0     0      1
-  (8,9]      0     1     0     0     1     1     1     1     0      1
-  (9,10]     1     0     0     0     1     1     1     1     1      1
+  (0,1]      1     1     1     1     0     1     0     1     1      1
+  (1,2]      1     0     0     0     0     0     0     1     1      1
+  (2,3]      1     1     0     0     1     1     0     0     1      1
+  (3,4]      1     0     1     1     1     0     1     1     1      0
+  (4,5]      1     0     1     1     1     1     1     1     0      1
+  (5,6]      0     1     1     1     1     1     1     0     0      1
+  (6,7]      1     0     1     1     0     0     1     0     0      1
+  (7,8]      0     0     1     0     0     1     1     1     1      0
+  (8,9]      1     1     1     0     0     0     1     1     1      1
+  (9,10]     1     1     1     0     1     1     0     0     1      1
 
 $psi
-[1] 0.6</code></pre>
+[1] 0.64</code></pre>
 </div>
 </div>
 <p>La función simula ubicaciones de animales o plantas en una cuadrícula de celdas que forma un cuadrante con un tamaño total (unidades totales) igual a <code>quad.size</code>, según un proceso de Poisson en el que los individuos se distribuyen al azar en el espacio. Este proceso se caracteriza por una intensidad, o número esperado de plantas o animales (“puntos”) por unidad de área. El patrón de puntos resultante se discretiza superponiendo una cuadrícula con celdas cuadradas de longitud <code>cell.size</code>. Esta discretización del espacio es lo que permite definir la abundancia en primer lugar y, luego, la presencia/ausencia o ocurrencia. La riqueza de especies, la tercera cantidad crucial mencionada en el título, es la suma de especies que ocurren en un sitio, lo que representa un resumen de los patrones de puntos, no para una sola especie, sino para un conjunto de especies presentes en un sitio.</p>
@@ -256,7 +259,7 @@ $psi
 </section>
 <section id="diseños-de-meta-poblaciones" class="level2">
 <h2 class="anchored" data-anchor-id="diseños-de-meta-poblaciones">DISEÑOS DE META-POBLACIONES</h2>
-<p>Curiosamente, sin conocer la relación entre los procesos puntuales y sus abundancias y ocurrencias interrelacionadas, a las personas siempre les ha gustado discretizar su área de estudio completa en subunidades más pequeñas, o, dicho de otra manera, replicar sus áreas de estudio en el espacio. Esto da lugar a lo que llamamos un “diseño de meta-población” (Royle, 2004a; Kéry y Royle, 2010). “Somos un tanto cautelosos con este término porque no queremos implicar que los animales que viven en tales unidades espaciales discretas necesariamente se comportan según una metapoblación formal (Hanski, 1998; Sutherland et al., 2012, 2014). Más bien, no pudimos encontrar un término mejor y más conciso para el caso extremadamente común en el que se estudia la distribución o abundancia en una colección de sitios espacialmente replicados o donde toda un área de estudio se subdivide en subunidades más pequeñas, a las que típicamente llamamos sitios” (kery and Royle, 2016). Para Kery and Royle, esto es un “diseño de meta-población”.</p>
+<p>Curiosamente, sin conocer la relación entre los procesos puntuales y sus abundancias y ocurrencias interrelacionadas, a las personas siempre les ha gustado discretizar su área de estudio completa en subunidades más pequeñas, o, dicho de otra manera, replicar sus áreas de estudio en el espacio. Esto da lugar a lo que llamamos un “diseño de meta-población” (Royle, 2004a; Kéry y Royle, 2010). <em>“Somos un tanto cautelosos con este término porque no queremos implicar que los animales que viven en tales unidades espaciales discretas necesariamente se comportan según una metapoblación formal (Hanski, 1998; Sutherland et al., 2012, 2014). Más bien, no pudimos encontrar un término mejor y más conciso para el caso extremadamente común en el que se estudia la distribución o abundancia en una colección de sitios espacialmente replicados o donde toda un área de estudio se subdivide en subunidades más pequeñas, a las que típicamente llamamos sitios”</em> (kery and Royle, 2016).</p>
 <p>Tales diseños de meta-población, o diseños con poblaciones espacialmente subdivididas, son extremadamente comunes en ecología y todas las ciencias relacionadas. Además, se adoptan prácticamente en todas partes en el monitoreo biológico, donde está claro que no se puede caracterizar el estado del medio ambiente solo con mediciones tomadas en un único sitio. Los diseños de meta-población vienen en una gran variedad, y el número, tamaño y forma de las celdas (subunidades) pueden variar, uno de ellos es el submuestreo espacial es sorprendentemente común en los diseños de meta-población, en los cuales cada sitio (unidad) se subdivide aún más en subunidades espaciales más pequeñas, que nuevamente pueden cubrir todo el sitio o solo una parte del área total de un sitio.</p>
 </section>
 <section id="parámetros-de-estado-y-de-tasa" class="level2">
@@ -283,7 +286,7 @@ Note
 <p>Modelo de error de medición falso negativo para conteos</p>
 </div>
 </div>
-<p>Aquí, p es la probabilidad de detección o encuentro de un individuo y representa el complemento de la tasa de error falso negativo, es decir, la tasa de error asociada es 1-p.&nbsp;De manera similar, para el estado de presencia/ausencia de una especie en un sitio, z, donde z = 1 denota presencia y z = 0 denota ausencia, podemos especificar el siguiente modelo de error de medición para la medición de presencia/ausencia o para el dato de detección/no detección en un sitio ocupado:</p>
+<p>Aquí, p es la probabilidad de detección o encuentro de un individuo y representa el complemento de la tasa de error falso negativo, es decir, la tasa de error asociada es <em>1-p</em>. De manera similar, para el estado de presencia/ausencia de una especie en un sitio, <em>z</em>, donde <em>z</em> = 1 denota presencia y <em>z</em> = 0 denota ausencia, podemos especificar el siguiente modelo de error de medición para la medición de presencia/ausencia o para el dato de detección/no detección en un sitio ocupado:</p>
 <p><span class="math display">\[ y \sim \text{Bernoulli}(p) \]</span></p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -298,7 +301,7 @@ Note
 <p>Modelo de error de medición falso negativo para observaciones de detección/no detección.</p>
 </div>
 </div>
-<p>En cualquiera de los casos, y a diferencia del modelo normal para errores de medición con variables continuas, el promedio de mediciones repetidas no será imparcial con respecto a las cantidades objetivo (N de abundancia o presencia/ausencia). Más bien, el promedio será igual a <em>Np</em> para los conteos y igual a <em>p</em> para las mediciones de presencia/ausencia (observaciones de detección/no detección) en un sitio ocupado. En contraste, el máximo entre una serie de mediciones se acercará cada vez más a los valores verdaderos <em>N</em> o <em>z</em> a medida que se aumente el número de mediciones repetidas, y qué tan rápido se acerca el máximo a <em>N</em> depende nuevamente de la probabilidad de detección <em>p</em>.</p>
+<p>En cualquiera de los casos, y a diferencia del modelo normal para errores de medición con variables continuas, el promedio de mediciones repetidas no será imparcial con respecto a las cantidades objetivo (<em>N</em> de abundancia o presencia/ausencia). Más bien, el promedio será igual a <em>Np</em> para los conteos y igual a <em>p</em> para las mediciones de presencia/ausencia (observaciones de detección/no detección) en un sitio ocupado. En contraste, el máximo entre una serie de mediciones se acercará cada vez más a los valores verdaderos <em>N</em> o <em>z</em> a medida que se aumente el número de mediciones repetidas, y qué tan rápido se acerca el máximo a <em>N</em> depende nuevamente de la probabilidad de detección <em>p</em>.</p>
 </section>
 <section id="error-falso-negativo-y-falso-positivo" class="level2">
 <h2 class="anchored" data-anchor-id="error-falso-negativo-y-falso-positivo">ERROR FALSO-NEGATIVO y FALSO-POSITIVO</h2>
@@ -364,6 +367,185 @@ Note
 <li><p>El modelo N-Mixture para abundancia</p></li>
 </ol>
 </section>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<ul>
+<li><ol type="1">
+<li>Instalar el paquete <code>unmarked</code>, <code>jagsUI</code>, <code>MuMIn</code>, <code>AICcmodavg</code></li>
+</ol></li>
+<li><ol start="2" type="1">
+<li>Ejecutar los siguientes comandos</li>
+</ol></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(unmarked)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">35</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>nSites <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>nVisits <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(nSites)               <span class="co"># a covariate</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta0 <span class="sc">+</span> beta1<span class="sc">*</span>x)   <span class="co"># expected counts at each site</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">rpois</span>(nSites, lambda)       <span class="co"># latent abundance</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, nSites, nVisits)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>)            <span class="co"># detection prob for each visit</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nVisits) {</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  y[,j] <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(nSites, N, p[j])</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Organize data</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>visitMat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span>nVisits), nSites, nVisits, <span class="at">byrow=</span><span class="cn">TRUE</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>umf <span class="ot">&lt;-</span> <span class="fu">unmarkedFramePCount</span>(<span class="at">y=</span>y, <span class="at">siteCovs=</span><span class="fu">data.frame</span>(<span class="at">x=</span>x),</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">obsCovs=</span><span class="fu">list</span>(<span class="at">visit=</span>visitMat))</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(umf)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a model</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>fm1 <span class="ot">&lt;-</span> <span class="fu">pcount</span>(<span class="sc">~</span>visit<span class="dv">-1</span> <span class="sc">~</span> x, umf, <span class="at">K=</span><span class="dv">50</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>fm1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plogis</span>(<span class="fu">coef</span>(fm1, <span class="at">type=</span><span class="st">"det"</span>)) <span class="co"># Should be close to p</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>p(visit1) p(visit2) p(visit3) 
+0.3504258 0.5840434 0.7787245 </code></pre>
+</div>
+</div>
+<ul>
+<li><ol start="3" type="1">
+<li>Ejecutar el siguiente comando</li>
+</ol></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jagsUI)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Load data (built into R)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(longley)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(longley)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Separate data objects</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>gnp <span class="ot">&lt;-</span> longley<span class="sc">$</span>GNP</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>employed <span class="ot">&lt;-</span> longley<span class="sc">$</span>Employed</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(employed)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#Input data objects must be numeric, and must be</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#scalars, vectors, matrices, or arrays.</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#Package together</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">gnp=</span>gnp,<span class="at">employed=</span>employed,<span class="at">n=</span>n)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="do">######################################</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="do">##      2. Write model file         ##</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="do">######################################</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">#Write a model in the BUGS language</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">#Generate model file directly in R</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">#(could also read in existing model file)</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co">#Identify filepath of model file</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>modfile <span class="ot">&lt;-</span> <span class="fu">tempfile</span>()</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co">#Write model to file</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(<span class="st">"</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="st">model{</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="st">  #Likelihood</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="st">  for (i in 1:n){ </span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="st">    employed[i] ~ dnorm(mu[i], tau)     </span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="st">    mu[i] &lt;- alpha + beta*gnp[i]</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="st">  #Priors</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="st">  alpha ~ dnorm(0, 0.00001)</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="st">  beta ~ dnorm(0, 0.00001)</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="st">  sigma ~ dunif(0,1000)</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="st">  tau &lt;- pow(sigma,-2)</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>, <span class="at">con=</span>modfile)</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="do">######################################</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="do">##    3. Initialize Parameters      ##</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="do">######################################</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="co">#Best to generate initial values using function</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="cf">function</span>(){  </span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">alpha=</span><span class="fu">rnorm</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>),<span class="at">beta=</span><span class="fu">rnorm</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>),<span class="at">sigma=</span><span class="fu">runif</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">3</span>))  </span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="co">#In many cases, JAGS can pick initial values automatically;</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a><span class="co">#you can leave argument inits=NULL to allow this.</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a><span class="do">######################################</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a><span class="do">##  4. Set parameters to monitor    ##</span></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="do">######################################</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="co">#Choose parameters you want to save output for</span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a><span class="co">#Only parameters in this list will appear in output object</span></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="co">#(deviance is added automatically if DIC=TRUE)</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="co">#List must be specified as a character vector</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'alpha'</span>,<span class="st">'beta'</span>,<span class="st">'sigma'</span>)</span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a><span class="do">######################################</span></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a><span class="do">##        5. Run Analysis           ##</span></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a><span class="do">######################################</span></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a><span class="co">#Call jags function; specify number of chains, number of adaptive iterations,</span></span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a><span class="co">#the length of the burn-in period, total iterations, and the thin rate.</span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">jags</span>(<span class="at">data =</span> data,</span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>            <span class="at">inits =</span> inits,</span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>            <span class="at">parameters.to.save =</span> params,</span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>            <span class="at">model.file =</span> modfile,</span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>            <span class="at">n.chains =</span> <span class="dv">3</span>,</span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>            <span class="at">n.adapt =</span> <span class="dv">100</span>,</span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>            <span class="at">n.iter =</span> <span class="dv">1000</span>,</span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a>            <span class="at">n.burnin =</span> <span class="dv">500</span>,</span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>            <span class="at">n.thin =</span> <span class="dv">2</span>)</span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a><span class="co">#Arguments will be passed to JAGS; you will see progress bars</span></span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a><span class="co">#and other information</span></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a><span class="co">#Examine output summary</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>JAGS output for model 'C:\Users\DAVIDM~1\AppData\Local\Temp\RtmpAXtp26\file66ec1d6a7b60', generated by jagsUI.
+Estimates based on 3 chains of 1000 iterations,
+adaptation = 100 iterations (sufficient),
+burn-in = 500 iterations and thin rate = 2,
+yielding 750 total samples from the joint posterior. 
+MCMC ran for 0.001 minutes at time 2024-11-18 09:42:43.070257.
+
+           mean    sd   2.5%    50%  97.5% overlap0 f  Rhat n.eff
+alpha    51.819 0.791 50.267 51.804 53.368    FALSE 1 1.003   405
+beta      0.035 0.002  0.031  0.035  0.039    FALSE 1 1.005   319
+sigma     0.713 0.148  0.493  0.682  1.057    FALSE 1 1.010   242
+deviance 33.328 2.773 30.048 32.702 40.373    FALSE 1 1.006   379
+
+Successful convergence based on Rhat values (all &lt; 1.1). 
+Rhat is the potential scale reduction factor (at convergence, Rhat=1). 
+For each parameter, n.eff is a crude measure of effective sample size. 
+
+overlap0 checks if 0 falls in the parameter's 95% credible interval.
+f is the proportion of the posterior with the same sign as the mean;
+i.e., our confidence that the parameter is positive or negative.
+
+DIC info: (pD = var(deviance)/2) 
+pD = 3.8 and DIC = 37.161 
+DIC is an estimate of expected predictive error (lower is better).</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
