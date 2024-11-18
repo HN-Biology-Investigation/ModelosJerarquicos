@@ -8,7 +8,7 @@
 
 <meta name="author" content="David Murillo">
 
-<title>Clase 2: Modelar Abundancia N-Mixture</title>
+<title>Clase 2: Modelos N-Mixture para estimar abundancia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Clase 2: Modelar Abundancia N-Mixture</h1>
+<h1 class="title">Clase 2: Modelos N-Mixture para estimar abundancia</h1>
 </div>
 
 
@@ -104,9 +104,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Unmarked se destaca como uno de los paquetes más populares para ajustar modelos de abundancia que incorporan variables de detección. A diferencia de Distance, este paquete se caracteriza por su mayor complejidad y una versatilidad notable en la capacidad de ajustar modelos más detallados. Requiere un nivel de conocimiento en R al menos intermedio para aprovechar plenamente su potencial, debido a su complejidad y las múltiples opciones de modelado que ofrece.</p>
-<p>En esta clase se obordara como utilizar Unmarked para modelar abundancia de especies para lo cuales se tomaran datos por medio de conteo por puntos. En la clase se explicara desde cero el uso de este paquete y paso a paso como ajustar, seleccionar, validar, interpretar y graficar el modelo, incluso la presancion de los datos para publicaciones cientificas.</p>
-<p>En esta clase, exploraremos el uso de Unmarked para modelar la abundancia de especies a partir de datos recopilados mediante conteo por puntos. Desde los fundamentos, explicaremos paso a paso cómo utilizar este paquete, cubriendo el proceso completo: desde el ajuste inicial del modelo hasta la selección, validación e interpretación de los resultados. También abordaremos la presentación de los datos para su inclusión en publicaciones científicas, asegurando un entendimiento completo y la capacidad de aplicar estos modelos de manera efectiva en contextos de investigación y divulgación científica.</p>
+<section id="el-paquete-de-r-unmarked" class="level2">
+<h2 class="anchored" data-anchor-id="el-paquete-de-r-unmarked"><strong>EL Paquete de R <code>unmarked</code></strong></h2>
+<p>El paquete de R unmarked (<a href="https://doi.org/10.18637/jss.v043.i10">Fiske y Chandler, 2011</a>) proporciona una plataforma integral para el análisis de muchos de los modelos jerárquicos (HMs) que cubrimos en este curso. Implementa estimaciones basadas en verosimilitud marginal y ofrece funciones de soporte para la organización de datos, resúmenes y análisis gráficos. El paquete fue desarrollado originalmente por Ian Fiske como estudiante de posgrado en la Universidad Estatal de Carolina del Norte, y fue asumido en gran medida por Richard Chandler alrededor del año 2011.</p>
+<p>El paquete unmarked ofrece un marco unificado para la manipulación de datos, exploración de datos, ajuste de modelos (mediante máxima verosimilitud), selección de modelos, promediado de modelos, evaluación del ajuste del modelo (Gof, por sus siglas en inglés), predicción, e implementa ideas como bootstrapping, predicción, estimación empírica Bayesiana y otros procedimientos de inferencia y análisis. Los modelos jerárquicos principales disponibles en unmarked son los siguientes:</p>
+<ul>
+<li><p>Modelo de ocupación por sitios de una sola temporada (“estático”) (MacKenzie et al., 2002; Tyre et al., 2003)</p></li>
+<li><p>Modelo estático de Royle-Nichols (Royle y Nichols, 2003)</p></li>
+<li><p>Modelo estático de ocupación con falsos positivos (Royle y Link, 2006; Miller et al., 2011)</p></li>
+<li><p>Modelos estáticos de ocupación penalizada (Hutchinson et al., 2015)</p></li>
+<li><p>Modelo estático binomial de mezcla N (Royle, 2004b)</p></li>
+<li><p>Modelo estático multinomial de mezcla N (Royle, 2004a; Dorazio et al., 2005; Langtimm et al., 2011)</p></li>
+<li><p>Modelo jerárquico estático de muestreo por distancias (Royle et al., 2004)</p></li>
+<li><p>Versiones de “población abierta” para muchos de los anteriores: 1) Modelo dinámico de ocupación (MacKenzie et al., 2003), 2) Modelo de mezcla multinomial con emigración temporal (Chandler et al., 2011), 3) Muestreo por distancias con emigración temporal, modelo dinámico de <em>N</em>-Mixture (Dail y Madsen, 2011), muestreo por distancias dinámico (Sollmann et al., 2015).</p></li>
+</ul>
+<p>Con frecuencia, los modeladores jerárquicos en formación tienen dificultades para determinar qué tipo de modelo deberían utilizar para abordar un problema específico. Una clave dicotómica simple puede ayudar a guiar al usuario hacia la funcionalidad adecuada de unmarked (Figura 2.1).</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Cargar base de datos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Formatear base de datos a formato unmarked</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Crear variables de detectabilidad</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Crear variables de habitat (covariables)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Crear tabla unmarked</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Ajustar modelo de deteccion</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">Seleccion de modelo de deteccion</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-8" role="tab" aria-controls="tabset-1-8" aria-selected="false" href="">Ajustar modelo de Abundancia</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-9-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-9" role="tab" aria-controls="tabset-1-9" aria-selected="false" href="">Seleccion de modelo de abundancia</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-10-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-10" role="tab" aria-controls="tabset-1-10" aria-selected="false" href="">Resumen de los resultados</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-11-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-11" role="tab" aria-controls="tabset-1-11" aria-selected="false" href="">Bondad de ajuste</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-12-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-12" role="tab" aria-controls="tabset-1-12" aria-selected="false" href="">Prepar data para graficar</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-13-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-13" role="tab" aria-controls="tabset-1-13" aria-selected="false" href="">Graficar modelo</a></li></ul>
 <div class="tab-content">
@@ -434,15 +446,15 @@ parboot(object = ModelAbun3, statistic = fitstats, nsim = 100, report = 1)
 
 Parametric Bootstrap Statistics:
                t0 mean(t0 - t_B) StdDev(t0 - t_B) Pr(t_B &gt; t0)
-SSE          30.5        -11.268            14.62        0.812
-Chisq        47.0        -19.138            16.81        0.911
-freemanTukey 28.2          0.999             3.76        0.366
+SSE          30.5        -14.380            15.48        0.861
+Chisq        47.0        -23.967            21.54        0.921
+freemanTukey 28.2          0.158             3.72        0.475
 
 t_B quantiles:
              0% 2.5% 25% 50% 75% 97.5% 100%
-SSE          19   24  32  39  49    78  100
-Chisq        37   46  55  63  74   100  138
-freemanTukey 19   21  24  27  30    35   39
+SSE          20   22  35  43  51    76  122
+Chisq        37   43  58  67  79   121  197
+freemanTukey 20   21  26  28  30    36   38
 
 t0 = Original statistic computed from data
 t_B = Vector of bootstrap samples</code></pre>
@@ -496,6 +508,7 @@ t_B = Vector of bootstrap samples</code></pre>
 <figcaption>HN Biology Investigation Academy</figcaption>
 </figure>
 </div>
+</section>
 
 </main>
 <!-- /main column -->

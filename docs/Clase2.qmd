@@ -1,16 +1,36 @@
 ---
-title: "Clase 2: Modelar Abundancia N-Mixture"
+title: "Clase 2: Modelos N-Mixture para estimar abundancia"
 author: "David Murillo"
 format:
   html:
     css: styles.css
 ---
 
-Unmarked se destaca como uno de los paquetes más populares para ajustar modelos de abundancia que incorporan variables de detección. A diferencia de Distance, este paquete se caracteriza por su mayor complejidad y una versatilidad notable en la capacidad de ajustar modelos más detallados. Requiere un nivel de conocimiento en R al menos intermedio para aprovechar plenamente su potencial, debido a su complejidad y las múltiples opciones de modelado que ofrece.
+## **EL Paquete de R `unmarked`**
 
-En esta clase se obordara como utilizar Unmarked para modelar abundancia de especies para lo cuales se tomaran datos por medio de conteo por puntos. En la clase se explicara desde cero el uso de este paquete y paso a paso como ajustar, seleccionar, validar, interpretar y graficar el modelo, incluso la presancion de los datos para publicaciones cientificas.
+El paquete de R unmarked ([Fiske y Chandler, 2011](https://doi.org/10.18637/jss.v043.i10)) proporciona una plataforma integral para el análisis de muchos de los modelos jerárquicos (HMs) que cubrimos en este curso. Implementa estimaciones basadas en verosimilitud marginal y ofrece funciones de soporte para la organización de datos, resúmenes y análisis gráficos. El paquete fue desarrollado originalmente por Ian Fiske como estudiante de posgrado en la Universidad Estatal de Carolina del Norte, y fue asumido en gran medida por Richard Chandler alrededor del año 2011.
 
-En esta clase, exploraremos el uso de Unmarked para modelar la abundancia de especies a partir de datos recopilados mediante conteo por puntos. Desde los fundamentos, explicaremos paso a paso cómo utilizar este paquete, cubriendo el proceso completo: desde el ajuste inicial del modelo hasta la selección, validación e interpretación de los resultados. También abordaremos la presentación de los datos para su inclusión en publicaciones científicas, asegurando un entendimiento completo y la capacidad de aplicar estos modelos de manera efectiva en contextos de investigación y divulgación científica.
+El paquete unmarked ofrece un marco unificado para la manipulación de datos, exploración de datos, ajuste de modelos (mediante máxima verosimilitud), selección de modelos, promediado de modelos, evaluación del ajuste del modelo (Gof, por sus siglas en inglés), predicción, e implementa ideas como bootstrapping, predicción, estimación empírica Bayesiana y otros procedimientos de inferencia y análisis. Los modelos jerárquicos principales disponibles en unmarked son los siguientes:
+
+- Modelo de ocupación por sitios de una sola temporada ("estático") (MacKenzie et al., 2002; Tyre et al., 2003)
+
+- Modelo estático de Royle-Nichols (Royle y Nichols, 2003)
+
+- Modelo estático de ocupación con falsos positivos (Royle y Link, 2006; Miller et al., 2011)
+
+- Modelos estáticos de ocupación penalizada (Hutchinson et al., 2015)
+
+- Modelo estático binomial de mezcla N (Royle, 2004b)
+
+- Modelo estático multinomial de mezcla N (Royle, 2004a; Dorazio et al., 2005; Langtimm et al., 2011)
+
+- Modelo jerárquico estático de muestreo por distancias (Royle et al., 2004)
+
+- Versiones de "población abierta" para muchos de los anteriores: 1) Modelo dinámico de ocupación (MacKenzie et al., 2003), 2) Modelo de mezcla multinomial con emigración temporal (Chandler et al., 2011), 3) Muestreo por distancias con emigración temporal, modelo dinámico de *N*-Mixture (Dail y Madsen, 2011), muestreo por distancias dinámico (Sollmann et al., 2015).
+
+Con frecuencia, los modeladores jerárquicos en formación tienen dificultades para determinar qué tipo de modelo deberían utilizar para abordar un problema específico. Una clave dicotómica simple puede ayudar a guiar al usuario hacia la funcionalidad adecuada de unmarked (Figura 2.1).
+
+
 
 ::: panel-tabset
 ## Cargar base de datos
