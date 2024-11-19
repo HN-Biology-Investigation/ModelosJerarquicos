@@ -6,6 +6,30 @@ format:
     css: styles.css
 ---
 
+## Introducción a los modelos de abundancia 
+
+La abundancia, o el tamaño poblacional, se refiere al número de individuos en un lugar y tiempo determinados. Normalmente, denotamos la abundancia como *N𝑖𝑡* , dondo *i* representa el lugar (espacio) y *t* es un índice para el tiempo. Sin duda, la abundancia debe ser la variable de estado más importante en toda la ecología. Esto se ilustra claramente por el hecho de que varios libros influyentes de ecología tienen la palabra "abundancia" en su título (por ejemplo, Andrewartha y Birch, 1954; Krebs, 2009). 
+
+Cuando contamos animales o plantas, estamos midiendo abundancia: un conteo *C* es una medida de la abundancia. Al medir la abundancia, existen exactamente dos tipos posibles de errores de medición: (1) podemos pasar por alto o no detectar a un individuo, o (2) podemos contar a un individuo varias veces o incluir otra especie en el conteo (identificación errónea de la especie). El primero representa un error de falso negativo (o de detección) y conduce a un sesgo negativo en el conteo en relación con la abundancia, mientras que los dos últimos representan errores de falso positivo y conducen a un sesgo positivo en el conteo en relación con la abundancia. Estos son los tipos de errores más fundamentales en cualquier medición de abundancia. Hay otras fuentes de errores; por ejemplo, para estudiar el tamaño de una población de adultos territoriales de alguna especie, pero no ser capaz de distinguir juveniles de adultos o individuos territoriales de individuos transitorios. Sin embargo, si realmente no puedes distinguirlos, en cierto sentido esto no es un error, sino simplemente que se está pidiendo demasiado. Necesitamos redefinir nuestro *N* para abarcar juveniles, adultos, locales y transitorios por igual. Por lo tanto, esto es un problema de cómo defines *N*. 
+
+## Modelo *N-mixture* para abundancia
+
+El modelo N-mixture  [(Royle, 2004b)](https://doi.org/10.1111/j.0006-341X.2004.00142.x) es posiblemente el modelo jerárquico (HM) más representativo para estimar la abundancia animal. Similar al modelo de ocupación, el diseño de muestreo tiene una estructura de medidas repetidas, donde se muestrean *M* sitios en *I* ocasiones (por ejemplo, conteos puntuales de aves en *I* mañanas dentro de la misma temporada), y se registran los individuos de una especie. Las observaciones son los conteos *y*, y el modelo de observación se asume que sigue una distribución binomial, condicionada al tamaño real de la población en el sitio *i*:
+
+$$y_{ij}| \sim Binomial(N_i,p)$$
+
+Aquí, *p* representa la probabilidad de detección a nivel individual (en contraste con la probabilidad de detección a nivel de sitio en el modelo de ocupación). Generalmente, se pueden modelar factores que influyen en la detección utilizando modelos lineales generalizados (GLMs) con la función de enlace logit, pero por ahora se omite esta generalidad. Al igual que en el modelo de ocupación, es necesario contar con conteos repetidos (es decir, "mediciones de abundancia") en al menos algunos sitios para garantizar la identificabilidad de los parámetros del modelo. La variable de estado en este caso es el "tamaño local de la población", *N*, y el GLM de Poisson es el marco natural para modelar la variación en esta variable de estado:
+
+$$N_i \sim Poisson(\lambda_i)$$
+
+En casi todos los estudios, existe interés en modelar el efecto de covariables medibles, por lo que se consideran modelos para el logaritmo de *λ* (es decir, el enlace canónico para GLMs de Poisson):
+
+$$log(\lambda) = \beta_0 + \beta_1x_i$$
+
+donde *x* es alguna covariable a nivel de sitio. Por supuesto, también se pueden considerar modelos alternativos para la abundancia local, como el Poisson inflado con ceros, el Poisson lognormal o el binomial negativo, que consideran la variación excesiva (o sobredispersión) en la abundancia local en comparación con el modelo de Poisson.
+
+Al igual que el modelo de ocupación, el modelo N-mixture es un tipo de GLM compuesto: tanto el modelo de observación como el de proceso son GLMs estándar, pero están vinculados mediante la estructura de dependencia condicional del modelo jerárquico. Los modelos N-mixture se implementan en el programa PRESENCE (Hines, 2006), en el programa MARK (White y Burnham, 1999), y en el paquete unmarked de R mediante la función pcount.
+
 ## **EL Paquete de R `unmarked`**
 
 El paquete de R unmarked ([Fiske y Chandler, 2011](https://doi.org/10.18637/jss.v043.i10)) proporciona una plataforma integral para el análisis de muchos de los modelos jerárquicos (HMs) que cubrimos en este curso. Implementa estimaciones basadas en verosimilitud marginal y ofrece funciones de soporte para la organización de datos, resúmenes y análisis gráficos. El paquete fue desarrollado originalmente por Ian Fiske como estudiante de posgrado en la Universidad Estatal de Carolina del Norte, y fue asumido en gran medida por Richard Chandler alrededor del año 2011.
@@ -33,10 +57,21 @@ Con frecuencia, los modeladores jerárquicos en formación tienen dificultades p
 ![](booksPictures/Screenshot 2024-11-19 071853.png)
 Figura 2.1 Árbol de decisión para los modelos disponibles en el paquete de R unmarked. Una pregunta científica o de manejo (el signo de interrogación en el cuadro superior) sugiere primero un enfoque en abundancia u ocurrencia; en segundo lugar, si el sistema es estático o dinámico; y en tercer lugar, el método de muestreo utilizado. Todos estos factores determinan el modelo apropiado para su estudio.
 
+## Ejercicio 
+
+Voluntarios experimentados realizan un recorrido transecto irregular, específico para cada cuadrante, cuya longitud varía entre 1 y 9 km. Cada transecto se recorre tres veces durante la temporada de cría (de mediados de abril a principios de julio) utilizando el método de mapeo de territorios (Bibby et al., 2000). Los cuadrantes situados en áreas altas (por encima de la línea de árboles) se inspeccionan solo dos veces. Los recorridos comienzan al amanecer y duran en promedio cuatro horas (SD = 1 h). Los observadores registran en un mapa la ubicación de cada individuo de cada especie identificada. Posteriormente, los territorios provisionales se determinan en función de la agrupación de observaciones y, para los registros aislados, en función del conocimiento de los tamaños típicos de los territorios de cada especie (Figura 6.8, derecha).
+
+Aquí analizaremos los conteos por cuadrante del número de territorios de carbonero común (*y*) en el cuadrante *i* durante el recorrido *j* en 2013. El conjunto de datos incluye coordenadas del sitio y covariables como elevación (m), cobertura forestal (%), y longitud de la ruta (km), así como covariables observacionales como la fecha (día 1 = 1 de abril) y la duración (min) de cada recorrido.
+
+Los objetivos de nuestro análisis son dos:
+
+- Identificar los factores ambientales que afectan la abundancia de carboneros comunes en Suiza.
+
+- Estimar el tamaño de la población de carboneros comunes en Suiza en 2013.
 
 ::: panel-tabset
 
-## Cargar base de datos
+### Cargar base de datos
 
 
 ```{r, warning=FALSE, message=FALSE}
@@ -67,7 +102,7 @@ Tits <- Tits %>%
 head(Tits)
 ```
 
-## Formatear base de datos a formato unmarked
+### Formatear base de datos a formato unmarked
 
 
 ```{r}
@@ -91,7 +126,7 @@ summary(Tits_umf)
 
 ```
 
-## Ajustar modelo de deteccion
+### Ajustar modelo de deteccion
 
 ```{r, warning=FALSE, message=FALSE}
 
@@ -116,7 +151,7 @@ DetNames <- c("Nulo", "Fecha", "Hora", "Dur")
 aictab(DetModels, DetNames, sort = TRUE)
 ```
 
-## Ajustar modelo de Abundancia
+### Ajustar modelo de Abundancia
 
 ```{r, warning=FALSE, message=FALSE}
 
@@ -129,7 +164,7 @@ ModelAbun2 <- pcount(~Date ~ forest, Tits_umf)
 ModelAbun3 <- pcount(~Date ~ elev + forest, Tits_umf)
 ```
 
-## Seleccion de modelo de abundancia
+### Seleccion de modelo de abundancia
 
 ```{r}
 AbunModels <- list(ModelAbun0, ModelAbun1, ModelAbun2, ModelAbun3)
@@ -139,14 +174,14 @@ AbunNames <- c("Nulo", "elev", "forest", "elev + forest")
 aictab(AbunModels, AbunNames, sort = TRUE)
 ```
 
-## Resumen de los resultados
+### Resumen de los resultados
 
 ```{r}
 summary(ModelAbun3)
 confint(ModelAbun3, type = "state", level = 0.95)
 ```
 
-## Bondad de ajuste
+### Bondad de ajuste
 
 ```{r, warning=FALSE, message=FALSE}
 
@@ -172,7 +207,7 @@ MigGOF <- Nmix.gof.test(ModelAbun3, nsim = 100, report = 3)
 
 ```
 
-## Prepar data para graficar
+### Prepar data para graficar
 
 ```{r}
 Elev <- data.frame(elev = seq(min(Tits$elev, na.rm = TRUE), max(Tits$elev, na.rm = TRUE), length.out = 100),
@@ -190,7 +225,7 @@ Forest_pre <- predict(ModelAbun3, newdata= Forest, appendData = TRUE, type = "st
 ```
 
 
-## Graficar modelo
+### Graficar modelo
 
 ```{r}
 ggplot(data= Elev_pre, aes(x= elev, y= Predicted))+
