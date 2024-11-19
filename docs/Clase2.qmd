@@ -30,172 +30,111 @@ El paquete unmarked ofrece un marco unificado para la manipulación de datos, ex
 
 Con frecuencia, los modeladores jerárquicos en formación tienen dificultades para determinar qué tipo de modelo deberían utilizar para abordar un problema específico. Una clave dicotómica simple puede ayudar a guiar al usuario hacia la funcionalidad adecuada de unmarked (Figura 2.1).
 
+![](booksPictures/Screenshot 2024-11-19 071853.png)
+Figura 2.1 Árbol de decisión para los modelos disponibles en el paquete de R unmarked. Una pregunta científica o de manejo (el signo de interrogación en el cuadro superior) sugiere primero un enfoque en abundancia u ocurrencia; en segundo lugar, si el sistema es estático o dinámico; y en tercer lugar, el método de muestreo utilizado. Todos estos factores determinan el modelo apropiado para su estudio.
 
 
 ::: panel-tabset
+
 ## Cargar base de datos
 
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(unmarked)
+library(AICcmodavg)
+library(MuMIn)
+```
+
+
 ```{r}
-Aves <- read.csv("data/AvesHabitatUm.csv")
+Tits <- read.csv("data/Tits.csv")
+
+str(Tits)
 ```
 
 Seleccionar variables necesarias
 
 ```{r}
 
-library(tidyverse)
+Tits <- Tits %>% 
+  select(X1, X2, X3,
+         elev, forest,
+         time.1, time.2, time.3,
+         date.1, date.2, date.3,
+         dur.1, dur.2, dur.3)
 
-AvesLimpia <- Aves %>% 
-  select(Site, VEGID, Type, ALTITUDE, Area_Basal, Hora, Fecha, Cielo, Viento, Especies, Abundancia) %>% 
-  mutate(Fecha = as.Date(Fecha, format = "%m/%d/%Y")) %>% 
-  mutate(Hora = as.integer(str_replace(Hora, ":", "")))
-  
-AvesOrdenadas <- AvesLimpia %>%
-  arrange(Site, Especies, Fecha, Hora, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  group_by(Site, Especies, Fecha, Hora, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  summarise(Abundancia = max(Abundancia)) %>%
-  group_by(Site, Fecha, Hora,  Especies, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  mutate(Orden = factor(row_number())) %>% 
-  filter(Orden %in% c(1, 2, 3))
-
-CarpusPivot <- AvesOrdenadas %>% 
-  pivot_wider(names_from = Especies, values_from = Abundancia, values_fill = 0) %>% 
-  select(Site, VEGID, Type, ALTITUDE, Area_Basal, Fecha, Hora, Orden, CARPUS)
-
-CarpusPivotOrden <- CarpusPivot %>%
-  arrange(Site, VEGID, Type, ALTITUDE, Area_Basal, CARPUS, Fecha, Hora) %>%
-  group_by(Site,VEGID, Type, ALTITUDE, Area_Basal, CARPUS) %>%
-  mutate(Orden = factor(row_number())) %>% 
-  filter(!is.na(Site))
-  
-
-head(CarpusPivotOrden)
+head(Tits)
 ```
 
 ## Formatear base de datos a formato unmarked
 
-Pasar cada replica en columnas diferentes de acuerdo a la especie de ave
 
 ```{r}
 
+y <- Tits[,c("X1", "X2", "X3")]
 
-# Crear un conjunto de datos con todos los niveles de Orden por Site
-CARPUSunmarked <- CarpusPivotOrden %>%
-  filter(!is.na(Fecha)) %>% 
-  mutate(Orden = as.numeric(Orden)) %>% 
-  complete(Orden = 1:3) %>%
-  mutate(CARPUS = ifelse(is.na(Fecha), NA, CARPUS),
-         CARPUS = replace_na(CARPUS, 50))
+SiteVar <- Tits[,c("elev", "forest")]
 
-# Pivot_wider
-CARPUSunmarkedReady <- CARPUSunmarked %>%
-  mutate(Fechaord = yday(Fecha)) %>% 
-  group_by(Site, Orden, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  summarise(CARPUS = max(CARPUS),
-            Fechaord = max(Fechaord),
-            Hora = max(Hora)) %>% 
-  ungroup() %>%
-  group_by(Site, VEGID, Type, ALTITUDE, Area_Basal) %>% 
-  pivot_wider(names_from = Orden,
-              values_from = c(Fechaord, Hora, CARPUS),
-              values_fill =  0) %>% 
-  mutate(CARPUS_1 = replace(CARPUS_1, CARPUS_1 == 50, NA)) %>% 
-  mutate(CARPUS_2 = replace(CARPUS_2, CARPUS_2 == 50, NA)) %>% 
-  mutate(CARPUS_3 = replace(CARPUS_3, CARPUS_3 == 50, NA)) 
-
+ObsVar <- list(Time = Tits[,c("time.1", "time.2", "time.3")],
+               Date = Tits[,c("date.1", "date.2", "date.3")],
+               Dur = Tits[,c("dur.1", "dur.2", "dur.3")])
 
 ```
 
-## Crear variables de detectabilidad
-
-```{r}
-## Definir ocasiones de deteccion
-CARPUS_y <- CARPUSunmarkedReady[,12:14]
-# y[y > 1] <- 1
-
-
-## Definir los variables asociados a la deteccion:
-
-
-Fecha_CARPUS= list(Fecha=CARPUSunmarkedReady[,6:8]) 
-
-# Y quien realizo la observacion
-
-Hora_CARPUS= list(Hora=CARPUSunmarkedReady[,9:11]) 
-
-
-```
-
-## Crear variables de habitat (covariables)
-
-```{r}
-## Definir los variables de covarianza
-
-CARPUS_siteCovs <- CARPUSunmarkedReady[,c("Type", "ALTITUDE", "Area_Basal")]
-```
-
-## Crear tabla unmarked
-
 ```{r}
 
-library(unmarked)
+Tits_umf <- unmarkedFramePCount(y = y, siteCovs = SiteVar, 
+                                    obsCovs= ObsVar )
 
-## CREAR DATA FRAME
-CARPUSunmarked_df <- unmarkedFramePCount(y = CARPUS_y, siteCovs = CARPUS_siteCovs, 
-                                    obsCovs=c(Fecha_CARPUS, Hora_CARPUS))
-
-summary(CARPUSunmarked_df)
+summary(Tits_umf)
 
 ```
 
 ## Ajustar modelo de deteccion
 
-```{r}
-#### MODELAR DETECCION PRIMERO
+```{r, warning=FALSE, message=FALSE}
 
-ModelDet0 <- pcount(~1 ~1, CARPUSunmarked_df) ##Null model
 
-ModelDet1 <- pcount(~Fecha ~1, CARPUSunmarked_df)
+ModelDet0 <- pcount(~1 ~1, Tits_umf ) ##Null model
 
-ModelDet2 <- pcount(~Hora ~1, CARPUSunmarked_df)
+ModelDet1 <- pcount(~Date ~1, Tits_umf )
 
-ModelDet3 <- pcount(~Fecha + Hora ~1, CARPUSunmarked_df)
+ModelDet2 <- pcount(~Time ~1, Tits_umf )
+
+ModelDet3 <- pcount(~Dur ~1, Tits_umf )
 ```
 
 ## Seleccion de modelo de deteccion
 
 ```{r}
-library(AICcmodavg)
 
 DetModels <- list(ModelDet0, ModelDet1, ModelDet2, ModelDet3)
 
-DetNames <- c("Nulo", "Fecha", "Hora", "Fecha + Hora")
+DetNames <- c("Nulo", "Fecha", "Hora", "Dur")
 
 aictab(DetModels, DetNames, sort = TRUE)
 ```
 
 ## Ajustar modelo de Abundancia
 
-```{r}
-#### MODELAR DETECCION PRIMERO
+```{r, warning=FALSE, message=FALSE}
 
-ModelAbun0 <- pcount(~1 ~ 1, CARPUSunmarked_df) ##Null model
+ModelAbun0 <- pcount(~Date ~ 1, Tits_umf) 
 
-ModelAbun1 <- pcount(~1 ~ Type, CARPUSunmarked_df)
+ModelAbun1 <- pcount(~Date ~ elev, Tits_umf)
 
-ModelAbun2 <- pcount(~1 ~ ALTITUDE, CARPUSunmarked_df)
+ModelAbun2 <- pcount(~Date ~ forest, Tits_umf)
 
-ModelAbun3 <- pcount(~1 ~ Area_Basal, CARPUSunmarked_df)
+ModelAbun3 <- pcount(~Date ~ elev + forest, Tits_umf)
 ```
 
 ## Seleccion de modelo de abundancia
 
 ```{r}
-library(AICcmodavg)
-
 AbunModels <- list(ModelAbun0, ModelAbun1, ModelAbun2, ModelAbun3)
 
-AbunNames <- c("Nulo", "Type", "ALTITUDE", "Area_Basal")
+AbunNames <- c("Nulo", "elev", "forest", "elev + forest")
 
 aictab(AbunModels, AbunNames, sort = TRUE)
 ```
@@ -204,7 +143,7 @@ aictab(AbunModels, AbunNames, sort = TRUE)
 
 ```{r}
 summary(ModelAbun3)
-confint(ModelAbun3, type = "state", level = 0.9)
+confint(ModelAbun3, type = "state", level = 0.95)
 ```
 
 ## Bondad de ajuste
@@ -236,25 +175,45 @@ MigGOF <- Nmix.gof.test(ModelAbun3, nsim = 100, report = 3)
 ## Prepar data para graficar
 
 ```{r}
-CARPUS_arear_basal <- data.frame(Area_Basal = seq(min(CARPUSunmarkedReady$Area_Basal, na.rm = TRUE), max(CARPUSunmarkedReady$Area_Basal, na.rm = TRUE), length.out = 100))
-                                 
-Carpus_pre_area_basal <- predict(ModelAbun3, newdata = CARPUS_arear_basal, type = "state")
+Elev <- data.frame(elev = seq(min(Tits$elev, na.rm = TRUE), max(Tits$elev, na.rm = TRUE), length.out = 100),
+                   forest = mean(Tits$forest, na.rm = TRUE))
 
-Carpus_pre_area_basal$Area_Basal <- CARPUS_arear_basal$Area_Basal 
+Forest <- data.frame(forest = seq(min(Tits$forest, na.rm = TRUE), max(Tits$forest, na.rm = TRUE), length.out = 100),
+                   elev = mean(Tits$elev, na.rm = TRUE))
+                                 
 ```
+
+```{r}
+Elev_pre <- predict(ModelAbun3, newdata= Elev, appendData = TRUE, type = "state")
+
+Forest_pre <- predict(ModelAbun3, newdata= Forest, appendData = TRUE, type = "state")
+```
+
 
 ## Graficar modelo
 
 ```{r}
-ggplot(data= Carpus_pre_area_basal, aes(x= Area_Basal, y= Predicted))+
+ggplot(data= Elev_pre, aes(x= elev, y= Predicted))+
   geom_ribbon(aes(ymin= lower,
                   ymax= upper), fill = "lightblue") +
   geom_line(color= "black") +
-  labs(x = "Area Basal", 
+  labs(x = "Elevacion", 
        y = "Abundancia")+
-  ggtitle("Relacion de Cardenilla pusilla versus el area basal") +
+  ggtitle("Abundancia explicada por la elevacion") +
   theme_classic()
 ```
+```{r}
+ggplot(data= Forest_pre, aes(x= forest, y= Predicted))+
+  geom_ribbon(aes(ymin= lower,
+                  ymax= upper), fill = "lightblue") +
+  geom_line(color= "black") +
+  labs(x = "% Bosque", 
+       y = "Abundancia")+
+  ggtitle("Abundancia explicada por el % bosque") +
+  theme_classic()
+```
+
+
 :::
 
 ![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
