@@ -168,7 +168,7 @@ window.Quarto = {
 </section>
 <section id="ejercicio" class="level2">
 <h2 class="anchored" data-anchor-id="ejercicio">Ejercicio</h2>
-<p>Voluntarios experimentados realizan un recorrido transecto irregular, específico para cada cuadrante, cuya longitud varía entre 1 y 9 km. Cada transecto se recorre tres veces durante la temporada de cría (de mediados de abril a principios de julio) utilizando el método de mapeo de territorios (Bibby et al., 2000). Los cuadrantes situados en áreas altas (por encima de la línea de árboles) se inspeccionan solo dos veces. Los recorridos comienzan al amanecer y duran en promedio cuatro horas (SD = 1 h). Los observadores registran en un mapa la ubicación de cada individuo de cada especie identificada. Posteriormente, los territorios provisionales se determinan en función de la agrupación de observaciones y, para los registros aislados, en función del conocimiento de los tamaños típicos de los territorios de cada especie (Figura 6.8, derecha).</p>
+<p>Voluntarios experimentados realizan un recorrido transecto irregular, específico para cada cuadrante, cuya longitud varía entre 1 y 9 km. Cada transecto se recorre tres veces durante la temporada de cría (de mediados de abril a principios de julio) utilizando el método de mapeo de territorios (Bibby et al., 2000). Los cuadrantes situados en áreas altas (por encima de la línea de árboles) se inspeccionan solo dos veces. Los recorridos comienzan al amanecer y duran en promedio cuatro horas (SD = 1 h). Los observadores registran en un mapa la ubicación de cada individuo de cada especie identificada. Posteriormente, los territorios provisionales se determinan en función de la agrupación de observaciones y, para los registros aislados, en función del conocimiento de los tamaños típicos de los territorios de cada especie.</p>
 <p>Aquí analizaremos los conteos por cuadrante del número de territorios de carbonero común (<em>y</em>) en el cuadrante <em>i</em> durante el recorrido <em>j</em> en 2013. El conjunto de datos incluye coordenadas del sitio y covariables como elevación (m), cobertura forestal (%), y longitud de la ruta (km), así como covariables observacionales como la fecha (día 1 = 1 de abril) y la duración (min) de cada recorrido.</p>
 <p>Los objetivos de nuestro análisis son dos:</p>
 <ul>
@@ -410,15 +410,15 @@ parboot(object = ModelAbun3, statistic = fitstats, nsim = 100, report = 1)
 
 Parametric Bootstrap Statistics:
                 t0 mean(t0 - t_B) StdDev(t0 - t_B) Pr(t_B &gt; t0)
-SSE          26345          21230            444.8            0
-Chisq         3515           2773             49.7            0
-freemanTukey   910            682             12.9            0
+SSE          26345          21161            498.5            0
+Chisq         3515           2762             58.0            0
+freemanTukey   910            679             15.3            0
 
 t_B quantiles:
                0% 2.5%  25%  50%  75% 97.5% 100%
-SSE          4139 4324 4799 5171 5391  6017 6296
-Chisq         646  654  707  744  771   846  885
-freemanTukey  194  203  219  228  236   251  255
+SSE          4197 4281 4792 5183 5478  6052 6520
+Chisq         642  655  707  756  790   864  899
+freemanTukey  203  206  219  228  243   264  272
 
 t0 = Original statistic computed from data
 t_B = Vector of bootstrap samples</code></pre>
