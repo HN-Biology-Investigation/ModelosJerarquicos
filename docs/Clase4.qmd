@@ -27,6 +27,7 @@ PaisajeMetricas <- readRDS("data/Paisaje250.rds")
 ```
 
 ::: panel-tabset
+
 ## Procesar base de datos
 
 ```{r}
@@ -95,26 +96,25 @@ SiteCovs <- Insectivoras3[,c(8,17)]
 
 Insectivoras3$Longitud <- c(100)
 
-InsectivorasUMF <- unmarkedFrameDS(y= y ,
+InsectivorasUMF <- unmarkedFrameGDS(y= y ,
                                    siteCovs = SiteCovs,
                                    dist.breaks = seq(0, 35, by= 6),
                                    survey = "line",
                                    unitsIn = "m",
-                                   tlength = Insectivoras3$Longitud)
+                                   tlength = Insectivoras3$Longitud,
+                                   numPrimary = 1)
 ```
 
 ## Fit model
 
-```{r}
-fmp1 <- distsamp(~ 1 ~ 1, InsectivorasUMF)
+```{r, warning=FALSE}
 
-fmp2 <- distsamp(~ 1 ~ Forest, keyfun = "halfnorm", output = "density", unitsOut = "ha",  InsectivorasUMF)
+fmp1 <- gdistsamp(~Forest, ~ 1, ~ 1, keyfun = "halfnorm", output = "density", unitsOut = "ha",  InsectivorasUMF)
 
-fmp3 <- distsamp(~ 1 ~ Forest, keyfun = "hazard", output = "density", unitsOut = "ha", InsectivorasUMF)
+fmp2 <- gdistsamp(~Forest, ~ 1, ~ 1, keyfun = "hazard", output = "density", unitsOut = "ha", InsectivorasUMF)
 
-fmp4 <- distsamp(~ 1 ~ Forest, keyfun = "exp", output = "density", unitsOut = "ha", InsectivorasUMF)
+fmp3 <- gdistsamp(~Forest, ~ 1, ~ 1, keyfun = "exp", output = "density", unitsOut = "ha", InsectivorasUMF)
 
-fmp5 <- distsamp(~ 1 ~ Forest, keyfun = "uniform", output = "density", unitsOut = "ha", InsectivorasUMF)
 
 
 
@@ -124,8 +124,8 @@ fmp5 <- distsamp(~ 1 ~ Forest, keyfun = "uniform", output = "density", unitsOut 
 ## Seleccionar modelo mas adecuado
 
 ```{r}
-Modelos <- list(fmp1, fmp2, fmp3, fmp4, fmp5)
-Nombres <- c("fmp1", "fmp2", "fmp3", "fmp4", "fmp5")
+Modelos <- list(fmp1, fmp2, fmp3)
+Nombres <- c("fmp1", "fmp2", "fmp3")
 
 aictab(Modelos, Nombres, sort = TRUE)
 
@@ -146,33 +146,31 @@ fitstats <- function(Mod_global2) {
   return(out)
 }
 
-(pb <- parboot(fmp2, fitstats, nsim=100, report=1))
+(pb <- parboot(fmp1, fitstats, nsim=100, report=1))
 
 cHat_pb <- pb@t0[2] / mean(pb@t.star[,2])
 
 
-MigGOF <- Nmix.gof.test(fmp2, nsim = 100, report = 3)
+MigGOF <- Nmix.gof.test(fmp1, nsim = 100, report = 3)
 ```
 
 ## Revisar resultados
 
 ```{r}
-summary(fmp2)
-confint(fmp2, type = "state", level= 0.95)
+summary(fmp1)
+confint(fmp1, type = "lambda", level= 0.95)
 
-exp(coef(fmp2, type="state", altNames=TRUE))
+exp(coef(fmp1, type="lambda", altNames=TRUE))
 
-hist(fmp2, ylim = c(0, 0.1), xlab="Distance (m)")	# Only works when there are no det covars
 ```
 
-## Prepara para graficar
+## Prepara para graficar abundancia
 
 ```{r}
 Forest <- data.frame(Forest = seq(min(Insectivoras3$Forest, na.rm = TRUE), max(Insectivoras3$Forest, na.rm = TRUE), length.out = 100))
 
-Forest_pre <- predict(fmp2, newdata = Forest, type = "state")
+Forest_pre <- predict(fmp2, newdata = Forest, type = "lambda", appendData = TRUE)
 
-Forest_pre$Forest <- Forest$Forest
 ```
 
 ## Graficar
@@ -185,6 +183,10 @@ ggplot(data = Forest_pre, aes(x= Forest, y= Predicted))+
   labs(title = "Abundancia de Insectivoros versus fecha")+
   theme_classic()
 ```
+
+
+
+
 :::
 
 ![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
