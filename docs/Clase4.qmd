@@ -170,8 +170,8 @@ exp(coef(fmp1, type="lambda", altNames=TRUE))
 Forest <- data.frame(Forest = seq(min(Insectivoras3$Forest, na.rm = TRUE), max(Insectivoras3$Forest, na.rm = TRUE), length.out = 100))
 
 Forest_pre <- predict(fmp2, newdata = Forest, type = "lambda", appendData = TRUE)
-
 ```
+
 
 ## Graficar
 
