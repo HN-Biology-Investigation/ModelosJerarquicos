@@ -219,6 +219,45 @@ ggplot(data= Dur_pre, aes(x= Dur, y= Predicted))+
   theme_classic()
 ```
 
+
+## Mapa de distribucion
+
+```{r}
+SuizaBosque <- readRDS("data/SuizaBosque.rds")
+```
+
+```{r}
+SuizaBosque_pre <- predict(ModelOccu2, type = "state", newdata = SuizaBosque,
+                           appendData = TRUE)
+```
+
+
+```{r}
+library(raster)
+
+SuizaBosque_raster <- data.frame(x= SuizaBosque_pre$x,
+                                 y = SuizaBosque_pre$y,
+                                 z = SuizaBosque_pre$Predicted)
+
+SuizaBosque_raster <- rasterFromXYZ(SuizaBosque_raster)
+
+plot(SuizaBosque_raster)
+```
+
+```{r}
+SuizaBosque_raster_df <- as.data.frame(SuizaBosque_raster, xy = TRUE)
+
+library(ggthemes)
+
+ggplot() +
+  geom_raster(data = SuizaBosque_raster_df, aes(x = x, y = y, fill = z)) +
+  theme_map() +
+  scale_fill_gradient(na.value = "white") +
+  labs(fill = "Ocupación")
+
+```
+
+
 :::
 
 ![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
