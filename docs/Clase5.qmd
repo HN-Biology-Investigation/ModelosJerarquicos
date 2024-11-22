@@ -1,5 +1,5 @@
 ---
-title: "Clase 5: Modelar ocupacion de especies en poblaciones cerradas"
+title: "Clase 5: Modelar ocupación de especies en poblaciones cerradas"
 author: "David Murillo"
 format:
   html:
@@ -7,44 +7,57 @@ format:
 ---
 
 
+## Modelado de ocupación y distribución de especies  
+
+Esta clase trata sobre el modelado conjunto de la ocurrencia y su error de medición falso negativo. La ocurrencia significa la presencia o ausencia de alguna "especie" en alguna unidad espacial y temporal definida. La ocurrencia o presencia/ausencia es una cantidad que se deriva directamente de la abundancia, y que tanto la abundancia como la ocurrencia son simples resúmenes superficiales de un patrón de puntos espaciales subyacente. Por lo tanto, la ocurrencia es exactamente equivalente al evento de que haya al menos un "punto" dentro de una unidad espacial o que la abundancia de estos "puntos" en una unidad espacial sea mayor que cero. Sin embargo, a pesar de ser solo una cantidad derivada, la ocurrencia es enormemente importante en ecología y ciencias relacionadas, como la gestión de la vida silvestre y la biología de la conservación. 
+
+Las razones de la importancia de la ocurrencia en ecología incluyen las siguientes:
+
+- Aunque es sólo una versión de abundancia con información reducida, la ocurrencia suele estar relacionada positivamente con la abundancia, y los cambios de población suelen reflejarse en cambios de distribución.
+
+- La ocurrencia puede ser la única alternativa viable para caracterizar el estado de una población si la abundancia no se puede evaluar de manera confiable por razones metodológicas o logísticas.
+
+- Es posible que los supuestos paramétricos necesarios para modelar la abundancia (por ejemplo, Poisson, binomial negativo) no se cumplan en su conjunto de datos. Por el contrario, el modelo típico de Bernoulli para la ocurrencia es probablemente bastante sólido en una variedad de modelos para la distribución de abundancia subyacente.
+
+- A veces, la abundancia puede no ser realmente importante, pero la presencia es suficiente para el propósito en cuestión, por ejemplo, para infecciones parasitarias, en las que no nos preocupamos por si hay 10 o más parásitos en un huésped. 
+
+- La presencia es idéntica a la abundancia cuando se evalúa a una escala espacial donde una unidad de muestra puede estar ocupada por, como máximo, un individuo, una pareja reproductora o un grupo familiar. Los ejemplos incluyen sitios definidos como territorios de aves rapaces o búhos. El número de sitios ocupados corresponde entonces al número de parejas reproductoras, es decir, a la medida más utilizada de la abundancia de una población en ecología aviar.
+
+- La presencia es la base de la medida de biodiversidad más utilizada, la riqueza de especies. 
+
+- La ocurrencia es de gran interés en la ecología tanto de especies invasoras como de enfermedades, ambos campos muy populares de la ecología.
+
+Por lo tanto, la ocurrencia es una variable de estado muy utilizada en ecología, y algunos de sus subcampos se centran casi exclusivamente en ella, como la ecología de metapoblaciones (Hanski, 1998) o el modelado de distribución de especies (Elith y Leathwick, 2009).
+
+El enfoque básico en estadística para el modelado de ocurrencia es tratar la presencia y la ausencia como una variable aleatoria de Bernoulli regida por la "probabilidad de éxito", que en este contexto se conoce como probabilidad de ocupación o presencia. Los efectos de las covariables se pueden modelar en una escala de enlace, en un modelo de regresión logística o relacionada, y muchas extensiones son conceptualmente sencillas.
+
+## Modelado de distribución de las ardillas rojas de Suiza
+
+Cualquier modelo de abundancia u ocurrencia con covariables indexadas espacialmente puede usarse para producir un mapa de abundancia u ocurrencia de especies, es decir, un mapa de distribución de especies. En particular, hay un sentido en el que los modelos de ocupación de sitios representan el modelo de distribución de especies más genuino porque modelan la probabilidad de ocupación real separada del error de detección de falsos negativos. Esto es diferente de cualquier otro marco de modelado de distribución de especies, que solo modela la ocurrencia aparente, es decir, el producto de la ocupación y la probabilidad de detección. 
+
+Para enfatizar el papel de los modelos de ocupación de sitios en la modelización de la distribución de especies y, finalmente, mostrar algunos análisis de datos con modelos de ocupación, utilizaremos `unmarked` para modelar la distribución de la ardilla roja europea (*Sciurus vulgaris*) en Suiza. El conjunto de datos SwissSquirrels.tat contiene datos de detección/no detección para la ardilla roja en 265 cuadrantes de estudio de 1 km² en Suiza para 2007, junto con algunas covariables.
+
+Objetivos
+
+- 1. Identificar los factores ambientales que afectan la distribución de la ardilla suiza
+
+- 2. Elaborar un mapa de distribución de la especie
+
+- 3. Estimar el tamaño del área de distribución suiza de la especie
+
+Mostramos un análisis completo que incluye la selección del modelo, la inferencia, la evaluación del GoF y la predicción/mapeo. Usamos dos covariables de sitio (elevación, cobertura forestal) y dos de observación (fecha y duración del muestreo).
+
 ::: panel-tabset
+
 ## Cargar base de datos
 
-```{r}
-Aves <- read.csv("data/AvesHabitatUm.csv")
-```
-
-Seleccionar variables necesarias
-
-```{r}
+```{r, warning=FALSE, message=FALSE}
 
 library(tidyverse)
+library(unmarked)
+library(AICcmodavg)
 
-AvesLimpia <- Aves %>% 
-  select(Site, VEGID, Type, ALTITUDE, Area_Basal, Hora, Fecha, Cielo, Viento, Especies, Abundancia) %>% 
-  mutate(Fecha = as.Date(Fecha, format = "%m/%d/%Y")) %>% 
-  mutate(Hora = as.integer(str_replace(Hora, ":", "")))
-  
-AvesOrdenadas <- AvesLimpia %>%
-  arrange(Site, Especies, Fecha, Hora, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  group_by(Site, Especies, Fecha, Hora, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  summarise(Abundancia = max(Abundancia)) %>%
-  group_by(Site, Fecha, Hora,  Especies, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  mutate(Orden = factor(row_number())) %>% 
-  filter(Orden %in% c(1, 2, 3))
-
-CarpusPivot <- AvesOrdenadas %>% 
-  pivot_wider(names_from = Especies, values_from = Abundancia, values_fill = 0) %>% 
-  select(Site, VEGID, Type, ALTITUDE, Area_Basal, Fecha, Hora, Orden, CARPUS)
-
-CarpusPivotOrden <- CarpusPivot %>%
-  arrange(Site, VEGID, Type, ALTITUDE, Area_Basal, CARPUS, Fecha, Hora) %>%
-  group_by(Site,VEGID, Type, ALTITUDE, Area_Basal, CARPUS) %>%
-  mutate(Orden = factor(row_number())) %>% 
-  filter(!is.na(Site))
-  
-
-head(CarpusPivotOrden)
+ArdillaRoja <- readRDS("data/SwissSquirrels.rds")
 ```
 
 ## Formatear base de datos a formato unmarked
@@ -52,126 +65,77 @@ head(CarpusPivotOrden)
 Pasar cada replica en columnas diferentes de acuerdo a la especie de ave
 
 ```{r}
+y <- ArdillaRoja[,c("det071", "det072", "det073")]
 
+SiteCov <- ArdillaRoja[,c("ele", "forest")]
 
-# Crear un conjunto de datos con todos los niveles de Orden por Site
-CARPUSunmarked <- CarpusPivotOrden %>%
-  filter(!is.na(Fecha)) %>% 
-  mutate(Orden = as.numeric(Orden)) %>% 
-  complete(Orden = 1:3) %>%
-  mutate(CARPUS = ifelse(is.na(Fecha), NA, CARPUS),
-         CARPUS = replace_na(CARPUS, 50))
-
-# Pivot_wider
-CARPUSunmarkedReady <- CARPUSunmarked %>%
-  mutate(Fechaord = yday(Fecha)) %>% 
-  group_by(Site, Orden, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  summarise(CARPUS = max(CARPUS),
-            Fechaord = max(Fechaord),
-            Hora = max(Hora)) %>% 
-  ungroup() %>%
-  group_by(Site, VEGID, Type, ALTITUDE, Area_Basal) %>% 
-  pivot_wider(names_from = Orden,
-              values_from = c(Fechaord, Hora, CARPUS),
-              values_fill =  0) %>% 
-  mutate(CARPUS_1 = replace(CARPUS_1, CARPUS_1 == 50, NA)) %>% 
-  mutate(CARPUS_2 = replace(CARPUS_2, CARPUS_2 == 50, NA)) %>% 
-  mutate(CARPUS_3 = replace(CARPUS_3, CARPUS_3 == 50, NA)) 
-
-
-```
-
-## Crear variables de detectabilidad
-
-```{r}
-## Definir ocasiones de deteccion
-CARPUS_y <- CARPUSunmarkedReady[,12:14]
-
-CARPUS_y[CARPUS_y > 1] <- 1 # Pasar matrix a 0 y 1
-
-
-## Definir los variables asociados a la deteccion:
-
-
-Fecha_CARPUS= list(Fecha=CARPUSunmarkedReady[,6:8]) 
-
-# Y quien realizo la observacion
-
-Hora_CARPUS= list(Hora=CARPUSunmarkedReady[,9:11]) 
-
-
-```
-
-## Crear variables de habitat (covariables)
-
-```{r}
-## Definir los variables de covarianza
-
-CARPUS_siteCovs <- CARPUSunmarkedReady[,c("Type", "ALTITUDE", "Area_Basal")]
+ObsCov <- list(Fecha = ArdillaRoja[,c("date071", "date072", "date073")],
+               Dur = ArdillaRoja[,c("dur071", "dur072", "dur073")])
 ```
 
 ## Crear tabla unmarked
 
 ```{r}
 
-library(unmarked)
+Ardillas_umf <- unmarkedFrameOccu(y = y, siteCovs = SiteCov, 
+                                    obsCovs= ObsCov)
 
-## CREAR DATA FRAME
-CARPUSunmarked_df <- unmarkedFrameOccu(y = CARPUS_y, siteCovs = CARPUS_siteCovs, 
-                                    obsCovs=c(Fecha_CARPUS, Hora_CARPUS))
-
-summary(CARPUSunmarked_df)
+summary(Ardillas_umf)
 
 ```
 
-## Ajustar modelo de deteccion
+## Ajustar modelo de detección  
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 #### MODELAR DETECCION PRIMERO
 
-ModelDet0 <- occu(~1 ~1, CARPUSunmarked_df) ##Null model
+ModelDet0 <- occu(~1 ~1, Ardillas_umf) ##Null model
 
-ModelDet1 <- occu(~Fecha ~1, CARPUSunmarked_df)
+ModelDet1 <- occu(~Fecha ~1, Ardillas_umf)
 
-ModelDet2 <- occu(~Hora ~1, CARPUSunmarked_df)
+ModelDet2 <- occu(~Dur ~1, Ardillas_umf)
 
-ModelDet3 <- occu(~Fecha + Hora ~1, CARPUSunmarked_df)
+ModelDet3 <- occu(~Fecha + Dur ~1, Ardillas_umf)
 ```
 
-## Seleccion de modelo de deteccion
+## Seleccion de modelo de detección 
 
 ```{r}
 library(AICcmodavg)
 
 DetModels <- list(ModelDet0, ModelDet1, ModelDet2, ModelDet3)
 
-DetNames <- c("Nulo", "Fecha", "Hora", "Fecha + Hora")
+DetNames <- c("Nulo", "Fecha", "Dur", "Fecha +Dur")
 
 aictab(DetModels, DetNames, sort = TRUE)
 ```
 
-## Ajustar modelo de Abundancia
+## Ajustar modelo de ocupación 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 #### MODELAR DETECCION PRIMERO
 
-ModelAbun0 <- occu(~1 ~ 1, CARPUSunmarked_df) ##Null model
+ModelOccu0 <- occu(~Fecha + Dur ~ 1, Ardillas_umf) ##Null model
 
-ModelAbun1 <- occu(~1 ~ Type, CARPUSunmarked_df)
+ModelOccu1 <- occu(~Fecha + Dur ~ ele, Ardillas_umf)
 
-ModelAbun2 <- occu(~1 ~ ALTITUDE, CARPUSunmarked_df)
+ModelOccu2 <- occu(~Fecha + Dur ~ forest, Ardillas_umf)
 
-ModelAbun3 <- occu(~1 ~ Area_Basal, CARPUSunmarked_df)
+ModelOccu3 <- occu(~Fecha + Dur ~ ele + forest, Ardillas_umf)
+
+ModelOccu4 <- occu(~Fecha + Dur ~ ele + I(ele^2), Ardillas_umf)
+
+ModelOccu5 <- occu(~Fecha + Dur ~ forest + I(forest^2), Ardillas_umf)
 ```
 
-## Seleccion de modelo de abundancia
+## Seleccion de modelo de ocupación 
 
 ```{r}
 library(AICcmodavg)
 
-AbunModels <- list(ModelAbun0, ModelAbun1, ModelAbun2, ModelAbun3)
+AbunModels <- list(ModelOccu0, ModelOccu1, ModelOccu2, ModelOccu3, ModelOccu4, ModelOccu5)
 
-AbunNames <- c("Nulo", "Type", "ALTITUDE", "Area_Basal")
+AbunNames <- c("Nulo", "ele", "forest", "ele + forest" , "ele2", "forest2")
 
 aictab(AbunModels, AbunNames, sort = TRUE)
 ```
@@ -179,8 +143,8 @@ aictab(AbunModels, AbunNames, sort = TRUE)
 ## Resumen de los resultados
 
 ```{r}
-summary(ModelAbun2)
-confint(ModelAbun2, type = "state", level = 0.95)
+summary(ModelOccu2)
+confint(ModelOccu2, type = "state", level = 0.95)
 ```
 
 ## Bondad de ajuste
@@ -199,36 +163,62 @@ fitstats <- function(Mod_global2) {
   return(out)
 }
 
-(pb <- parboot(ModelAbun2, fitstats, nsim=100, report=1))
+(pb <- parboot(ModelOccu2, fitstats, nsim=100, report=1))
 
+
+```
+
+```{r}
 cHat_pb <- pb@t0[2] / mean(pb@t.star[,2])
-
-
-
+cHat_pb
 ```
 
-## Prepar data para graficar
+
+## Prepar data para graficar ocupación 
 
 ```{r}
-CARPUS_ALTITUDE <- data.frame(ALTITUDE = seq(min(CARPUSunmarkedReady$ALTITUDE, na.rm = TRUE), max(CARPUSunmarkedReady$ALTITUDE, na.rm = TRUE), length.out = 100))
+Forest <- data.frame(forest = seq(min(ArdillaRoja$forest, na.rm = TRUE), max(ArdillaRoja$forest, na.rm = TRUE), length.out = 100))
                                  
-Carpus_ALTITUDE <- predict(ModelAbun2, newdata = CARPUS_ALTITUDE, type = "state")
+Forest_pre <- predict(ModelOccu2, newdata =Forest, type = "state", appendData = TRUE)
 
-Carpus_ALTITUDE$ALTITUDE <- CARPUS_ALTITUDE$ALTITUDE 
 ```
 
-## Graficar modelo
+## Graficar modelo de ocupación
 
 ```{r}
-ggplot(data= Carpus_ALTITUDE, aes(x= ALTITUDE, y= Predicted))+
+ggplot(data= Forest_pre, aes(x= forest, y= Predicted))+
   geom_ribbon(aes(ymin= lower,
                   ymax= upper), fill = "lightblue") +
   geom_line(color= "black") +
-  labs(x = "Elevacion", 
+  labs(x = "Cobertura boscosa", 
        y = expression(paste("Probabilidad de ocupancia (", psi, ")", sep = "")))+
-  ggtitle("Ocupancia de Cardenilla pusilla versus la elevacion") +
+  ggtitle("Ocupancia de Ardilla Roja") +
   theme_classic()
 ```
+
+## Prepar data para graficar detección 
+
+```{r}
+Dur <- data.frame(Dur = seq(min(ArdillaRoja$dur071, na.rm = TRUE), max(ArdillaRoja$dur073, na.rm = TRUE), length.out = 100),
+                  Fecha = mean(ArdillaRoja$date072))
+                                 
+Dur_pre <- predict(ModelOccu2, newdata =Dur, type = "det", appendData = TRUE)
+
+```
+
+## Graficar modelo de detección
+
+```{r}
+ggplot(data= Dur_pre, aes(x= Dur, y= Predicted))+
+  geom_ribbon(aes(ymin= lower,
+                  ymax= upper), fill = "lightblue") +
+  geom_line(color= "black") +
+  labs(x = "Duración del transecto", 
+       y = expression(paste("Probabilidad de detección")))+
+  ggtitle("Detección de Ardilla Roja") +
+  theme_classic()
+```
+
 :::
 
 ![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
