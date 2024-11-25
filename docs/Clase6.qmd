@@ -14,7 +14,7 @@ Los modelos *N-Mixture* son métodos de inferencia sobre la abundancia que se aj
 
 ## El modelo *N-Mixture* de Royal-Nichols o Bernoulli/Poisson
 
-Cuando se cumplen los supuestos paramétricos adecuados, podemos estimar la abundancia a partir de datos de detección/no detección ("presencia/ausencia"). El modelo de Royle-Nichols (o modelo RN para abreviar) es otro ejemplo de ello ([Royle y Nichols, 2003]( https://doi.org/10.1890/0012-9658(2003)084[0777:EAFRPA]2.0.CO;2)). El modelo básico de *N-Mixture* es una mezcla binomial/Poisson para los conteos observados, mientras que el modelo RN es una mezcla Bernoulli/Poisson para los datos de detección/no detección observados. Es un modelo de mezcla N importante en el árbol genealógico de modelos de este curso, porque proporciona un vínculo conceptual entre los modelos jerárquicos N-Mixture para la abundancia y el modelo N-Mixture para la ocurrencia (es decir, el modelo de ocupación clásico. El modelo RN puede ser útil para estimar la abundancia a partir de mediciones replicadas de presencia/ausencia, para acomodar la heterogeneidad de detección cuando se enfoca en la ocupación o para vincular los datos de ocupación con los datos de abundancia en un modelo integrado, y se ve así:
+Cuando se cumplen los supuestos paramétricos adecuados, podemos estimar la abundancia a partir de datos de detección/no detección ("presencia/ausencia"). El modelo de Royle-Nichols (o modelo RN para abreviar) es otro ejemplo de ello ([Royle y Nichols, 2003]( https://doi.org/10.1890/0012-9658(2003)084[0777:EAFRPA]2.0.CO;2)). El modelo básico de *N-Mixture* es una mezcla binomial/Poisson para los conteos observados, mientras que el modelo RN es una mezcla Bernoulli/Poisson para los datos de detección/no detección observados. Es un modelo de mezcla N importante en el árbol genealógico de modelos de este curso, porque proporciona un vínculo conceptual entre los modelos jerárquicos N-Mixture para la abundancia y el modelo N-Mixture para la ocurrencia (es decir, el modelo de abundancia clásico. El modelo RN puede ser útil para estimar la abundancia a partir de mediciones replicadas de presencia/ausencia, para acomodar la heterogeneidad de detección cuando se enfoca en la ocupación o para vincular los datos de ocupación con los datos de abundancia en un modelo integrado, y se ve así:
 
 1. Modelo para el tamaño de la población de cuadrantes (modelo de proceso de estado): 
 
@@ -25,9 +25,9 @@ $$log(\lambda_i) = /beta_0 + covariate effect $$
 
 2. Modelo de error de medición (modelo de observación): 
 
-$$y_{ij}|N_i \sim Bernoulli(P*_{ij})$$
+$$y_{ij}|N_i \sim Bernoulli(P^*_{ij})$$
 
-$$P*_{ij} = 1 - (1 - P_{ij}^N_i)$$
+$$P^*_{ij} = 1 - (1 - P_{ij}N_i)$$
 
 $$logit(P_{ij} = \alpha_0 + covariate effect$$
 
@@ -94,7 +94,7 @@ DetNames <- c("Nulo", "Fecha", "Dur", "Fecha +Dur")
 aictab(DetModels, DetNames, sort = TRUE)
 ```
 
-## Ajustar modelo de ocupación 
+## Ajustar modelo de abundancia 
 
 ```{r, warning=FALSE, message=FALSE}
 #### MODELAR DETECCION PRIMERO
@@ -112,7 +112,7 @@ ModelOccu4 <- occuRN(~Fecha + Dur ~ ele + I(ele^2), Ardillas_umf)
 ModelOccu5 <- occuRN(~Fecha + Dur ~ forest + I(forest^2), Ardillas_umf)
 ```
 
-## Seleccion de modelo de ocupación 
+## Seleccion de modelo de abundancia 
 
 ```{r}
 library(AICcmodavg)
@@ -158,7 +158,7 @@ cHat_pb
 ```
 
 
-## Prepar data para graficar ocupación 
+## Prepar data para graficar abundancia 
 
 ```{r}
 Forest <- data.frame(forest = seq(min(ArdillaRoja$forest, na.rm = TRUE), max(ArdillaRoja$forest, na.rm = TRUE), length.out = 100))
@@ -167,7 +167,7 @@ Forest_pre <- predict(ModelOccu2, newdata =Forest, type = "state", appendData = 
 
 ```
 
-## Graficar modelo de ocupación
+## Graficar modelo de abundancia
 
 ```{r}
 ggplot(data= Forest_pre, aes(x= forest, y= Predicted))+
@@ -237,7 +237,7 @@ ggplot() +
   geom_raster(data = SuizaBosque_raster_df, aes(x = x, y = y, fill = z)) +
   theme_map() +
   scale_fill_gradient(na.value = "white") +
-  labs(fill = "Ocupación")
+  labs(fill = "Abundancia")
 
 ```
 
