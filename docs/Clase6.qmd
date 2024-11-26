@@ -20,16 +20,16 @@ Cuando se cumplen los supuestos paramétricos adecuados, podemos estimar la abun
 
 $$N_i \sim Poisson(\lambda_i)$$
 
-$$log(\lambda_i) = /beta_0 + covariate effect $$
+$$log(\lambda_i) = \beta_0 + covariate effect $$
 
 
 2. Modelo de error de medición (modelo de observación): 
 
 $$y_{ij}|N_i \sim Bernoulli(P^*_{ij})$$
 
-$$P^*_{ij} = 1 - (1 - P_{ij}N_i)$$
+$$P^*_{ij} = 1 - (1 - P_{ij}^N_i)$$
 
-$$logit(P_{ij} = \alpha_0 + covariate effect$$
+$$logit(P_{ij}) = \alpha_0 + covariate effect$$
 
 
 

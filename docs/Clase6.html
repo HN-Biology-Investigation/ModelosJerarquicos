@@ -143,13 +143,13 @@ window.Quarto = {
 <li>Modelo para el tamaño de la población de cuadrantes (modelo de proceso de estado):</li>
 </ol>
 <p><span class="math display">\[N_i \sim Poisson(\lambda_i)\]</span></p>
-<p><span class="math display">\[log(\lambda_i) = /beta_0 + covariate effect \]</span></p>
+<p><span class="math display">\[log(\lambda_i) = \beta_0 + covariate effect \]</span></p>
 <ol start="2" type="1">
 <li>Modelo de error de medición (modelo de observación):</li>
 </ol>
 <p><span class="math display">\[y_{ij}|N_i \sim Bernoulli(P^*_{ij})\]</span></p>
-<p><span class="math display">\[P^*_{ij} = 1 - (1 - P_{ij}N_i)\]</span></p>
-<p><span class="math display">\[logit(P_{ij} = \alpha_0 + covariate effect\]</span></p>
+<p><span class="math display">\[P^*_{ij} = 1 - (1 - P_{ij}^N_i)\]</span></p>
+<p><span class="math display">\[logit(P_{ij}) = \alpha_0 + covariate effect\]</span></p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
@@ -339,15 +339,15 @@ parboot(object = ModelOccu2, statistic = fitstats, nsim = 100, report = 1)
 
 Parametric Bootstrap Statistics:
               t0 mean(t0 - t_B) StdDev(t0 - t_B) Pr(t_B &gt; t0)
-SSE          130          4.041             6.38        0.248
-Chisq        525        -33.292            24.10        0.911
-freemanTukey 167          0.992             7.23        0.426
+SSE          130           4.18             6.53        0.267
+Chisq        525         -34.24            19.93        0.950
+freemanTukey 167           1.14             7.31        0.485
 
 t_B quantiles:
               0% 2.5% 25% 50% 75% 97.5% 100%
-SSE          107  115 122 126 130   137  140
-Chisq        510  516 542 555 575   605  625
-freemanTukey 143  152 160 165 171   178  183
+SSE          107  114 122 126 131   138  140
+Chisq        516  522 545 558 573   596  616
+freemanTukey 141  152 161 167 171   178  183
 
 t0 = Original statistic computed from data
 t_B = Vector of bootstrap samples</code></pre>
@@ -358,7 +358,7 @@ t_B = Vector of bootstrap samples</code></pre>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>cHat_pb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Chisq 
-0.9403412 </code></pre>
+0.9387448 </code></pre>
 </div>
 </div>
 </div>
