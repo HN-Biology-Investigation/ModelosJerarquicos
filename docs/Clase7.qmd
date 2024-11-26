@@ -13,3 +13,264 @@ Cuando decimos "interacciones entre especies" en esta clase, nos referimos a una
 
 Referencia: [Aplied Hierarchical Modeling in Ecology, Volumen 2](https://www.sciencedirect.com/book/9780128237687/applied-hierarchical-modeling-in-ecology-analysis-of-distribution-abundance-and-species-richness-in-r-and-bugs)
 
+
+
+```{r}
+library(tidyverse)
+library(unmarked)
+library(abind)
+```
+
+
+
+```{r}
+Carnivores <- readRDS("data/CarnivoreData.rds")
+
+str(Carnivores)
+```
+
+```{r}
+ylist <- list(bobcat = as.matrix(Carnivores[,c("bobcat1", "bobcat2", "bobcat3" )]), 
+              coyote = as.matrix(Carnivores[,c("coyote1", "coyote2", "coyote3" )]),
+              redfox = as.matrix(Carnivores[,c("redfox1", "redfox2", "redfox3" )]))
+```
+
+
+```{r}
+Dist <- scale(Carnivores[,'Dist_5km'])
+HDens <- scale(Carnivores[,'HDens_5km'])
+Trail <- Carnivores[,'Trail']
+
+head(sitecovs <- data.frame(Dist = Dist, HDens = HDens, Trail = Trail))
+```
+
+```{r}
+umf <- unmarkedFrameOccuMulti(y = ylist, siteCovs = sitecovs)
+```
+
+```{r}
+summary(umf)
+
+plot(umf)
+```
+
+
+```{r}
+occ_formulae1 <- c(
+    # bobcat, coyote, red fox occupancy, respectively
+    # Modeled as constant
+    ' ~ 1',' ~ 1',' ~ 1',
+    # Two-way interactions are fixed at 0
+    # bobcat:coyote, bobcat:redfox, coyote:redfox
+    rep(0,3),
+    # Fix 3-way interaction at 0
+    0
+)
+```
+
+
+```{r}
+# Constant detection by species
+det_formulae1 <- rep(' ~ 1', 3)
+
+# Fit model 1
+(fm1 <- occuMulti(det_formulae1, occ_formulae1, umf))
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+# Specify models for occupancy in terms of natural parameters f
+occ_formulae2 <- c(
+    # bobcat, coyote, red fox occupancy, respectively
+    # Modeled as a linear function of Dist
+    rep(' ~ Dist', 3),
+    # same: ' ~ Dist',' ~ Dist',' ~ Dist',
+    # Two-way interactions are fixed at 0
+    # bobcat:coyote, bobcat:redfox, coyote:redfox
+    rep(0, 3),
+    # Fix 3-way interaction also at 0
+    0
+)
+# Detection by species
+det_formulae2 <- rep('~as.factor(Trail)', 3)
+# det_formulae2 <- rep('~as.factor(Trail) + date', 3)
+
+# Fit model 2
+(fm2 <- occuMulti(det_formulae2, occ_formulae2, umf,
+    control = list(maxit = 500, trace = TRUE, REPORT = 1)))
+
+```
+
+
+```{r}
+# Specify models for occupancy in terms of natural parameters f
+occ_formulae3 <- c(
+    # bobcat, coyote, red fox occupancy, respectively
+    # Modeled as constant
+    rep(' ~ 1', 3),
+    # same: ' ~ 1',' ~ 1',' ~ 1',
+    # Two-way interactions are intercept-only
+    # bobcat:coyote, bobcat:redfox, coyote:redfox
+    rep('~1', 3),
+    # same: '~1', '~1', '~1',
+    # Still fix 3-way interaction at 0 (for an intercept model would write: '~1')
+    0
+)
+# Detection by species
+det_formulae3 <- rep('~1', 3)
+
+# Fit model 3
+(fm3 <- occuMulti(det_formulae3, occ_formulae3, umf,
+    control = list(maxit = 500, trace = TRUE, REPORT = 1)))
+```
+
+
+
+```{r}
+# Specify models for occupancy in terms of natural parameters f
+occ_formulae4 <- c(
+  # bobcat, coyote, red fox occupancy, respectively
+  # Main species effect modeled with a covariate
+  rep(' ~ Dist', 3),
+  # Two-way interactions are still intercept-only
+  # bobcat:coyote, bobcat:redfox, coyote:redfox
+  rep('~1', 3),
+  # Still fix 3-way interaction at 0
+  0
+)
+# Detection by species
+det_formulae4 <- rep('~as.factor(Trail)', 3)
+
+# Fit model 4
+(fm4 <- occuMulti(det_formulae4, occ_formulae4, umf,
+    control = list(maxit = 500, trace = TRUE, REPORT = 1)))
+
+```
+
+
+```{r}
+# Specify models for occupancy in terms of natural parameters f
+occ_formulae5 <- c(
+    # bobcat, coyote, red fox occupancy, respectively
+    # Main species effects all modeled with two covariates
+    rep(' ~ Dist', 3),
+    # Two-way interactions are a function of housing density
+    # bobcat:coyote, bobcat:redfox, coyote:redfox
+    rep('~HDens', 3),
+    # Still fix 3-way interaction at 0
+    0
+)
+# Detection by species
+det_formulae5 <- rep('~as.factor(Trail)', 3)
+
+# Fit model 5
+(fm5 <- occuMulti(det_formulae5, occ_formulae5, umf,
+    control = list(maxit = 500, trace = TRUE, REPORT = 1)))
+```
+
+```{r}
+library(AICcmodavg)
+
+aictab(cand.set =  list(fm1, fm2, fm3, fm4, fm5),
+       modnames = c("fm1", "fm2", "fm3", "fm4", "fm5"))
+```
+
+
+Predict conditional occupancy and present in a table
+
+```{r}
+
+nd <- data.frame(Dist = 0, HDens = 0)
+
+bob_none <- predict(fm5, type = 'state', species = 'bobcat',
+    cond = c('-coyote','-redfox'), newdata = nd, nsims = 1000)
+
+bob_coyote <- predict(fm5,type = 'state',species = 'bobcat',
+    cond = c('coyote','-redfox'), newdata = nd, nsims = 1000)
+
+bob_redfox <- predict(fm5,type = 'state',species = 'bobcat',
+    cond = c('-coyote','redfox'), newdata = nd, nsims = 1000)
+
+bob_both <- predict(fm5,type = 'state',species = 'bobcat',
+    cond = c('coyote','redfox'), newdata = nd, nsims = 1000)
+```
+
+```{r}
+round(occtab <- rbind('Neither' = bob_none, 'Coyote' = bob_coyote,
+  'Red fox' = bob_redfox, 'Both' = bob_both), 3)
+```
+
+
+```{r}
+
+Dist_df <- data.frame(Dist = seq(min(sitecovs$Dist), max(sitecovs$Dist), length = 100) , 
+                     HDens = mean(sitecovs$HDens), length = 100)
+
+HDens_df <- data.frame(Dist = mean(sitecovs$Dist) , 
+                     HDens = seq(min(sitecovs$HDens), max(sitecovs$HDens), length = 100))
+
+coyote <- predict(fm5,type = 'state',species = 'coyote',
+    newdata = Dist_df, nsims = 1000 )
+
+redfox <- predict(fm5,type = 'state',species = 'redfox',
+    newdata = Dist_df, nsims = 1000)
+
+bobcat <- predict(fm5,type = 'state',species = 'bobcat',
+   newdata = Dist_df, nsims = 1000)
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+coyote$Especie <- "coyote"
+redfox$Especie <- "redfox"
+bobcat$Especie <- "bobcat"
+
+coyote$Dist <- Dist_df$Dist
+redfox$Dist <- Dist_df$Dist
+bobcat$Dist <- Dist_df$Dist
+
+Carnivores_plot <- rbind(coyote, redfox, bobcat)
+
+head(Carnivores_plot)
+```
+
+```{r, message=FALSE, warning=FALSE}
+ggplot(data = Carnivores_plot, aes(x= Dist, y= Predicted, color= Especie, fill = Especie))+
+  geom_line()+
+  geom_ribbon(aes(ymin =  lower, ymax= upper),
+              alpha= 0.5) +
+  labs(y ="Ocupacion Marginal",
+       x= "Distancia en radio de 5km")+
+  theme_classic()
+```
+
+```{r}
+
+bob_redfox <- predict(fm5,type = 'state',species = 'bobcat',
+    cond = c('redfox'), newdata = Dist_df, nsims = 1000)
+
+bob_coyote <- predict(fm5,type = 'state',species = 'bobcat',
+    cond = c('coyote'), newdata = Dist_df, nsims = 1000)
+
+bob_coyote$Especie <- "coyote"
+bob_redfox$Especie <- "redfox"
+
+bob_coyote$Dist <- Dist_df$Dist
+bob_redfox$Dist <- Dist_df$Dist
+
+
+Bob_Condicional <- rbind(bob_coyote, bob_redfox)
+
+head(Bob_Condicional )
+```
+
+```{r}
+ggplot(data = Bob_Condicional, aes(x= Dist, y= Predicted, color= Especie, fill = Especie))+
+  geom_line()+
+  geom_ribbon(aes(ymin =  lower, ymax= upper),
+              alpha= 0.5) +
+  labs(y ="Ocupacion de Bobcat",
+       x= "Distancia en radio de 5km") +
+  theme_classic()
+```
+

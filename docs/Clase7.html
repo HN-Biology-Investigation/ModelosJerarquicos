@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -73,6 +107,642 @@ ul.task-list li input[type="checkbox"] {
 <p>Este capítulo trata sobre el modelado de interacciones entre dos o más especies en términos de patrones observados en la ocurrencia. Las interacciones entre especies son fundamentales para la ecología, ya que pueden ser resultado de mecanismos ecológicos tan importantes como la competencia, la depredación y el mutualismo, denominados colectivamente interacciones bióticas. En sentido estricto, solo los experimentos manipulativos o las observaciones conductuales directas de individuos permiten decidir si una asociación estadística observada puede atribuirse a interacciones bióticas reales, efectos ambientales o ambos mecanismos juntos. Por ejemplo, una correlación espacial negativa en la ocurrencia o abundancia de dos especies puede deberse a una interacción antagónica, como la competencia, el parasitismo o la depredación. Alternativamente, puede ser simplemente el resultado de diferentes preferencias de hábitat de las dos especies, es decir, filtrado de hábitat. O puede ser el resultado de una combinación de ambos mecanismos. Esta es quizás la advertencia principal para la mayoría de las aplicaciones de los modelos de este capítulo: que una correlación no implica necesariamente causalidad.</p>
 <p>Cuando decimos “interacciones entre especies” en esta clase, nos referimos a una asociación o no independencia en los parámetros de múltiples especies en un modelo de ocurrencia. Es decir, utilizamos el término “interacción” en un sentido puramente descriptivo, estadístico o correlativo. Cubriremos modelos multiespecie para ocurrencia, que tienen parámetros específicos para dar cuenta de la posible no independencia entre pares de especies. Además, estos modelos nos permitirán, en diferentes grados, probar hipótesis sobre posibles mecanismos biológicos subyacentes a dicha no independencia entre múltiples especies. Algunos de estos modelos tienen un toque claramente mecanicista, pero ni siquiera ellos nos permitirán hacer inferencias sólidas sobre interacciones reales entre individuos de múltiples especies, a menos que tengamos el tipo correcto de datos (observaciones experimentales o de comportamiento). Sin embargo, los modelos de esta clase pueden ser herramientas poderosas para descubrir patrones: pueden señalar algunos pares de especies como candidatos para interacciones bióticas directas. El descubrimiento de fuertes asociaciones positivas o negativas en la abundancia o la ocurrencia (o posiblemente en otro parámetro) puede ser seguido por investigaciones más enfocadas en los posibles fundamentos mecanicistas de tales patrones. Además, si ajustamos estos modelos a los datos recopilados en el contexto de un experimento manipulativo diseñado para aislar algún mecanismo biológico, entonces nos permitirán hacer inferencias sólidas sobre los efectos de estos mecanismos. Y como siempre, si nuestros modelos muestran una asociación positiva o negativa que fue predicha en base a un conocimiento a priori sobre posibles interacciones bióticas entre estas especies, entonces esto proporciona una inferencia más sólida sobre la existencia de estas interacciones.</p>
 <p>Referencia: <a href="https://www.sciencedirect.com/book/9780128237687/applied-hierarchical-modeling-in-ecology-analysis-of-distribution-abundance-and-species-richness-in-r-and-bugs">Aplied Hierarchical Modeling in Ecology, Volumen 2</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.0     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(unmarked)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(abind)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Carnivores <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/CarnivoreData.rds"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Carnivores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   1437 obs. of  15 variables:
+ $ Dist_5km   : num  0.04 0.03 0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 ...
+ $ HDens_5km  : num  9.35 9.5 9.65 9.6 9.61 ...
+ $ Latitude   : num  0.39 0.39 0.39 0.39 0.39 ...
+ $ Longitude  : num  -0.772 -0.772 -0.772 -0.772 -0.772 ...
+ $ People_site: num  0.857 0.002 0.387 0.003 0 0.443 0 0 0.002 0 ...
+ $ Trail      : int  1 0 1 0 0 1 0 0 0 0 ...
+ $ bobcat1    : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ bobcat2    : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ bobcat3    : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ coyote1    : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ coyote2    : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ coyote3    : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ redfox1    : int  0 0 0 0 0 1 0 0 0 0 ...
+ $ redfox2    : int  0 0 0 0 0 1 0 0 0 0 ...
+ $ redfox3    : int  0 0 1 0 0 1 0 0 0 0 ...</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ylist <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">bobcat =</span> <span class="fu">as.matrix</span>(Carnivores[,<span class="fu">c</span>(<span class="st">"bobcat1"</span>, <span class="st">"bobcat2"</span>, <span class="st">"bobcat3"</span> )]), </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">coyote =</span> <span class="fu">as.matrix</span>(Carnivores[,<span class="fu">c</span>(<span class="st">"coyote1"</span>, <span class="st">"coyote2"</span>, <span class="st">"coyote3"</span> )]),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">redfox =</span> <span class="fu">as.matrix</span>(Carnivores[,<span class="fu">c</span>(<span class="st">"redfox1"</span>, <span class="st">"redfox2"</span>, <span class="st">"redfox3"</span> )]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Dist <span class="ot">&lt;-</span> <span class="fu">scale</span>(Carnivores[,<span class="st">'Dist_5km'</span>])</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>HDens <span class="ot">&lt;-</span> <span class="fu">scale</span>(Carnivores[,<span class="st">'HDens_5km'</span>])</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>Trail <span class="ot">&lt;-</span> Carnivores[,<span class="st">'Trail'</span>]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sitecovs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> Dist, <span class="at">HDens =</span> HDens, <span class="at">Trail =</span> Trail))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Dist      HDens Trail
+1 1.2017760 0.03128299     1
+2 0.7361647 0.03668136     0
+3 0.7361647 0.04187064     1
+4 0.7361647 0.04014855     0
+5 0.7361647 0.04049080     0
+6 0.7361647 0.04543423     1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>umf <span class="ot">&lt;-</span> <span class="fu">unmarkedFrameOccuMulti</span>(<span class="at">y =</span> ylist, <span class="at">siteCovs =</span> sitecovs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(umf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>unmarkedFrame Object
+
+1437 sites
+3 species: bobcat coyote redfox 
+Maximum number of observations per site: 3 
+Mean number of observations per site:
+bobcat: 3  coyote: 3  redfox: 3  
+Sites with at least one detection:
+bobcat: 196  coyote: 401  redfox: 161  
+Tabulation of y observations:
+bobcat:
+   0    1 
+4057  254 
+coyote:
+   0    1 
+3685  626 
+redfox:
+   0    1 
+4054  257 
+
+Site-level covariates:
+      Dist             HDens             Trail       
+ Min.   :-0.6607   Min.   :-0.2964   Min.   :0.0000  
+ 1st Qu.:-0.6607   1st Qu.:-0.2892   1st Qu.:0.0000  
+ Median :-0.6607   Median :-0.2708   Median :0.0000  
+ Mean   : 0.0000   Mean   : 0.0000   Mean   :0.3229  
+ 3rd Qu.: 0.2706   3rd Qu.:-0.1905   3rd Qu.:1.0000  
+ Max.   : 5.3923   Max.   : 6.2498   Max.   :1.0000  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(umf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Clase7_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>occ_formulae1 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat, coyote, red fox occupancy, respectively</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modeled as constant</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">' ~ 1'</span>,<span class="st">' ~ 1'</span>,<span class="st">' ~ 1'</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Two-way interactions are fixed at 0</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat:coyote, bobcat:redfox, coyote:redfox</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">3</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Fix 3-way interaction at 0</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constant detection by species</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>det_formulae1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">' ~ 1'</span>, <span class="dv">3</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model 1</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>(fm1 <span class="ot">&lt;-</span> <span class="fu">occuMulti</span>(det_formulae1, occ_formulae1, umf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+occuMulti(detformulas = det_formulae1, stateformulas = occ_formulae1, 
+    data = umf, maxOrder = 3L)
+
+Occupancy:
+                     Estimate     SE      z  P(&gt;|z|)
+[bobcat] (Intercept)   -1.171 0.1328  -8.82 1.13e-18
+[coyote] (Intercept)   -0.629 0.0744  -8.46 2.79e-17
+[redfox] (Intercept)   -1.846 0.0944 -19.56 3.58e-85
+
+Detection:
+                     Estimate     SE     z  P(&gt;|z|)
+[bobcat] (Intercept)   -1.104 0.1396 -7.91 2.59e-15
+[coyote] (Intercept)   -0.333 0.0764 -4.36 1.30e-05
+[redfox] (Intercept)   -0.252 0.1182 -2.13 3.29e-02
+
+AIC: 6710.658 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>occ_formulae2 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat, coyote, red fox occupancy, respectively</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modeled as a linear function of Dist</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">' ~ Dist'</span>, <span class="dv">3</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># same: ' ~ Dist',' ~ Dist',' ~ Dist',</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Two-way interactions are fixed at 0</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat:coyote, bobcat:redfox, coyote:redfox</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">3</span>),</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Fix 3-way interaction also at 0</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Detection by species</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>det_formulae2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">'~as.factor(Trail)'</span>, <span class="dv">3</span>)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co"># det_formulae2 &lt;- rep('~as.factor(Trail) + date', 3)</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model 2</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>(fm2 <span class="ot">&lt;-</span> <span class="fu">occuMulti</span>(det_formulae2, occ_formulae2, umf,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">maxit =</span> <span class="dv">500</span>, <span class="at">trace =</span> <span class="cn">TRUE</span>, <span class="at">REPORT =</span> <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>initial  value 4145.891058 
+iter   2 value 3564.392891
+iter   3 value 3491.336999
+iter   4 value 3345.562989
+iter   5 value 3260.856435
+iter   6 value 3238.918538
+iter   7 value 3214.517112
+iter   8 value 3205.172680
+iter   9 value 3200.938826
+iter  10 value 3189.861878
+iter  11 value 3173.669093
+iter  12 value 3164.402609
+iter  13 value 3141.827898
+iter  14 value 3140.705930
+iter  15 value 3134.410022
+iter  16 value 3128.848007
+iter  17 value 3124.524109
+iter  18 value 3124.432997
+iter  19 value 3118.885342
+iter  20 value 3117.268394
+iter  21 value 3116.815868
+iter  22 value 3116.769367
+iter  23 value 3116.762841
+iter  24 value 3116.762460
+iter  24 value 3116.762441
+iter  24 value 3116.762441
+final  value 3116.762441 
+converged</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+occuMulti(detformulas = det_formulae2, stateformulas = occ_formulae2, 
+    data = umf, control = list(maxit = 500, trace = TRUE, REPORT = 1), 
+    maxOrder = 3L)
+
+Occupancy:
+                     Estimate     SE        z  P(&gt;|z|)
+[bobcat] (Intercept)  -0.5542 0.1587  -3.4930 4.78e-04
+[bobcat] Dist         -0.5224 0.1293  -4.0413 5.32e-05
+[coyote] (Intercept)   0.1917 0.1058   1.8116 7.01e-02
+[coyote] Dist         -0.0069 0.0845  -0.0817 9.35e-01
+[redfox] (Intercept)  -1.5358 0.1195 -12.8554 8.02e-38
+[redfox] Dist         -0.2912 0.1123  -2.5926 9.53e-03
+
+Detection:
+                           Estimate     SE      z  P(&gt;|z|)
+[bobcat] (Intercept)          -2.58 0.1619 -15.91 5.54e-57
+[bobcat] as.factor(Trail)1     1.89 0.1714  11.02 3.01e-28
+[coyote] (Intercept)          -1.96 0.0998 -19.65 5.63e-86
+[coyote] as.factor(Trail)1     2.17 0.1227  17.68 5.52e-70
+[redfox] (Intercept)          -1.40 0.1836  -7.61 2.80e-14
+[redfox] as.factor(Trail)1     1.63 0.2186   7.44 1.00e-13
+
+AIC: 6257.525 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>occ_formulae3 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat, coyote, red fox occupancy, respectively</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modeled as constant</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">' ~ 1'</span>, <span class="dv">3</span>),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># same: ' ~ 1',' ~ 1',' ~ 1',</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Two-way interactions are intercept-only</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat:coyote, bobcat:redfox, coyote:redfox</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">'~1'</span>, <span class="dv">3</span>),</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># same: '~1', '~1', '~1',</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Still fix 3-way interaction at 0 (for an intercept model would write: '~1')</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Detection by species</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>det_formulae3 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">'~1'</span>, <span class="dv">3</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model 3</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>(fm3 <span class="ot">&lt;-</span> <span class="fu">occuMulti</span>(det_formulae3, occ_formulae3, umf,</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">maxit =</span> <span class="dv">500</span>, <span class="at">trace =</span> <span class="cn">TRUE</span>, <span class="at">REPORT =</span> <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>initial  value 4145.891058 
+iter   2 value 3505.573494
+iter   3 value 3435.371493
+iter   4 value 3387.637819
+iter   5 value 3354.360193
+iter   6 value 3347.754192
+iter   7 value 3347.632929
+iter   8 value 3344.810452
+iter   9 value 3339.435728
+iter  10 value 3328.127024
+iter  11 value 3318.849371
+iter  12 value 3314.197452
+iter  13 value 3308.641333
+iter  14 value 3306.455277
+iter  15 value 3306.109440
+iter  16 value 3304.189861
+iter  17 value 3304.108916
+iter  18 value 3304.063734
+iter  19 value 3304.056400
+iter  20 value 3304.055708
+iter  20 value 3304.055707
+final  value 3304.055707 
+converged</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+occuMulti(detformulas = det_formulae3, stateformulas = occ_formulae3, 
+    data = umf, control = list(maxit = 500, trace = TRUE, REPORT = 1), 
+    maxOrder = 3L)
+
+Occupancy:
+                            Estimate    SE      z  P(&gt;|z|)
+[bobcat] (Intercept)           -1.76 0.179  -9.81 1.03e-22
+[coyote] (Intercept)           -1.30 0.137  -9.54 1.37e-21
+[redfox] (Intercept)           -2.20 0.152 -14.44 2.81e-47
+[bobcat:coyote] (Intercept)     1.72 0.262   6.56 5.48e-11
+[bobcat:redfox] (Intercept)    -1.38 0.377  -3.66 2.57e-04
+[coyote:redfox] (Intercept)     1.41 0.248   5.69 1.31e-08
+
+Detection:
+                     Estimate     SE     z  P(&gt;|z|)
+[bobcat] (Intercept)   -1.106 0.1398 -7.91 2.59e-15
+[coyote] (Intercept)   -0.331 0.0761 -4.35 1.38e-05
+[redfox] (Intercept)   -0.253 0.1183 -2.13 3.28e-02
+
+AIC: 6626.111 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>occ_formulae4 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># bobcat, coyote, red fox occupancy, respectively</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Main species effect modeled with a covariate</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep</span>(<span class="st">' ~ Dist'</span>, <span class="dv">3</span>),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Two-way interactions are still intercept-only</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># bobcat:coyote, bobcat:redfox, coyote:redfox</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep</span>(<span class="st">'~1'</span>, <span class="dv">3</span>),</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Still fix 3-way interaction at 0</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Detection by species</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>det_formulae4 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">'~as.factor(Trail)'</span>, <span class="dv">3</span>)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model 4</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>(fm4 <span class="ot">&lt;-</span> <span class="fu">occuMulti</span>(det_formulae4, occ_formulae4, umf,</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">maxit =</span> <span class="dv">500</span>, <span class="at">trace =</span> <span class="cn">TRUE</span>, <span class="at">REPORT =</span> <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>initial  value 4145.891058 
+iter   2 value 3497.184274
+iter   3 value 3359.919032
+iter   4 value 3200.588756
+iter   5 value 3167.151612
+iter   6 value 3150.796555
+iter   7 value 3132.720745
+iter   8 value 3128.638305
+iter   9 value 3126.384541
+iter  10 value 3124.509970
+iter  11 value 3122.437277
+iter  12 value 3121.578894
+iter  13 value 3120.372680
+iter  14 value 3117.299726
+iter  15 value 3115.120629
+iter  16 value 3111.840295
+iter  17 value 3108.852715
+iter  18 value 3108.160578
+iter  19 value 3106.379403
+iter  20 value 3104.153870
+iter  21 value 3102.503664
+iter  22 value 3098.117691
+iter  23 value 3094.888904
+iter  24 value 3093.351887
+iter  25 value 3092.489769
+iter  26 value 3092.087253
+iter  27 value 3091.900953
+iter  28 value 3091.762127
+iter  29 value 3091.733087
+iter  30 value 3091.730215
+iter  31 value 3091.729867
+iter  32 value 3091.729794
+iter  32 value 3091.729781
+final  value 3091.729781 
+converged</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+occuMulti(detformulas = det_formulae4, stateformulas = occ_formulae4, 
+    data = umf, control = list(maxit = 500, trace = TRUE, REPORT = 1), 
+    maxOrder = 3L)
+
+Occupancy:
+                            Estimate     SE     z  P(&gt;|z|)
+[bobcat] (Intercept)          -1.010 0.2393 -4.22 2.42e-05
+[bobcat] Dist                 -0.637 0.1438 -4.43 9.51e-06
+[coyote] (Intercept)          -0.529 0.1919 -2.75 5.89e-03
+[coyote] Dist                  0.160 0.0986  1.62 1.05e-01
+[redfox] (Intercept)          -1.762 0.2311 -7.62 2.47e-14
+[redfox] Dist                 -0.463 0.1271 -3.65 2.67e-04
+[bobcat:coyote] (Intercept)    1.304 0.3223  4.05 5.20e-05
+[bobcat:redfox] (Intercept)   -1.881 0.3996 -4.71 2.52e-06
+[coyote:redfox] (Intercept)    1.224 0.3179  3.85 1.18e-04
+
+Detection:
+                           Estimate    SE      z  P(&gt;|z|)
+[bobcat] (Intercept)          -2.59 0.162 -15.97 2.11e-57
+[bobcat] as.factor(Trail)1     1.89 0.171  11.08 1.60e-28
+[coyote] (Intercept)          -1.94 0.100 -19.31 4.48e-83
+[coyote] as.factor(Trail)1     2.15 0.123  17.43 4.63e-68
+[redfox] (Intercept)          -1.38 0.184  -7.50 6.46e-14
+[redfox] as.factor(Trail)1     1.61 0.219   7.34 2.10e-13
+
+AIC: 6213.46 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>occ_formulae5 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat, coyote, red fox occupancy, respectively</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Main species effects all modeled with two covariates</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">' ~ Dist'</span>, <span class="dv">3</span>),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Two-way interactions are a function of housing density</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat:coyote, bobcat:redfox, coyote:redfox</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">'~HDens'</span>, <span class="dv">3</span>),</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Still fix 3-way interaction at 0</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Detection by species</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>det_formulae5 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">'~as.factor(Trail)'</span>, <span class="dv">3</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model 5</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>(fm5 <span class="ot">&lt;-</span> <span class="fu">occuMulti</span>(det_formulae5, occ_formulae5, umf,</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">maxit =</span> <span class="dv">500</span>, <span class="at">trace =</span> <span class="cn">TRUE</span>, <span class="at">REPORT =</span> <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>initial  value 4145.891058 
+iter   2 value 3488.834951
+iter   3 value 3338.430208
+iter   4 value 3161.635338
+iter   5 value 3118.737722
+iter   6 value 3101.048975
+iter   7 value 3089.656797
+iter   8 value 3082.679421
+iter   9 value 3079.863756
+iter  10 value 3077.335138
+iter  11 value 3074.954984
+iter  12 value 3073.229248
+iter  13 value 3071.823713
+iter  14 value 3070.168308
+iter  15 value 3068.423840
+iter  16 value 3067.564127
+iter  17 value 3065.635251
+iter  18 value 3062.916359
+iter  19 value 3062.672676
+iter  20 value 3060.991809
+iter  21 value 3059.642503
+iter  22 value 3056.550603
+iter  23 value 3054.543308
+iter  24 value 3051.032301
+iter  25 value 3048.256038
+iter  26 value 3047.596978
+iter  27 value 3045.787366
+iter  28 value 3044.912736
+iter  29 value 3044.430405
+iter  30 value 3044.063737
+iter  31 value 3043.982199
+iter  32 value 3043.940331
+iter  33 value 3043.931549
+iter  34 value 3043.928428
+iter  35 value 3043.927714
+iter  36 value 3043.927173
+iter  37 value 3043.926743
+iter  38 value 3043.926315
+iter  39 value 3043.926250
+iter  39 value 3043.926230
+iter  39 value 3043.926214
+final  value 3043.926214 
+converged</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+occuMulti(detformulas = det_formulae5, stateformulas = occ_formulae5, 
+    data = umf, control = list(maxit = 500, trace = TRUE, REPORT = 1), 
+    maxOrder = 3L)
+
+Occupancy:
+                            Estimate    SE     z  P(&gt;|z|)
+[bobcat] (Intercept)          -1.154 0.261 -4.42 9.81e-06
+[bobcat] Dist                 -0.648 0.146 -4.43 9.28e-06
+[coyote] (Intercept)          -0.569 0.207 -2.75 5.94e-03
+[coyote] Dist                  0.203 0.106  1.91 5.64e-02
+[redfox] (Intercept)          -1.844 0.246 -7.50 6.57e-14
+[redfox] Dist                 -0.335 0.128 -2.62 8.91e-03
+[bobcat:coyote] (Intercept)    1.046 0.374  2.80 5.17e-03
+[bobcat:coyote] HDens         -2.239 0.654 -3.43 6.14e-04
+[bobcat:redfox] (Intercept)   -1.545 0.427 -3.62 2.95e-04
+[bobcat:redfox] HDens          1.284 0.432  2.98 2.93e-03
+[coyote:redfox] (Intercept)    1.421 0.366  3.89 1.01e-04
+[coyote:redfox] HDens          1.277 0.386  3.31 9.42e-04
+
+Detection:
+                           Estimate     SE      z  P(&gt;|z|)
+[bobcat] (Intercept)          -2.54 0.1632 -15.57 1.22e-54
+[bobcat] as.factor(Trail)1     1.83 0.1707  10.72 7.99e-27
+[coyote] (Intercept)          -2.00 0.0993 -20.13 4.41e-90
+[coyote] as.factor(Trail)1     2.16 0.1211  17.86 2.47e-71
+[redfox] (Intercept)          -1.56 0.1621  -9.64 5.51e-22
+[redfox] as.factor(Trail)1     1.82 0.2044   8.92 4.63e-19
+
+AIC: 6123.852 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AICcmodavg)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">aictab</span>(<span class="at">cand.set =</span>  <span class="fu">list</span>(fm1, fm2, fm3, fm4, fm5),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">modnames =</span> <span class="fu">c</span>(<span class="st">"fm1"</span>, <span class="st">"fm2"</span>, <span class="st">"fm3"</span>, <span class="st">"fm4"</span>, <span class="st">"fm5"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Model selection based on AICc:
+
+     K    AICc Delta_AICc AICcWt Cum.Wt       LL
+fm5 18 6124.33       0.00      1      1 -3043.93
+fm4 15 6213.80      89.46      0      1 -3091.73
+fm2 12 6257.74     133.41      0      1 -3116.76
+fm3  9 6626.24     501.90      0      1 -3304.06
+fm1  6 6710.72     586.38      0      1 -3349.33</code></pre>
+</div>
+</div>
+<p>Predict conditional occupancy and present in a table</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> <span class="dv">0</span>, <span class="at">HDens =</span> <span class="dv">0</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>bob_none <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5, <span class="at">type =</span> <span class="st">'state'</span>, <span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'-coyote'</span>,<span class="st">'-redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>bob_coyote <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'coyote'</span>,<span class="st">'-redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>bob_redfox <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'-coyote'</span>,<span class="st">'redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>bob_both <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'coyote'</span>,<span class="st">'redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(occtab <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="st">'Neither'</span> <span class="ot">=</span> bob_none, <span class="st">'Coyote'</span> <span class="ot">=</span> bob_coyote,</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">'Red fox'</span> <span class="ot">=</span> bob_redfox, <span class="st">'Both'</span> <span class="ot">=</span> bob_both), <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Predicted    SE lower upper
+Neither     0.240 0.048 0.159 0.344
+Coyote      0.473 0.078 0.331 0.629
+Red fox     0.063 0.030 0.023 0.139
+Both        0.161 0.054 0.086 0.290</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>Dist_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> <span class="fu">seq</span>(<span class="fu">min</span>(sitecovs<span class="sc">$</span>Dist), <span class="fu">max</span>(sitecovs<span class="sc">$</span>Dist), <span class="at">length =</span> <span class="dv">100</span>) , </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">HDens =</span> <span class="fu">mean</span>(sitecovs<span class="sc">$</span>HDens), <span class="at">length =</span> <span class="dv">100</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>HDens_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> <span class="fu">mean</span>(sitecovs<span class="sc">$</span>Dist) , </span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">HDens =</span> <span class="fu">seq</span>(<span class="fu">min</span>(sitecovs<span class="sc">$</span>HDens), <span class="fu">max</span>(sitecovs<span class="sc">$</span>HDens), <span class="at">length =</span> <span class="dv">100</span>))</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>coyote <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'coyote'</span>,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>redfox <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'redfox'</span>,</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>bobcat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>coyote<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"coyote"</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>redfox<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"redfox"</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>bobcat<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"bobcat"</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>coyote<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>redfox<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>bobcat<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>Carnivores_plot <span class="ot">&lt;-</span> <span class="fu">rbind</span>(coyote, redfox, bobcat)</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Carnivores_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Predicted         SE     lower     upper Especie       Dist
+1 0.4998692 0.03635713 0.4343723 0.5749869  coyote -0.6606690
+2 0.5003237 0.03564753 0.4353865 0.5730021  coyote -0.5995281
+3 0.5007859 0.03497932 0.4360782 0.5723975  coyote -0.5383872
+4 0.5012569 0.03435489 0.4374998 0.5706574  coyote -0.4772464
+5 0.5017378 0.03377661 0.4380497 0.5697959  coyote -0.4161055
+6 0.5022295 0.03324685 0.4393275 0.5681884  coyote -0.3549646</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Carnivores_plot, <span class="fu">aes</span>(<span class="at">x=</span> Dist, <span class="at">y=</span> Predicted, <span class="at">color=</span> Especie, <span class="at">fill =</span> Especie))<span class="sc">+</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span>  lower, <span class="at">ymax=</span> upper),</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span><span class="st">"Ocupacion Marginal"</span>,</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Distancia en radio de 5km"</span>)<span class="sc">+</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Clase7_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>bob_redfox <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'redfox'</span>), <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>bob_coyote <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'coyote'</span>), <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>bob_coyote<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"coyote"</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>bob_redfox<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"redfox"</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>bob_coyote<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>bob_redfox<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>Bob_Condicional <span class="ot">&lt;-</span> <span class="fu">rbind</span>(bob_coyote, bob_redfox)</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Bob_Condicional )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Predicted         SE     lower     upper Especie       Dist
+1 0.4709423 0.07132249 0.3270235 0.6114450  coyote -0.6606690
+2 0.4626109 0.07050918 0.3202601 0.6018795  coyote -0.5995281
+3 0.4542876 0.06971189 0.3148063 0.5921619  coyote -0.5383872
+4 0.4459770 0.06893267 0.3094822 0.5850144  coyote -0.4772464
+5 0.4376837 0.06817344 0.3020075 0.5738510  coyote -0.4161055
+6 0.4294122 0.06743594 0.2990701 0.5642717  coyote -0.3549646</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Bob_Condicional, <span class="fu">aes</span>(<span class="at">x=</span> Dist, <span class="at">y=</span> Predicted, <span class="at">color=</span> Especie, <span class="at">fill =</span> Especie))<span class="sc">+</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span>  lower, <span class="at">ymax=</span> upper),</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span><span class="st">"Ocupacion de Bobcat"</span>,</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Distancia en radio de 5km"</span>) <span class="sc">+</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Clase7_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 </main>
 <!-- /main column -->
