@@ -27,7 +27,7 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 [Clase 6: El modelo Royal-Nichols y otros modelos N-Mixture no estándar](Clase6.html)
 
-[Clase 7: Modelar ocupación con múltiples especies]
+[Clase 7: Modelado de interacciones entre especies (ocupación)](Clase7.html)
 
 [Clase 8: Modelar supervivencia aparente o persistencia]
 
