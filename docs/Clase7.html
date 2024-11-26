@@ -107,6 +107,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Este capítulo trata sobre el modelado de interacciones entre dos o más especies en términos de patrones observados en la ocurrencia. Las interacciones entre especies son fundamentales para la ecología, ya que pueden ser resultado de mecanismos ecológicos tan importantes como la competencia, la depredación y el mutualismo, denominados colectivamente interacciones bióticas. En sentido estricto, solo los experimentos manipulativos o las observaciones conductuales directas de individuos permiten decidir si una asociación estadística observada puede atribuirse a interacciones bióticas reales, efectos ambientales o ambos mecanismos juntos. Por ejemplo, una correlación espacial negativa en la ocurrencia o abundancia de dos especies puede deberse a una interacción antagónica, como la competencia, el parasitismo o la depredación. Alternativamente, puede ser simplemente el resultado de diferentes preferencias de hábitat de las dos especies, es decir, filtrado de hábitat. O puede ser el resultado de una combinación de ambos mecanismos. Esta es quizás la advertencia principal para la mayoría de las aplicaciones de los modelos de este capítulo: que una correlación no implica necesariamente causalidad.</p>
 <p>Cuando decimos “interacciones entre especies” en esta clase, nos referimos a una asociación o no independencia en los parámetros de múltiples especies en un modelo de ocurrencia. Es decir, utilizamos el término “interacción” en un sentido puramente descriptivo, estadístico o correlativo. Cubriremos modelos multiespecie para ocurrencia, que tienen parámetros específicos para dar cuenta de la posible no independencia entre pares de especies. Además, estos modelos nos permitirán, en diferentes grados, probar hipótesis sobre posibles mecanismos biológicos subyacentes a dicha no independencia entre múltiples especies. Algunos de estos modelos tienen un toque claramente mecanicista, pero ni siquiera ellos nos permitirán hacer inferencias sólidas sobre interacciones reales entre individuos de múltiples especies, a menos que tengamos el tipo correcto de datos (observaciones experimentales o de comportamiento). Sin embargo, los modelos de esta clase pueden ser herramientas poderosas para descubrir patrones: pueden señalar algunos pares de especies como candidatos para interacciones bióticas directas. El descubrimiento de fuertes asociaciones positivas o negativas en la abundancia o la ocurrencia (o posiblemente en otro parámetro) puede ser seguido por investigaciones más enfocadas en los posibles fundamentos mecanicistas de tales patrones. Además, si ajustamos estos modelos a los datos recopilados en el contexto de un experimento manipulativo diseñado para aislar algún mecanismo biológico, entonces nos permitirán hacer inferencias sólidas sobre los efectos de estos mecanismos. Y como siempre, si nuestros modelos muestran una asociación positiva o negativa que fue predicha en base a un conocimiento a priori sobre posibles interacciones bióticas entre estas especies, entonces esto proporciona una inferencia más sólida sobre la existencia de estas interacciones.</p>
 <p>Referencia: <a href="https://www.sciencedirect.com/book/9780128237687/applied-hierarchical-modeling-in-ecology-analysis-of-distribution-abundance-and-species-richness-in-r-and-bugs">Aplied Hierarchical Modeling in Ecology, Volumen 2</a></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Cargar paquetes</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Cargar base de datos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Modelo 1</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Modelo 2</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Modelo 3</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Modelo 4</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">Modelo 5</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-8" role="tab" aria-controls="tabset-1-8" aria-selected="false" href="">Seleccion de modelo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-9-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-9" role="tab" aria-controls="tabset-1-9" aria-selected="false" href="">Predicciones</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-10-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-10" role="tab" aria-controls="tabset-1-10" aria-selected="false" href="">Prediccion Marginal</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-11-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-11" role="tab" aria-controls="tabset-1-11" aria-selected="false" href="">Grafico ocupacion marginal</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-12-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-12" role="tab" aria-controls="tabset-1-12" aria-selected="false" href="">Prediccion condicional</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-13-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-13" role="tab" aria-controls="tabset-1-13" aria-selected="false" href="">Grafico condicional</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -122,8 +126,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(unmarked)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(abind)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AICcmodavg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Carnivores <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/CarnivoreData.rds"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -147,6 +153,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  $ redfox3    : int  0 0 1 0 0 1 0 0 0 0 ...</code></pre>
 </div>
 </div>
+<section id="preparar-formato-unmarked" class="level1">
+<h1>Preparar formato unmarked</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ylist <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">bobcat =</span> <span class="fu">as.matrix</span>(Carnivores[,<span class="fu">c</span>(<span class="st">"bobcat1"</span>, <span class="st">"bobcat2"</span>, <span class="st">"bobcat3"</span> )]), </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">coyote =</span> <span class="fu">as.matrix</span>(Carnivores[,<span class="fu">c</span>(<span class="st">"coyote1"</span>, <span class="st">"coyote2"</span>, <span class="st">"coyote3"</span> )]),</span>
@@ -212,6 +220,9 @@ Site-level covariates:
 </div>
 </div>
 </div>
+</section>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>occ_formulae1 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat, coyote, red fox occupancy, respectively</span></span>
@@ -251,6 +262,8 @@ Detection:
 AIC: 6710.658 </code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>occ_formulae2 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
@@ -329,6 +342,8 @@ Detection:
 AIC: 6257.525 </code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>occ_formulae3 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
@@ -399,6 +414,8 @@ Detection:
 AIC: 6626.111 </code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>occ_formulae4 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
@@ -485,6 +502,8 @@ Detection:
 AIC: 6213.46 </code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>occ_formulae5 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
@@ -582,6 +601,8 @@ Detection:
 AIC: 6123.852 </code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-1-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-8-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AICcmodavg)</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -599,6 +620,8 @@ fm3  9 6626.24     501.90      0      1 -3304.06
 fm1  6 6710.72     586.38      0      1 -3349.33</code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-1-9" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-9-tab">
 <p>Predict conditional occupancy and present in a table</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> <span class="dv">0</span>, <span class="at">HDens =</span> <span class="dv">0</span>)</span>
@@ -629,12 +652,14 @@ fm1  6 6710.72     586.38      0      1 -3349.33</code></pre>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">'Red fox'</span> <span class="ot">=</span> bob_redfox, <span class="st">'Both'</span> <span class="ot">=</span> bob_both), <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        Predicted    SE lower upper
-Neither     0.240 0.048 0.159 0.344
-Coyote      0.473 0.078 0.331 0.629
-Red fox     0.063 0.030 0.023 0.139
-Both        0.161 0.054 0.086 0.290</code></pre>
+Neither     0.240 0.048 0.159 0.349
+Coyote      0.473 0.080 0.321 0.624
+Red fox     0.063 0.034 0.026 0.152
+Both        0.161 0.055 0.084 0.296</code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-1-10" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-10-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>Dist_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> <span class="fu">seq</span>(<span class="fu">min</span>(sitecovs<span class="sc">$</span>Dist), <span class="fu">max</span>(sitecovs<span class="sc">$</span>Dist), <span class="at">length =</span> <span class="dv">100</span>) , </span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">HDens =</span> <span class="fu">mean</span>(sitecovs<span class="sc">$</span>HDens), <span class="at">length =</span> <span class="dv">100</span>)</span>
@@ -672,14 +697,16 @@ Both        0.161 0.054 0.086 0.290</code></pre>
 <span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Carnivores_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Predicted         SE     lower     upper Especie       Dist
-1 0.4998692 0.03635713 0.4343723 0.5749869  coyote -0.6606690
-2 0.5003237 0.03564753 0.4353865 0.5730021  coyote -0.5995281
-3 0.5007859 0.03497932 0.4360782 0.5723975  coyote -0.5383872
-4 0.5012569 0.03435489 0.4374998 0.5706574  coyote -0.4772464
-5 0.5017378 0.03377661 0.4380497 0.5697959  coyote -0.4161055
-6 0.5022295 0.03324685 0.4393275 0.5681884  coyote -0.3549646</code></pre>
+1 0.4998692 0.03485259 0.4347442 0.5710614  coyote -0.6606690
+2 0.5003237 0.03417033 0.4368348 0.5696538  coyote -0.5995281
+3 0.5007859 0.03353079 0.4387939 0.5692059  coyote -0.5383872
+4 0.5012569 0.03293642 0.4412358 0.5699960  coyote -0.4772464
+5 0.5017378 0.03238962 0.4438437 0.5687943  coyote -0.4161055
+6 0.5022295 0.03189278 0.4459416 0.5673536  coyote -0.3549646</code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-1-11" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-11-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Carnivores_plot, <span class="fu">aes</span>(<span class="at">x=</span> Dist, <span class="at">y=</span> Predicted, <span class="at">color=</span> Especie, <span class="at">fill =</span> Especie))<span class="sc">+</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
@@ -696,6 +723,8 @@ Both        0.161 0.054 0.086 0.290</code></pre>
 </div>
 </div>
 </div>
+</div>
+<div id="tabset-1-12" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-12-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>bob_redfox <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'redfox'</span>), <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -719,14 +748,16 @@ Both        0.161 0.054 0.086 0.290</code></pre>
 <span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Bob_Condicional )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Predicted         SE     lower     upper Especie       Dist
-1 0.4709423 0.07132249 0.3270235 0.6114450  coyote -0.6606690
-2 0.4626109 0.07050918 0.3202601 0.6018795  coyote -0.5995281
-3 0.4542876 0.06971189 0.3148063 0.5921619  coyote -0.5383872
-4 0.4459770 0.06893267 0.3094822 0.5850144  coyote -0.4772464
-5 0.4376837 0.06817344 0.3020075 0.5738510  coyote -0.4161055
-6 0.4294122 0.06743594 0.2990701 0.5642717  coyote -0.3549646</code></pre>
+1 0.4709423 0.07082915 0.3345470 0.6053862  coyote -0.6606690
+2 0.4626109 0.06997400 0.3286530 0.5952754  coyote -0.5995281
+3 0.4542876 0.06913699 0.3227993 0.5850942  coyote -0.5383872
+4 0.4459770 0.06832041 0.3158525 0.5748154  coyote -0.4772464
+5 0.4376837 0.06752638 0.3087472 0.5658915  coyote -0.4161055
+6 0.4294122 0.06675682 0.3022396 0.5573612  coyote -0.3549646</code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-1-13" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-13-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Bob_Condicional, <span class="fu">aes</span>(<span class="at">x=</span> Dist, <span class="at">y=</span> Predicted, <span class="at">color=</span> Especie, <span class="at">fill =</span> Especie))<span class="sc">+</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
@@ -742,6 +773,15 @@ Both        0.161 0.054 0.086 0.290</code></pre>
 </figure>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg" class="img-fluid figure-img"></p>
+<figcaption>HN Biology Investigation Academy</figcaption>
+</figure>
 </div>
 
 </main>

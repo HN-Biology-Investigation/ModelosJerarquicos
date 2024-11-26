@@ -13,21 +13,27 @@ Cuando decimos "interacciones entre especies" en esta clase, nos referimos a una
 
 Referencia: [Aplied Hierarchical Modeling in Ecology, Volumen 2](https://www.sciencedirect.com/book/9780128237687/applied-hierarchical-modeling-in-ecology-analysis-of-distribution-abundance-and-species-richness-in-r-and-bugs)
 
+::: panel-tabset
 
+## Cargar paquetes
 
 ```{r}
 library(tidyverse)
 library(unmarked)
-library(abind)
+library(AICcmodavg)
 ```
 
 
+## Cargar base de datos
 
 ```{r}
 Carnivores <- readRDS("data/CarnivoreData.rds")
 
 str(Carnivores)
 ```
+
+
+# Preparar formato unmarked
 
 ```{r}
 ylist <- list(bobcat = as.matrix(Carnivores[,c("bobcat1", "bobcat2", "bobcat3" )]), 
@@ -54,6 +60,7 @@ summary(umf)
 plot(umf)
 ```
 
+## Modelo 1
 
 ```{r}
 occ_formulae1 <- c(
@@ -77,6 +84,7 @@ det_formulae1 <- rep(' ~ 1', 3)
 (fm1 <- occuMulti(det_formulae1, occ_formulae1, umf))
 ```
 
+## Modelo 2
 
 ```{r, message=FALSE, warning=FALSE}
 # Specify models for occupancy in terms of natural parameters f
@@ -101,6 +109,7 @@ det_formulae2 <- rep('~as.factor(Trail)', 3)
 
 ```
 
+## Modelo 3
 
 ```{r}
 # Specify models for occupancy in terms of natural parameters f
@@ -125,6 +134,7 @@ det_formulae3 <- rep('~1', 3)
 ```
 
 
+## Modelo 4
 
 ```{r}
 # Specify models for occupancy in terms of natural parameters f
@@ -148,6 +158,8 @@ det_formulae4 <- rep('~as.factor(Trail)', 3)
 ```
 
 
+## Modelo 5
+
 ```{r}
 # Specify models for occupancy in terms of natural parameters f
 occ_formulae5 <- c(
@@ -168,6 +180,8 @@ det_formulae5 <- rep('~as.factor(Trail)', 3)
     control = list(maxit = 500, trace = TRUE, REPORT = 1)))
 ```
 
+## Seleccion de modelo
+
 ```{r}
 library(AICcmodavg)
 
@@ -175,6 +189,8 @@ aictab(cand.set =  list(fm1, fm2, fm3, fm4, fm5),
        modnames = c("fm1", "fm2", "fm3", "fm4", "fm5"))
 ```
 
+
+## Predicciones 
 
 Predict conditional occupancy and present in a table
 
@@ -200,6 +216,8 @@ round(occtab <- rbind('Neither' = bob_none, 'Coyote' = bob_coyote,
   'Red fox' = bob_redfox, 'Both' = bob_both), 3)
 ```
 
+
+## Prediccion Marginal
 
 ```{r}
 
@@ -234,6 +252,8 @@ Carnivores_plot <- rbind(coyote, redfox, bobcat)
 head(Carnivores_plot)
 ```
 
+## Grafico ocupacion marginal
+
 ```{r, message=FALSE, warning=FALSE}
 ggplot(data = Carnivores_plot, aes(x= Dist, y= Predicted, color= Especie, fill = Especie))+
   geom_line()+
@@ -243,6 +263,8 @@ ggplot(data = Carnivores_plot, aes(x= Dist, y= Predicted, color= Especie, fill =
        x= "Distancia en radio de 5km")+
   theme_classic()
 ```
+
+## Prediccion condicional
 
 ```{r}
 
@@ -264,6 +286,8 @@ Bob_Condicional <- rbind(bob_coyote, bob_redfox)
 head(Bob_Condicional )
 ```
 
+## Grafico condicional
+
 ```{r}
 ggplot(data = Bob_Condicional, aes(x= Dist, y= Predicted, color= Especie, fill = Especie))+
   geom_line()+
@@ -274,3 +298,6 @@ ggplot(data = Bob_Condicional, aes(x= Dist, y= Predicted, color= Especie, fill =
   theme_classic()
 ```
 
+:::
+
+![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
