@@ -70,6 +70,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="Clase9_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="fullcontent">
@@ -253,74 +254,74 @@ Estimates based on 3 chains of 1100 iterations,
 adaptation = 1000 iterations (sufficient),
 burn-in = 100 iterations and thin rate = 1,
 yielding 3000 total samples from the joint posterior. 
-MCMC ran in parallel for 2.068 minutes at time 2024-11-27 15:50:24.223344.
+MCMC ran in parallel for 8.312 minutes at time 2024-11-27 16:14:20.419413.
 
                  mean     sd     2.5%      50%    97.5% overlap0      f   Rhat
-dsr.mu         2.8609 0.3225   2.2407   2.8644   3.4728    FALSE 1.0000 1.0145
-b.age          0.0509 0.0107   0.0298   0.0506   0.0719    FALSE 1.0000 1.0101
-b.dist        -0.0147 0.0842  -0.1815  -0.0166   0.1545     TRUE 0.5850 1.0140
-b.init        -0.1720 0.0999  -0.3686  -0.1724   0.0249     TRUE 0.9560 1.0009
-dsr.area.sd    0.4014 0.1821   0.0201   0.3950   0.7931    FALSE 1.0000 1.0670
-dsr.yr.sd      0.2744 0.2238   0.0202   0.2126   0.8624    FALSE 1.0000 1.0171
-dsr.spp.sd     0.2474 0.2060   0.0186   0.1914   0.8353    FALSE 1.0000 1.0826
-eps.area[1]    0.4112 0.3642  -0.1624   0.3782   1.1940     TRUE 0.8860 1.0163
-eps.area[2]   -0.1462 0.2543  -0.6667  -0.1179   0.3289     TRUE 0.7150 1.0081
-eps.area[3]    0.1955 0.2555  -0.2851   0.1753   0.7403     TRUE 0.7890 1.0020
-eps.area[4]   -0.0917 0.3317  -0.7721  -0.0591   0.5611     TRUE 0.6080 1.0038
-eps.area[5]    0.0560 0.2687  -0.4705   0.0354   0.6212     TRUE 0.5757 1.0024
-eps.area[6]   -0.5569 0.3099  -1.1727  -0.5499  -0.0005    FALSE 0.9757 1.0457
-eps.area[7]   -0.2175 0.2560  -0.7456  -0.2013   0.2432     TRUE 0.8043 1.0059
-eps.area[8]   -0.1949 0.2475  -0.7081  -0.1842   0.2730     TRUE 0.7857 1.0126
-eps.area[9]    0.3565 0.3036  -0.1438   0.3320   1.0236     TRUE 0.8963 1.0141
-eps.area[10]   0.1354 0.2535  -0.3538   0.1168   0.6851     TRUE 0.7030 1.0053
-eps.area[11]   0.0375 0.3580  -0.6684   0.0137   0.8017     TRUE 0.5283 1.0031
-eps.area[12]   0.1373 0.2289  -0.2979   0.1183   0.6219     TRUE 0.7303 1.0086
-eps.yr[1]     -0.0162 0.1947  -0.4491  -0.0085   0.4015     TRUE 0.5333 1.0156
-eps.yr[2]      0.1229 0.2147  -0.2555   0.0797   0.6481     TRUE 0.7387 1.0064
-eps.yr[3]     -0.0725 0.1940  -0.5279  -0.0507   0.3307     TRUE 0.6707 1.0191
-eps.spp[1]     0.0447 0.1567  -0.2761   0.0309   0.3838     TRUE 0.6217 1.0084
-eps.spp[2]     0.1116 0.2139  -0.2206   0.0599   0.6530     TRUE 0.6863 1.0249
-eps.spp[3]    -0.0834 0.1609  -0.4548  -0.0507   0.1882     TRUE 0.6817 1.0068
-eps.spp[4]    -0.0504 0.1647  -0.4474  -0.0266   0.2522     TRUE 0.6027 1.0055
-eps.spp[5]    -0.0633 0.2390  -0.6321  -0.0328   0.4287     TRUE 0.6153 1.0326
-eps.spp[6]    -0.0461 0.2631  -0.7258  -0.0145   0.4645     TRUE 0.5593 1.0263
-eps.spp[7]     0.1344 0.2937  -0.2972   0.0583   0.9193     TRUE 0.6710 1.0551
-eps.spp[8]     0.0675 0.3416  -0.4658   0.0123   1.1445     TRUE 0.5450 1.0921
-deviance     765.6391 7.0491 754.8396 764.7068 782.1445    FALSE 1.0000 1.0890
+dsr.mu         2.7792 0.3839   1.9534   2.7882   3.4875    FALSE 1.0000 1.0594
+b.age          0.0511 0.0115   0.0285   0.0510   0.0735    FALSE 1.0000 1.0470
+b.dist        -0.0076 0.0819  -0.1654  -0.0064   0.1556     TRUE 0.5327 1.0042
+b.init        -0.1706 0.0974  -0.3535  -0.1727   0.0233     TRUE 0.9577 1.0107
+dsr.area.sd    0.4289 0.1661   0.1174   0.4191   0.7898    FALSE 1.0000 1.0075
+dsr.yr.sd      0.3232 0.2422   0.0198   0.2579   0.8965    FALSE 1.0000 1.0054
+dsr.spp.sd     0.2243 0.1724   0.0260   0.1791   0.7006    FALSE 1.0000 1.1811
+eps.area[1]    0.4451 0.3627  -0.1472   0.4019   1.2617     TRUE 0.9110 1.0047
+eps.area[2]   -0.1377 0.2585  -0.6641  -0.1333   0.3687     TRUE 0.7057 1.0004
+eps.area[3]    0.2071 0.2551  -0.2815   0.1996   0.7250     TRUE 0.7893 1.0027
+eps.area[4]   -0.1050 0.3445  -0.8160  -0.0873   0.5845     TRUE 0.6160 1.0043
+eps.area[5]    0.0857 0.2849  -0.4460   0.0621   0.6608     TRUE 0.6003 1.0088
+eps.area[6]   -0.5800 0.2967  -1.1703  -0.5809  -0.0143    FALSE 0.9810 1.0052
+eps.area[7]   -0.2078 0.2553  -0.7353  -0.2025   0.2848     TRUE 0.7970 1.0016
+eps.area[8]   -0.1859 0.2574  -0.7314  -0.1805   0.2967     TRUE 0.7687 1.0016
+eps.area[9]    0.4102 0.2955  -0.0950   0.3963   1.0374     TRUE 0.9337 1.0021
+eps.area[10]   0.1496 0.2597  -0.3387   0.1417   0.6740     TRUE 0.7190 1.0038
+eps.area[11]   0.0316 0.3684  -0.6938   0.0188   0.8092     TRUE 0.5233 0.9998
+eps.area[12]   0.1530 0.2388  -0.3059   0.1435   0.6386     TRUE 0.7457 1.0051
+eps.yr[1]      0.0329 0.2516  -0.4544   0.0069   0.6507     TRUE 0.5237 1.0057
+eps.yr[2]      0.1884 0.2762  -0.2385   0.1265   0.8978     TRUE 0.7833 1.0125
+eps.yr[3]     -0.0370 0.2566  -0.5665  -0.0355   0.5480     TRUE 0.6073 1.0076
+eps.spp[1]     0.0496 0.1596  -0.2603   0.0323   0.4158     TRUE 0.6247 1.0692
+eps.spp[2]     0.1087 0.2077  -0.2251   0.0654   0.6385     TRUE 0.7063 1.1039
+eps.spp[3]    -0.0767 0.1727  -0.4720  -0.0530   0.2484     TRUE 0.6817 1.0281
+eps.spp[4]    -0.0505 0.1739  -0.4508  -0.0286   0.2848     TRUE 0.6217 1.0296
+eps.spp[5]    -0.0703 0.2074  -0.5742  -0.0429   0.3309     TRUE 0.6240 1.0391
+eps.spp[6]    -0.0235 0.2570  -0.6265  -0.0098   0.4568     TRUE 0.5247 1.0288
+eps.spp[7]     0.1074 0.2551  -0.2803   0.0464   0.7869     TRUE 0.6510 1.1734
+eps.spp[8]     0.0393 0.2638  -0.4439   0.0095   0.6667     TRUE 0.5353 1.0663
+deviance     764.7716 6.3337 754.5922 764.0246 779.7214    FALSE 1.0000 1.0132
              n.eff
-dsr.mu         198
-b.age          287
-b.dist         148
-b.init        1975
-dsr.area.sd     47
-dsr.yr.sd      129
-dsr.spp.sd      41
-eps.area[1]    135
-eps.area[2]    358
-eps.area[3]    895
-eps.area[4]    651
-eps.area[5]   2786
-eps.area[6]     53
-eps.area[7]    323
-eps.area[8]    197
-eps.area[9]    144
-eps.area[10]   951
-eps.area[11]  1106
-eps.area[12]   249
-eps.yr[1]     1496
-eps.yr[2]     1478
-eps.yr[3]      472
-eps.spp[1]     341
-eps.spp[2]     115
-eps.spp[3]     419
-eps.spp[4]     575
-eps.spp[5]    2792
-eps.spp[6]     193
-eps.spp[7]      61
-eps.spp[8]      77
-deviance        45
+dsr.mu          39
+b.age           78
+b.dist         538
+b.init         262
+dsr.area.sd    724
+dsr.yr.sd      361
+dsr.spp.sd      16
+eps.area[1]   1461
+eps.area[2]   2309
+eps.area[3]    647
+eps.area[4]   1013
+eps.area[5]    626
+eps.area[6]   1217
+eps.area[7]   1893
+eps.area[8]   1491
+eps.area[9]   1407
+eps.area[10]   775
+eps.area[11]  3000
+eps.area[12]   511
+eps.yr[1]      383
+eps.yr[2]      184
+eps.yr[3]      268
+eps.spp[1]      56
+eps.spp[2]      36
+eps.spp[3]     253
+eps.spp[4]     607
+eps.spp[5]     242
+eps.spp[6]     484
+eps.spp[7]      24
+eps.spp[8]     521
+deviance       385
 
-Successful convergence based on Rhat values (all &lt; 1.1). 
+**WARNING** Rhat values indicate convergence failure. 
 Rhat is the potential scale reduction factor (at convergence, Rhat=1). 
 For each parameter, n.eff is a crude measure of effective sample size. 
 
@@ -329,7 +330,7 @@ f is the proportion of the posterior with the same sign as the mean;
 i.e., our confidence that the parameter is positive or negative.
 
 DIC info: (pD = var(deviance)/2) 
-pD = 23.7 and DIC = 789.3595 
+pD = 20 and DIC = 784.7383 
 DIC is an estimate of expected predictive error (lower is better).</code></pre>
 </div>
 </div>

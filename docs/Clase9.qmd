@@ -1,8 +1,9 @@
 ---
 title: "Clase 9: Supervivencia de nido"
 author: "David Murillo"
-format: html
-editor: visual
+format:
+  html:
+    css: styles.css
 ---
 
 ## Supervivencia de nidos
