@@ -8,7 +8,7 @@
 
 <meta name="author" content="David Murillo">
 
-<title>Clase 8: Modelos jerarquicos de sobrevivencia</title>
+<title>Clase 8: Modelos jerárquicos de supervivencia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -69,7 +35,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="Clase8_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="Clase8_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="fullcontent">
@@ -80,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Clase 8: Modelos jerarquicos de sobrevivencia</h1>
+<h1 class="title">Clase 8: Modelos jerárquicos de supervivencia</h1>
 </div>
 
 
@@ -103,27 +99,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="quarto" class="level2">
-<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
-<p>Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
-</section>
-<section id="running-code" class="level2">
-<h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-</div>
-<p>You can add options to executable code like this</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
-</div>
-</div>
-<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
-</section>
+<p>El tema de esta clase es el célebre modelo Cormack-Jolly-Seber, o CJS (Cormack, 1964; Jolly, 1965; Seber, 1965), uno de los modelos estadísticos más famosos en ecología. El modelo CJS requiere datos de captura-recaptura en vivo (también llamados marcaje-recaptura o marcaje-reseñamiento) de individuos reconocibles individualmente. Esto generalmente significa individuos marcados (etiquetados), pero la identificación genética y, a veces, la variabilidad natural en el color o los patrones de plumas/pelaje/piel pueden servir igualmente bien para identificar de manera única a los individuos. El modelo CJS produce estimaciones de la probabilidad aparente de supervivencia <span class="math inline">\(\phi\)</span>, la probabilidad de que un individuo marcado permanezca vivo y en el área de estudio entre dos puntos temporales en los que se realizan los reconocimientos, y de la probabilidad de recaptura <em>p</em>, la probabilidad de que un individuo marcado se encuentre en un punto temporal determinado (nótese que la identificación en el tiempo amplio se refiere al re-avistamiento y cualquier otra forma de identificación individual). Sorprendentemente, el modelo CJS también estima la probabilidad de un evento (muerte), ¡aunque nunca observamos directamente ese evento!</p>
+<p>Las bases y el diseño para producir datos susceptibles de análisis bajo un modelo CJS es aquel en el que se define un área de estudio fija y luego se sale y se intenta capturar y marcar tantos individuos como se definan. En ocasiones fijas, el primer registro de un individuo reconocible por sus marcas naturales o genéticas, etc. es funcionalmente idéntico al primer marcado de ese individuo. Luego, en cada ocasión, se registra la identidad de los individuos que ya tienen una marca y se coloca una nueva marca en aquellos que no la tienen. Los datos básicos se resumen en la matriz de historial de captura o detección <strong>Y</strong> de dimensiones <em>n</em> x <em>T</em>, donde <em>T</em> es el número de ocasiones Y <em>n</em> es el número de animales marcados primero hasta la ocasión <em>T</em>-1; aquellos marcados en la ocasión <em>T</em> no proporcionan ninguna información sobre la supervivencia y pueden ignorarse. La entrada (<em>i</em>,<em>t</em>) de la matriz contiene un 1 cuando el individuo <em>i</em> fue detectado en la ocasión 1 y un 0 cuando no lo fue.</p>
+<p>Es crucial que la extensión espacial de un área de estudio permanezca igual a lo largo del tiempo, porque en el modelo CJS estamos estimando la supervivencia aparente: el producto de la supervivencia real (<em>S</em>) y la probabilidad de permanecer en el área de estudio (es decir, fidelidad <em>F</em>). A partir de datos simples (no espaciales) de captura-recaptura, no es posible separar estos dos componentes (aunque se hace posible con modelos CJS espacialmente explícitos. Por lo tanto, si extiende su área de estudio a lo largo del tiempo, más individuos marcados tenderán a permanecer dentro de sus límites, <em>F</em> aumentará y también lo hará la supervivencia aparente. A menudo, las ocasiones de captura se espacian regularmente, por ejemplo, durante la temporada de reproducción en cada año, pero no es necesario que así sea, y hay diferentes formas de lidiar con intervalos de tiempo desiguales. Además, lo ideal es que la captura sea instantánea y no que se extienda de forma continua en el tiempo (también existen modelos de supervivencia para datos recopilados en tiempo continuo. Por último, si queremos que nuestras estimaciones caractericen a la población en general en lugar de solo a la muestra de individuos capturados, debemos apuntar a capturar una muestra aleatoria de individuos de la población (y sin extendernos en esto, solo afirmamos que esto puede ser más desafiante de lo que parece a primera vista).</p>
 
 </main>
 <!-- /main column -->
