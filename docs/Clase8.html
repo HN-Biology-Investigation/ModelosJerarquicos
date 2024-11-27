@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -116,10 +150,234 @@ window.Quarto = {
 <p>Por lo tanto, que un individuo sea detectado o no depende de dos cosas: si está vivo y de la probabilidad de recaptura <span class="math inline">\(p\)</span>. En el caso más general, podemos permitir que ambos parámetros del modelo difieran según el individuo <span class="math inline">\(i\)</span> y el tiempo <span class="math inline">\(t\)</span> y, a continuación, se puede especificar una gran cantidad de patrones para ellos agregando efectos de covariables o efectos aleatorios. Un conjunto de presencia o ausencia de efectos temporales conduce a la clasificación clásica de modelos <span class="math inline">\(\phi(t)p(t)\)</span>, <span class="math inline">\(\phi(t)p(.)\)</span>, <span class="math inline">\(\phi(.)p(t)\)</span>, <span class="math inline">\(\phi(.)p(.)\)</span> clasificación de modelos con parámetros que son constantes (.) o totalmente dependientes del tiempo (<span class="math inline">\(t\)</span>) (Cooch y White, 2019).</p>
 <p>Referencia, Capítulo 3: <a href="https://www.sciencedirect.com/book/9780128237687/applied-hierarchical-modeling-in-ecology-analysis-of-distribution-abundance-and-species-richness-in-r-and-bugs">Aplied Hierarchical Modeling in Ecology, Volumen 2</a></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Datos sobre el mosquitero musical británico <em>Phylloscopus trochilus</em></a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Datos sobre el GWWA</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Modelo 1</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jagsUI)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AHMbook)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(willowWarbler)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(willowWarbler)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 4
+ $ birds :'data.frame': 10551 obs. of  12 variables:
+  ..$ 1986 : num [1:10551] 1 1 1 1 1 1 1 1 1 1 ...
+  ..$ 1987 : num [1:10551] 0 0 0 1 0 0 0 0 0 0 ...
+  ..$ 1988 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
+  ..$ 1989 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
+  ..$ 1990 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
+  ..$ 1991 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
+  ..$ 1992 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
+  ..$ 1993 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
+  ..$ 1994 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
+  ..$ 1995 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
+  ..$ 1996 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
+  ..$ cesID: num [1:10551] 1 1 1 1 1 1 1 1 1 1 ...
+ $ cells :'data.frame': 9667 obs. of  4 variables:
+  ..$ lon    : num [1:9667] 167500 172500 167500 172500 177500 ...
+  ..$ lat    : num [1:9667] 12500 12500 17500 17500 17500 22500 22500 22500 22500 22500 ...
+  ..$ gdd    : num [1:9667] 2136 2120 1945 1943 1956 ...
+  ..$ blockID: num [1:9667] 1 1 3 3 3 2 2 3 3 3 ...
+ $ CES   :'data.frame': 193 obs. of  4 variables:
+  ..$ cesx   : num [1:193] 307500 432500 457500 312500 477500 ...
+  ..$ cesy   : num [1:193] 92500 167500 352500 227500 377500 ...
+  ..$ BlockID: num [1:193] 25 77 204 110 222 283 119 234 295 152 ...
+  ..$ CellID : num [1:193] 319 1366 4302 2266 4627 ...
+ $ blocks:'data.frame': 495 obs. of  2 variables:
+  ..$ blockX: num [1:495] 175 150 175 200 150 175 200 225 250 275 ...
+  ..$ blockY: num [1:495] 0 25 25 25 50 50 50 50 50 50 ...</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">attach</span> (willowWarbler)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ch <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(birds[, <span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>])</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>sitevec <span class="ot">&lt;-</span> birds<span class="sc">$</span>cesID</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(nyear <span class="ot">&lt;-</span> <span class="fu">ncol</span>(ch))        <span class="co"># Number years: 11</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(nsite <span class="ot">&lt;-</span> <span class="fu">nrow</span>(CES))       <span class="co"># Number of CE sites: 193</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 193</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(nblock <span class="ot">&lt;-</span> <span class="fu">nrow</span>(blocks))   <span class="co"># Number of blocks: 495</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 495</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(marr <span class="ot">&lt;-</span> <span class="fu">ch2marray</span>(ch))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11]
+ [1,]   55   13    1    1    0    0    0    0    0     0   622
+ [2,]    0  123   17    2    1    0    0    0    0     0   652
+ [3,]    0    0  143   20    4    0    0    0    0     0   855
+ [4,]    0    0    0  179   16    6    0    0    0     0  1222
+ [5,]    0    0    0    0  183   14    1    0    0     0  1174
+ [6,]    0    0    0    0    0  161   16    5    0     0  1049
+ [7,]    0    0    0    0    0    0  172   20    4     0  1087
+ [8,]    0    0    0    0    0    0    0  239   41     9  1042
+ [9,]    0    0    0    0    0    0    0    0  252    24  1299
+[10,]    0    0    0    0    0    0    0    0    0   247  1269</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of birds released each year 1–10</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>(r <span class="ot">&lt;-</span> <span class="fu">apply</span>(marr, <span class="dv">1</span>, sum))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  692  795 1022 1423 1372 1231 1283 1331 1575 1516</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create 3d (or multi-site) m-array and r array: MARR and R</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>MARR <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>, <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">10</span>, nyear, nsite))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>, <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">10</span>, nsite))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nsite){</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  sel.part <span class="ot">&lt;-</span> ch[sitevec <span class="sc">==</span> k, ]</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  ma <span class="ot">&lt;-</span> <span class="fu">ch2marray</span>(sel.part)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  MARR[,,k] <span class="ot">&lt;-</span> ma</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  R[,k] <span class="ot">&lt;-</span> <span class="fu">apply</span>(ma, <span class="dv">1</span>, sum)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle and summarize data set</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(bdata <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">MARR =</span> MARR, <span class="at">R =</span> R, <span class="at">n.site =</span> nsite, <span class="at">n.occ =</span> nyear))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 4
+ $ MARR  : num [1:10, 1:11, 1:193] 1 0 0 0 0 0 0 0 0 0 ...
+ $ R     : num [1:10, 1:193] 13 5 0 0 0 0 0 0 0 0 ...
+ $ n.site: int 193
+ $ n.occ : int 11</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify model in BUGS language</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="at">file =</span> <span class="st">"cjs6.txt"</span>,<span class="st">"</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="st">  # Priors and linear models</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site){</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)){</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="st">      phi[t, s] &lt;- ilogit(lphi[t, s]) # survival</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="st">      p[t, s] &lt;- ilogit(lp[t, s]) # recapture</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="st">      lphi[t, s] &lt;- alpha.lphi.site[s] + beta.lphi.time[t]</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="st">      lp[t, s] &lt;- alpha.lp.site[s] + beta.lp.time[t]</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="st">    # Define random site effects</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="st">    alpha.lphi.site[s] ~ dnorm(mu.lphi, tau.lphi.site)</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="st">    alpha.lp.site[s] ~ dnorm(mu.lp, tau.lp.site)</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="st">    mean.phi.site[s] &lt;- ilogit(alpha.lphi.site[s])</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="st">    mean.p.site[s] &lt;- ilogit(alpha.lp.site[s])</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="st">  # Define random year effects</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="st">  for (t in 1:(n.occ-1)){</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="st">    beta.lphi.time[t] ~ dnorm(0, tau.lphi.time)</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="st">    beta.lp.time[t] ~ dnorm(0, tau.lp.time)</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="st">    mean.phi.time[t] &lt;- ilogit(mu.lphi + beta.lphi.time[t])</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="st">    mean.p.time[t] &lt;- ilogit(mu.lp + beta.lp.time[t])</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="st">  # Hyperpriors for hyperparams</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="st">  mu.lphi &lt;- logit(mean.phi)</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="st">  mean.phi ~ dunif(0, 1)</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="st">  mu.lp &lt;- logit(mean.p)</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="st">  mean.p ~ dunif(0, 1)</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="st">  tau.lphi.site &lt;- pow(sd.lphi.site, -2)</span></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="st">  sd.lphi.site ~ dunif(0, 3)</span></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a><span class="st">  tau.lp.site &lt;- pow(sd.lp.site, -2)</span></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a><span class="st">  sd.lp.site ~ dunif(0, 3)</span></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="st">  tau.lphi.time &lt;- pow(sd.lphi.time, -2)</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a><span class="st">  sd.lphi.time ~ dunif(0, 3)</span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a><span class="st">  tau.lp.time &lt;- pow(sd.lp.time, -2)</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="st">  sd.lp.time ~ dunif(0, 3)</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="st">  # Multinomial likelihood for the m-array data (JAGS style)</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site){</span></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)){</span></span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a><span class="st">      MARR[t,1:n.occ,s] ~ dmulti(pr[t, , s], R[t,s])</span></span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a><span class="st">  # Define the cell probabilities of the m-array</span></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a><span class="st">  # Main diagonal</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site){</span></span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)){</span></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="st">      q[t,s] &lt;- 1-p[t,s] # Probability of non-recapture</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a><span class="st">      pr[t,t,s] &lt;- phi[t,s]*p[t,s]</span></span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a><span class="st">      # Above main diagonal</span></span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a><span class="st">      for (j in (t+1):(n.occ-1)){</span></span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a><span class="st">        pr[t,j,s] &lt;- prod(phi[t:j,s])*prod(q[t:(j-1),s])*p[j,s]</span></span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a><span class="st">      } #j</span></span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a><span class="st">      # Below main diagonal</span></span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a><span class="st">      for (j in 1:(t-1)){</span></span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a><span class="st">        pr[t,j,s] &lt;- 0</span></span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a><span class="st">  # Last column: probability of non-recapture</span></span>
+<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site){</span></span>
+<span id="cb18-65"><a href="#cb18-65" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)){</span></span>
+<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a><span class="st">      pr[t,n.occ,s] &lt;- 1-sum(pr[t,1:(n.occ-1),s])</span></span>
+<span id="cb18-67"><a href="#cb18-67" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb18-68"><a href="#cb18-68" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb18-69"><a href="#cb18-69" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb18-70"><a href="#cb18-70" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial values</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="cf">function</span>(){<span class="fu">list</span>(<span class="at">mean.phi =</span> <span class="fu">runif</span>(<span class="dv">1</span>), <span class="at">mean.p =</span> <span class="fu">runif</span>(<span class="dv">1</span>))}</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters monitored</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean.phi"</span>, <span class="st">"mean.p"</span>, <span class="st">"sd.lphi.site"</span>, <span class="st">"sd.lp.site"</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sd.lphi.time"</span>, <span class="st">"sd.lp.time"</span>, <span class="st">"mean.phi.site"</span>, <span class="st">"mean.p.site"</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mean.phi.time"</span>, <span class="st">"mean.p.time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MCMC settings</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># na &lt;- 1000 ; ni &lt;- 30000 ; nt &lt;- 10 ; nb &lt;- 20000 ; nc &lt;- 3</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>na <span class="ot">&lt;-</span> <span class="dv">100</span> ; ni <span class="ot">&lt;-</span> <span class="dv">300</span> ; nt <span class="ot">&lt;-</span> <span class="dv">1</span> ; nb <span class="ot">&lt;-</span> <span class="dv">200</span> ; nc <span class="ot">&lt;-</span> <span class="dv">3</span>  <span class="co"># ~~~ for testing</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Call JAGS (ART 192 min), check convergence and summarize posteriors</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>out6 <span class="ot">&lt;-</span> <span class="fu">jags</span>(bdata, inits, params, <span class="st">"cjs6.txt"</span>, <span class="at">n.adapt =</span> na, <span class="at">n.chains =</span> nc,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.thin =</span> nt, <span class="at">n.iter =</span> ni, <span class="at">n.burnin =</span> nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Processing function input....... 
 
+Done. 
+ 
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 1930
+   Unobserved stochastic nodes: 412
+   Total graph size: 65699
+
+Initializing model
+
+Adaptive phase, 100 iterations x 3 chains 
+If no progress bar appears JAGS has decided not to adapt 
+ 
+
+ Burn-in phase, 200 iterations x 3 chains 
+ 
+
+Sampling from joint posterior, 100 iterations x 3 chains 
+ 
+
+Calculating statistics....... 
+
+Done. </code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>

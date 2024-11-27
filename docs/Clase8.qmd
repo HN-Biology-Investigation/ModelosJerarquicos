@@ -36,7 +36,164 @@ Referencia, Capítulo 3: [Aplied Hierarchical Modeling in Ecology, Volumen 2](ht
 
 ::: panel-tabset
 
-## Datos sobre el mosquitero musical británico *Phylloscopus trochilus*
+## Datos sobre el GWWA
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(jagsUI)
+library(AHMbook)
+
+```
+
+
+```{r}
+data(willowWarbler)
+str(willowWarbler)
+```
+
+```{r}
+attach (willowWarbler)
+ch <- as.matrix(birds[, 1:11])
+sitevec <- birds$cesID
+```
+
+
+```{r}
+(nyear <- ncol(ch))        # Number years: 11
+(nsite <- nrow(CES))       # Number of CE sites: 193
+(nblock <- nrow(blocks))   # Number of blocks: 495
+
+```
+
+```{r}
+(marr <- ch2marray(ch))
+```
+
+```{r}
+# Calculate the number of birds released each year 1–10
+(r <- apply(marr, 1, sum))
+```
+
+```{r}
+# Create 3d (or multi-site) m-array and r array: MARR and R
+MARR <- array(NA, dim = c(10, nyear, nsite))
+R <- array(NA, dim = c(10, nsite))
+
+for(k in 1:nsite){
+  sel.part <- ch[sitevec == k, ]
+  ma <- ch2marray(sel.part)
+  MARR[,,k] <- ma
+  R[,k] <- apply(ma, 1, sum)
+}
+
+
+
+```
+
+
+```{r}
+# Bundle and summarize data set
+str(bdata <- list(MARR = MARR, R = R, n.site = nsite, n.occ = nyear))
+```
+## Modelo 1
+
+```{r}
+# Specify model in BUGS language
+cat(file = "cjs6.txt","
+model {
+
+  # Priors and linear models
+  for (s in 1:n.site){
+    for (t in 1:(n.occ-1)){
+      phi[t, s] <- ilogit(lphi[t, s]) # survival
+      p[t, s] <- ilogit(lp[t, s]) # recapture
+      lphi[t, s] <- alpha.lphi.site[s] + beta.lphi.time[t]
+      lp[t, s] <- alpha.lp.site[s] + beta.lp.time[t]
+    }
+    # Define random site effects
+    alpha.lphi.site[s] ~ dnorm(mu.lphi, tau.lphi.site)
+    alpha.lp.site[s] ~ dnorm(mu.lp, tau.lp.site)
+    mean.phi.site[s] <- ilogit(alpha.lphi.site[s])
+    mean.p.site[s] <- ilogit(alpha.lp.site[s])
+  }
+  # Define random year effects
+  for (t in 1:(n.occ-1)){
+    beta.lphi.time[t] ~ dnorm(0, tau.lphi.time)
+    beta.lp.time[t] ~ dnorm(0, tau.lp.time)
+    mean.phi.time[t] <- ilogit(mu.lphi + beta.lphi.time[t])
+    mean.p.time[t] <- ilogit(mu.lp + beta.lp.time[t])
+  }
+
+  # Hyperpriors for hyperparams
+  mu.lphi <- logit(mean.phi)
+  mean.phi ~ dunif(0, 1)
+  mu.lp <- logit(mean.p)
+  mean.p ~ dunif(0, 1)
+  tau.lphi.site <- pow(sd.lphi.site, -2)
+  sd.lphi.site ~ dunif(0, 3)
+  tau.lp.site <- pow(sd.lp.site, -2)
+  sd.lp.site ~ dunif(0, 3)
+  tau.lphi.time <- pow(sd.lphi.time, -2)
+  sd.lphi.time ~ dunif(0, 3)
+  tau.lp.time <- pow(sd.lp.time, -2)
+  sd.lp.time ~ dunif(0, 3)
+
+  # Multinomial likelihood for the m-array data (JAGS style)
+  for (s in 1:n.site){
+    for (t in 1:(n.occ-1)){
+      MARR[t,1:n.occ,s] ~ dmulti(pr[t, , s], R[t,s])
+    }
+  }
+  # Define the cell probabilities of the m-array
+  # Main diagonal
+  for (s in 1:n.site){
+    for (t in 1:(n.occ-1)){
+      q[t,s] <- 1-p[t,s] # Probability of non-recapture
+      pr[t,t,s] <- phi[t,s]*p[t,s]
+      # Above main diagonal
+      for (j in (t+1):(n.occ-1)){
+        pr[t,j,s] <- prod(phi[t:j,s])*prod(q[t:(j-1),s])*p[j,s]
+      } #j
+      # Below main diagonal
+      for (j in 1:(t-1)){
+        pr[t,j,s] <- 0
+      }
+    }
+  }
+  # Last column: probability of non-recapture
+  for (s in 1:n.site){
+    for (t in 1:(n.occ-1)){
+      pr[t,n.occ,s] <- 1-sum(pr[t,1:(n.occ-1),s])
+    }
+  }
+}
+")
+
+```
+
+
+```{r}
+# Initial values
+inits <- function(){list(mean.phi = runif(1), mean.p = runif(1))}
+
+# Parameters monitored
+params <- c("mean.phi", "mean.p", "sd.lphi.site", "sd.lp.site",
+    "sd.lphi.time", "sd.lp.time", "mean.phi.site", "mean.p.site",
+    "mean.phi.time", "mean.p.time")
+```
+
+
+```{r}
+# MCMC settings
+# na <- 1000 ; ni <- 30000 ; nt <- 10 ; nb <- 20000 ; nc <- 3
+na <- 100 ; ni <- 300 ; nt <- 1 ; nb <- 200 ; nc <- 3  # ~~~ for testing
+
+# Call JAGS (ART 192 min), check convergence and summarize posteriors
+out6 <- jags(bdata, inits, params, "cjs6.txt", n.adapt = na, n.chains = nc,
+    n.thin = nt, n.iter = ni, n.burnin = nb)
+```
+
+
 
 
 
