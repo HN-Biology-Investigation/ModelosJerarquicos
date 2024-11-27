@@ -13,11 +13,13 @@ Cuando decimos "interacciones entre especies" en esta clase, nos referimos a una
 
 Referencia: [Aplied Hierarchical Modeling in Ecology, Volumen 2](https://www.sciencedirect.com/book/9780128237687/applied-hierarchical-modeling-in-ecology-analysis-of-distribution-abundance-and-species-richness-in-r-and-bugs)
 
+Leer [Rota et al. 2016](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12587) para mayor detalles de modelos de ocupación con multiples especies.
+
 ::: panel-tabset
 
 ## Cargar paquetes
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(unmarked)
 library(AICcmodavg)
@@ -25,6 +27,8 @@ library(AICcmodavg)
 
 
 ## Cargar base de datos
+
+Leer [McShea et al. 2015](https://link.springer.com/article/10.1007/s10980-015-0262-9) para mayor detalles de la base de datos.
 
 ```{r}
 Carnivores <- readRDS("data/CarnivoreData.rds")
@@ -252,14 +256,14 @@ Carnivores_plot <- rbind(coyote, redfox, bobcat)
 head(Carnivores_plot)
 ```
 
-## Grafico ocupacion marginal
+## Grafico ocupación marginal
 
 ```{r, message=FALSE, warning=FALSE}
 ggplot(data = Carnivores_plot, aes(x= Dist, y= Predicted, color= Especie, fill = Especie))+
   geom_line()+
   geom_ribbon(aes(ymin =  lower, ymax= upper),
               alpha= 0.5) +
-  labs(y ="Ocupacion Marginal",
+  labs(y ="ocupación Marginal",
        x= "Distancia en radio de 5km")+
   theme_classic()
 ```
@@ -293,7 +297,7 @@ ggplot(data = Bob_Condicional, aes(x= Dist, y= Predicted, color= Especie, fill =
   geom_line()+
   geom_ribbon(aes(ymin =  lower, ymax= upper),
               alpha= 0.5) +
-  labs(y ="Ocupacion de Bobcat",
+  labs(y ="ocupación de Bobcat",
        x= "Distancia en radio de 5km") +
   theme_classic()
 ```
