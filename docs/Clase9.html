@@ -8,7 +8,7 @@
 
 <meta name="author" content="David Murillo">
 
-<title>Clase 9: Supervivencia de nido</title>
+<title>Clase 8: Supervivencia de nido</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Clase 9: Supervivencia de nido</h1>
+<h1 class="title">Clase 8: Supervivencia de nido</h1>
 </div>
 
 
@@ -104,12 +104,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="supervivencia-de-nidos" class="level2">
-<h2 class="anchored" data-anchor-id="supervivencia-de-nidos">Supervivencia de nidos</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Supervivencia de nidos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">cargar paquetes</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Cargar base de datos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Preparar datos para el modelo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Modelo Nulo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Modelo year como predictor</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">Modelo year + age como predictor</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-8" role="tab" aria-controls="tabset-1-8" aria-selected="false" href="">Crear funcion del modelo mixto</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <p>Para este analisi necesitaremos instalar el software <a href="https://sourceforge.net/projects/mcmc-jags/">Jags</a></p>
-</section>
-<section id="cargar-paquetes" class="level2">
-<h2 class="anchored" data-anchor-id="cargar-paquetes">cargar paquetes</h2>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jagsUI)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -117,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.5.0     ✔ tibble    3.2.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
 ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
 ✔ purrr     1.0.2     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -126,22 +127,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 </div>
-</section>
-<section id="cargar-base-de-datos" class="level2">
-<h2 class="anchored" data-anchor-id="cargar-base-de-datos">Cargar base de datos</h2>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>NidosPatos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/duck_nests.csv"</span>, </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">header=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>La base de datos duck_NidoPatos1s.csv contiene una muestra aleatoria de registro para tres anos, divididos en 12 bloques.</p>
+<p>La base de datos duck_NidoPatos1s.csv contiene una muestra aleatoria de registro para tres años, divididos en 12 bloques.</p>
 <p>Primero estandarizaremos la visita inicial a cada nido</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>NidoPatos1 <span class="ot">&lt;-</span> NidosPatos <span class="sc">%&gt;%</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">init_stadard =</span> (init<span class="sc">-</span> <span class="fu">mean</span>(init))<span class="sc">/</span><span class="fu">sd</span>(init))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="preparar-datos-para-el-modelo" class="level2">
-<h2 class="anchored" data-anchor-id="preparar-datos-para-el-modelo">Preparar datos para el modelo</h2>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
 <p>Crearemos una lista con las covariables que pueden implementarce en el modelo</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dsr.data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n.nests =</span> <span class="fu">dim</span>(NidoPatos1)[<span class="dv">1</span>], </span>
@@ -157,219 +156,290 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">survive =</span> NidoPatos1<span class="sc">$</span>survive,</span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">dist =</span> NidoPatos1<span class="sc">$</span>dist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="crear-funcion-del-modelo" class="level2">
-<h2 class="anchored" data-anchor-id="crear-funcion-del-modelo">Crear funcion del modelo</h2>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shaffer's nest survival model, coded for JAGS</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>{<span class="fu">sink</span>(<span class="st">"dsr.jags"</span>); <span class="fu">cat</span>(<span class="st">"</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>(<span class="st">"dsr_null.jags"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st"># modeling daily nest survival on the logit scale</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.mu ~ dnorm(0, 0.33) # intercept, note this is vague (0,1) on real scale</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">  # modeling daily nest survival on the logit scale</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">  dsr.mu ~ dnorm(0, 0.33) # intercept, vague prior (0,1) on real scale</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st"># fixed effects for nest level covariates (all are linear on logit scale)</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">b.age ~ dnorm(0, 1) # nest age effect</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">b.dist ~ dnorm(0, 1) # distance from management edge</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="st">b.init ~ dnorm(0, 1) # nest initiation date effect</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="st"># note: I'm modeling site and year as crossed random effects - they could also be nested</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="st"># random site effects</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.area.sd ~ dunif(0.01, 1) # random site effect</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.area.tau &lt;- pow(dsr.area.sd, -2)</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="st">for (j in 1:n.areas){</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="st">  eps.area[j] ~ dnorm(0, dsr.area.tau)</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="st"># random year effects</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.yr.sd ~ dunif(0.01, 1) # random year effect</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.yr.tau &lt;- pow(dsr.yr.sd, -2)</span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="st">for (i in 1:n.yrs){</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="st">  eps.yr[i] ~ dnorm(0, dsr.yr.tau)</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="st"># random species effects</span></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.spp.sd ~ dunif(0.01, 1) # random species effect</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.spp.tau &lt;- pow(dsr.spp.sd, -2)</span></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="st">for (i in 1:n.spp){</span></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="st">  eps.spp[i] ~ dnorm(0, dsr.spp.tau)</span></span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="st">for (i in 1:n.nests){</span></span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="st">  for (j in 1:expos[i]){</span></span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="st">      # daily survival is function of mean dsr, nest age effect, distance from edge,</span></span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="st">      # initiation date, and random effects for area, year, and species</span></span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="st">      logitS[i,j] &lt;- dsr.mu + b.age*(age[i]+j-1) + b.dist*dist[i] + b.init*init[i] + </span></span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="st">        eps.area[area[i]] + eps.yr[year[i]] + eps.spp[spp[i]]</span></span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="st">      logit(S[i,j]) &lt;- logitS[i,j] # convert back to real scale</span></span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="st">      } </span></span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="st">    IS[i] &lt;- prod(S[i,1:expos[i]]) # prob of surviving entire exposure interval</span></span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="st">    survive[i] ~ dbern(IS[i]) # does nest survive this nest check interval?</span></span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a><span class="st">  } # end jags model</span></span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>,<span class="at">fill =</span> <span class="cn">TRUE</span>); <span class="fu">sink</span>()}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="definir-parametros-del-modelo" class="level2">
-<h2 class="anchored" data-anchor-id="definir-parametros-del-modelo">Definir parametros del modelo</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>parms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dsr.mu"</span>, <span class="st">"b.age"</span>, <span class="st">"b.dist"</span>, <span class="st">"b.init"</span>, </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">"dsr.area.sd"</span>, <span class="st">"dsr.yr.sd"</span>, <span class="st">"dsr.spp.sd"</span>,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>           <span class="st">"eps.area"</span>, <span class="st">"eps.yr"</span>, <span class="st">"eps.spp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="ajustar-modelo" class="level2">
-<h2 class="anchored" data-anchor-id="ajustar-modelo">Ajustar modelo</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MCMC settings</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>na <span class="ot">&lt;-</span> <span class="dv">1000</span>; ni <span class="ot">&lt;-</span> <span class="dv">1100</span>; nt <span class="ot">&lt;-</span> <span class="dv">1</span>        </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>nb <span class="ot">&lt;-</span> <span class="dv">100</span>; nc <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># call jags (~ 4 min)</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>nest.success <span class="ot">&lt;-</span> <span class="fu">jagsUI</span>(dsr.data, <span class="at">inits =</span> <span class="cn">NULL</span>, parms, <span class="st">"dsr.jags"</span>, </span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n.adapt =</span> na, <span class="at">n.chains =</span> nc, <span class="at">n.thin =</span> nt, </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n.iter =</span> ni, <span class="at">n.burnin =</span> nb, <span class="at">parallel =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">  for (i in 1:n.nests) {</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">    for (j in 1:expos[i]) {</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">      # daily survival is a constant mean survival (no covariates or random effects)</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="st">      logitS[i,j] &lt;- dsr.mu</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="st">      logit(S[i,j]) &lt;- logitS[i,j] # convert back to real scale</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="st">    IS[i] &lt;- prod(S[i,1:expos[i]]) # prob of surviving entire exposure interval</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="st">    survive[i] ~ dbern(IS[i]) # does nest survive this nest check interval?</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>, <span class="at">fill =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Processing function input....... 
+model {
+  # modeling daily nest survival on the logit scale
+  dsr.mu ~ dnorm(0, 0.33) # intercept, vague prior (0,1) on real scale
 
-Done. 
- 
-Beginning parallel processing using 3 cores. Console output will be suppressed.
-
-Parallel processing completed.
-
-Calculating statistics....... 
-
-Done. </code></pre>
+  for (i in 1:n.nests) {
+    for (j in 1:expos[i]) {
+      # daily survival is a constant mean survival (no covariates or random effects)
+      logitS[i,j] &lt;- dsr.mu
+      logit(S[i,j]) &lt;- logitS[i,j] # convert back to real scale
+    }
+    IS[i] &lt;- prod(S[i,1:expos[i]]) # prob of surviving entire exposure interval
+    survive[i] ~ dbern(IS[i]) # does nest survive this nest check interval?
+  }
+}</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="revisar-parametros-del-modelo" class="level2">
-<h2 class="anchored" data-anchor-id="revisar-parametros-del-modelo">Revisar parametros del modelo</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(nest.success, <span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>parms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dsr.mu"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>na <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>ni <span class="ot">&lt;-</span> <span class="dv">1100</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>nt <span class="ot">&lt;-</span> <span class="dv">1</span>        </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>nb <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>nc <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>nest.success_nulo <span class="ot">&lt;-</span> <span class="fu">jagsUI</span>(dsr.data, <span class="at">inits =</span> <span class="cn">NULL</span>, parms, <span class="st">"dsr_null.jags"</span>, </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n.adapt =</span> na, <span class="at">n.chains =</span> nc, <span class="at">n.thin =</span> nt, </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n.iter =</span> ni, <span class="at">n.burnin =</span> nb)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(nest.success_nulo, <span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>(<span class="st">"dsr_year.jags"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="st">  # modeling daily nest survival on the logit scale</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="st">  dsr.mu ~ dnorm(0, 0.33) # intercept, vague prior (0,1) on real scale</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="st">  b.year ~ dnorm(0, 1) # fixed effect for year (vague prior)</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="st">  for (i in 1:n.nests) {</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="st">    for (j in 1:expos[i]) {</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="st">      # daily survival is a function of mean survival and year effect</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="st">      logitS[i,j] &lt;- dsr.mu + b.year * year[i] # adding year effect to the logit model</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="st">      logit(S[i,j]) &lt;- logitS[i,j] # convert back to real scale</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="st">    IS[i] &lt;- prod(S[i,1:expos[i]]) # prob of surviving entire exposure interval</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="st">    survive[i] ~ dbern(IS[i]) # does nest survive this nest check interval?</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>, <span class="at">fill =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>JAGS output for model 'dsr.jags', generated by jagsUI.
-Estimates based on 3 chains of 1100 iterations,
-adaptation = 1000 iterations (sufficient),
-burn-in = 100 iterations and thin rate = 1,
-yielding 3000 total samples from the joint posterior. 
-MCMC ran in parallel for 8.312 minutes at time 2024-11-27 16:14:20.419413.
+<pre><code>
+model {
+  # modeling daily nest survival on the logit scale
+  dsr.mu ~ dnorm(0, 0.33) # intercept, vague prior (0,1) on real scale
+  b.year ~ dnorm(0, 1) # fixed effect for year (vague prior)
 
-                 mean     sd     2.5%      50%    97.5% overlap0      f   Rhat
-dsr.mu         2.7792 0.3839   1.9534   2.7882   3.4875    FALSE 1.0000 1.0594
-b.age          0.0511 0.0115   0.0285   0.0510   0.0735    FALSE 1.0000 1.0470
-b.dist        -0.0076 0.0819  -0.1654  -0.0064   0.1556     TRUE 0.5327 1.0042
-b.init        -0.1706 0.0974  -0.3535  -0.1727   0.0233     TRUE 0.9577 1.0107
-dsr.area.sd    0.4289 0.1661   0.1174   0.4191   0.7898    FALSE 1.0000 1.0075
-dsr.yr.sd      0.3232 0.2422   0.0198   0.2579   0.8965    FALSE 1.0000 1.0054
-dsr.spp.sd     0.2243 0.1724   0.0260   0.1791   0.7006    FALSE 1.0000 1.1811
-eps.area[1]    0.4451 0.3627  -0.1472   0.4019   1.2617     TRUE 0.9110 1.0047
-eps.area[2]   -0.1377 0.2585  -0.6641  -0.1333   0.3687     TRUE 0.7057 1.0004
-eps.area[3]    0.2071 0.2551  -0.2815   0.1996   0.7250     TRUE 0.7893 1.0027
-eps.area[4]   -0.1050 0.3445  -0.8160  -0.0873   0.5845     TRUE 0.6160 1.0043
-eps.area[5]    0.0857 0.2849  -0.4460   0.0621   0.6608     TRUE 0.6003 1.0088
-eps.area[6]   -0.5800 0.2967  -1.1703  -0.5809  -0.0143    FALSE 0.9810 1.0052
-eps.area[7]   -0.2078 0.2553  -0.7353  -0.2025   0.2848     TRUE 0.7970 1.0016
-eps.area[8]   -0.1859 0.2574  -0.7314  -0.1805   0.2967     TRUE 0.7687 1.0016
-eps.area[9]    0.4102 0.2955  -0.0950   0.3963   1.0374     TRUE 0.9337 1.0021
-eps.area[10]   0.1496 0.2597  -0.3387   0.1417   0.6740     TRUE 0.7190 1.0038
-eps.area[11]   0.0316 0.3684  -0.6938   0.0188   0.8092     TRUE 0.5233 0.9998
-eps.area[12]   0.1530 0.2388  -0.3059   0.1435   0.6386     TRUE 0.7457 1.0051
-eps.yr[1]      0.0329 0.2516  -0.4544   0.0069   0.6507     TRUE 0.5237 1.0057
-eps.yr[2]      0.1884 0.2762  -0.2385   0.1265   0.8978     TRUE 0.7833 1.0125
-eps.yr[3]     -0.0370 0.2566  -0.5665  -0.0355   0.5480     TRUE 0.6073 1.0076
-eps.spp[1]     0.0496 0.1596  -0.2603   0.0323   0.4158     TRUE 0.6247 1.0692
-eps.spp[2]     0.1087 0.2077  -0.2251   0.0654   0.6385     TRUE 0.7063 1.1039
-eps.spp[3]    -0.0767 0.1727  -0.4720  -0.0530   0.2484     TRUE 0.6817 1.0281
-eps.spp[4]    -0.0505 0.1739  -0.4508  -0.0286   0.2848     TRUE 0.6217 1.0296
-eps.spp[5]    -0.0703 0.2074  -0.5742  -0.0429   0.3309     TRUE 0.6240 1.0391
-eps.spp[6]    -0.0235 0.2570  -0.6265  -0.0098   0.4568     TRUE 0.5247 1.0288
-eps.spp[7]     0.1074 0.2551  -0.2803   0.0464   0.7869     TRUE 0.6510 1.1734
-eps.spp[8]     0.0393 0.2638  -0.4439   0.0095   0.6667     TRUE 0.5353 1.0663
-deviance     764.7716 6.3337 754.5922 764.0246 779.7214    FALSE 1.0000 1.0132
-             n.eff
-dsr.mu          39
-b.age           78
-b.dist         538
-b.init         262
-dsr.area.sd    724
-dsr.yr.sd      361
-dsr.spp.sd      16
-eps.area[1]   1461
-eps.area[2]   2309
-eps.area[3]    647
-eps.area[4]   1013
-eps.area[5]    626
-eps.area[6]   1217
-eps.area[7]   1893
-eps.area[8]   1491
-eps.area[9]   1407
-eps.area[10]   775
-eps.area[11]  3000
-eps.area[12]   511
-eps.yr[1]      383
-eps.yr[2]      184
-eps.yr[3]      268
-eps.spp[1]      56
-eps.spp[2]      36
-eps.spp[3]     253
-eps.spp[4]     607
-eps.spp[5]     242
-eps.spp[6]     484
-eps.spp[7]      24
-eps.spp[8]     521
-deviance       385
-
-**WARNING** Rhat values indicate convergence failure. 
-Rhat is the potential scale reduction factor (at convergence, Rhat=1). 
-For each parameter, n.eff is a crude measure of effective sample size. 
-
-overlap0 checks if 0 falls in the parameter's 95% credible interval.
-f is the proportion of the posterior with the same sign as the mean;
-i.e., our confidence that the parameter is positive or negative.
-
-DIC info: (pD = var(deviance)/2) 
-pD = 20 and DIC = 784.7383 
-DIC is an estimate of expected predictive error (lower is better).</code></pre>
+  for (i in 1:n.nests) {
+    for (j in 1:expos[i]) {
+      # daily survival is a function of mean survival and year effect
+      logitS[i,j] &lt;- dsr.mu + b.year * year[i] # adding year effect to the logit model
+      logit(S[i,j]) &lt;- logitS[i,j] # convert back to real scale
+    }
+    IS[i] &lt;- prod(S[i,1:expos[i]]) # prob of surviving entire exposure interval
+    survive[i] ~ dbern(IS[i]) # does nest survive this nest check interval?
+  }
+}</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="preparar-datos-a-graficar" class="level2">
-<h2 class="anchored" data-anchor-id="preparar-datos-a-graficar">Preparar datos a graficar</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">35</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>dsr <span class="ot">&lt;-</span> <span class="fu">plogis</span>(nest.success<span class="sc">$</span>mean<span class="sc">$</span>dsr.mu <span class="sc">+</span> nest.success<span class="sc">$</span>mean<span class="sc">$</span>b.age<span class="sc">*</span>age)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>dsr_IC2<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">plogis</span>(nest.success<span class="sc">$</span>q2<span class="fl">.5</span><span class="sc">$</span>dsr.mu <span class="sc">+</span> nest.success<span class="sc">$</span>q2<span class="fl">.5</span><span class="sc">$</span>b.age<span class="sc">*</span>age)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>dsr_IC97<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">plogis</span>(nest.success<span class="sc">$</span>q97<span class="fl">.5</span><span class="sc">$</span>dsr.mu <span class="sc">+</span> nest.success<span class="sc">$</span>q97<span class="fl">.5</span><span class="sc">$</span>b.age<span class="sc">*</span>age)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>Age_df_pre <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">age =</span> age,</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">dsr =</span>dsr,</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">IC95L =</span> dsr_IC2<span class="fl">.5</span>,</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">IC95H =</span> dsr_IC97<span class="fl">.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>parms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dsr.mu"</span>, <span class="st">"b.year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="graficar" class="level2">
-<h2 class="anchored" data-anchor-id="graficar">Graficar</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Age_df_pre, <span class="fu">aes</span>(<span class="at">x=</span> age, <span class="at">y =</span>dsr)) <span class="sc">+</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin=</span> IC95L,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax=</span> IC95H),</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span> <span class="fl">0.4</span>,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">fill=</span> <span class="st">"lightgreen"</span>)<span class="sc">+</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>na <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ni <span class="ot">&lt;-</span> <span class="dv">1100</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>nt <span class="ot">&lt;-</span> <span class="dv">1</span>        </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>nb <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>nc <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>nest.success_year <span class="ot">&lt;-</span> <span class="fu">jagsUI</span>(dsr.data, <span class="at">inits =</span> <span class="cn">NULL</span>, parms, <span class="st">"dsr_year.jags"</span>, </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n.adapt =</span> na, <span class="at">n.chains =</span> nc, <span class="at">n.thin =</span> nt, </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n.iter =</span> ni, <span class="at">n.burnin =</span> nb, <span class="at">parallel =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>year <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>dsr <span class="ot">&lt;-</span> <span class="fu">plogis</span>(nest.success_year<span class="sc">$</span>mean<span class="sc">$</span>dsr.mu <span class="sc">+</span> nest.success_year<span class="sc">$</span>mean<span class="sc">$</span>b.year <span class="sc">*</span> year)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>dsr_IC2<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">plogis</span>(nest.success_year<span class="sc">$</span>q2<span class="fl">.5</span><span class="sc">$</span>dsr.mu <span class="sc">+</span> nest.success_year<span class="sc">$</span>mean<span class="sc">$</span>b.year <span class="sc">*</span> year)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>dsr_IC97<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">plogis</span>(nest.success_year<span class="sc">$</span>q97<span class="fl">.5</span><span class="sc">$</span>dsr.mu <span class="sc">+</span> nest.success_year<span class="sc">$</span>mean<span class="sc">$</span>b.year <span class="sc">*</span> year)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>df_pre_year <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">dsr =</span> dsr,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">IC95L =</span> dsr_IC2<span class="fl">.5</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">IC95H =</span> dsr_IC97<span class="fl">.5</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>                         <span class="at">year =</span> year)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_pre_year, <span class="fu">aes</span>(<span class="at">x=</span> year, <span class="at">y =</span>dsr)) <span class="sc">+</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span> IC95L,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax=</span> IC95H),</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.4</span>,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span> <span class="fl">0.4</span>,</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">fill=</span> <span class="st">"lightgreen"</span>)<span class="sc">+</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="fl">0.9</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>(<span class="st">"dsr_year_age.jags"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="st">  # modeling daily nest survival on the logit scale</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="st">  dsr.mu ~ dnorm(0, 0.33) # intercept, vague prior (0,1) on real scale</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="st">  b.year ~ dnorm(0, 1) # fixed effect for year (vague prior)</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="st">  b.age ~ dnorm(0, 1) # fixed effect for age (vague prior)</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="st">  for (i in 1:n.nests) {</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="st">    for (j in 1:expos[i]) {</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="st">      # daily survival is a function of mean survival, year effect, and age effect</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="st">      logitS[i,j] &lt;- dsr.mu + b.year * year[i] + b.age * age[i] # adding both year and age effects</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="st">      logit(S[i,j]) &lt;- logitS[i,j] # convert back to real scale</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="st">    IS[i] &lt;- prod(S[i,1:expos[i]]) # prob of surviving entire exposure interval</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="st">    survive[i] ~ dbern(IS[i]) # does nest survive this nest check interval?</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>, <span class="at">fill =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+model {
+  # modeling daily nest survival on the logit scale
+  dsr.mu ~ dnorm(0, 0.33) # intercept, vague prior (0,1) on real scale
+  b.year ~ dnorm(0, 1) # fixed effect for year (vague prior)
+  b.age ~ dnorm(0, 1) # fixed effect for age (vague prior)
+
+  for (i in 1:n.nests) {
+    for (j in 1:expos[i]) {
+      # daily survival is a function of mean survival, year effect, and age effect
+      logitS[i,j] &lt;- dsr.mu + b.year * year[i] + b.age * age[i] # adding both year and age effects
+      logit(S[i,j]) &lt;- logitS[i,j] # convert back to real scale
+    }
+    IS[i] &lt;- prod(S[i,1:expos[i]]) # prob of surviving entire exposure interval
+    survive[i] ~ dbern(IS[i]) # does nest survive this nest check interval?
+  }
+}</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>parms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dsr.mu"</span>, <span class="st">"b.year"</span>, <span class="st">"b.age"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a> MCMC settings</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>na <span class="ot">&lt;-</span> <span class="dv">1000</span>; ni <span class="ot">&lt;-</span> <span class="dv">1100</span>; nt <span class="ot">&lt;-</span> <span class="dv">1</span>        </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>nb <span class="ot">&lt;-</span> <span class="dv">100</span>; nc <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>nest.success_year_age <span class="ot">&lt;-</span> <span class="fu">jagsUI</span>(dsr.data, <span class="at">inits =</span> <span class="cn">NULL</span>, parms, <span class="st">"dsr_year_age.jags"</span>, </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n.adapt =</span> na, <span class="at">n.chains =</span> nc, <span class="at">n.thin =</span> nt, </span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n.iter =</span> ni, <span class="at">n.burnin =</span> nb, <span class="at">parallel =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">35</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>dsr <span class="ot">&lt;-</span> <span class="fu">plogis</span>(nest.success_year_age<span class="sc">$</span>mean<span class="sc">$</span>dsr.mu <span class="sc">+</span> nest.success_year_age<span class="sc">$</span>mean<span class="sc">$</span>b.age<span class="sc">*</span>age)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>dsr_IC2<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">plogis</span>(nest.success_year_age<span class="sc">$</span>q2<span class="fl">.5</span><span class="sc">$</span>dsr.mu <span class="sc">+</span> nest.success_year_age<span class="sc">$</span>q2<span class="fl">.5</span><span class="sc">$</span>b.age<span class="sc">*</span>age)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>dsr_IC97<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">plogis</span>(nest.success_year_age<span class="sc">$</span>q97<span class="fl">.5</span><span class="sc">$</span>dsr.mu <span class="sc">+</span> nest.success_year_age<span class="sc">$</span>q97<span class="fl">.5</span><span class="sc">$</span>b.age<span class="sc">*</span>age)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>Age_df_pre <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">age =</span> age,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">dsr =</span>dsr,</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">IC95L =</span> dsr_IC2<span class="fl">.5</span>,</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>                         <span class="at">IC95H =</span> dsr_IC97<span class="fl">.5</span>)</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Age_df_pre, <span class="fu">aes</span>(<span class="at">x=</span> age, <span class="at">y =</span>dsr)) <span class="sc">+</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin=</span> IC95L,</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax=</span> IC95H),</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span> <span class="fl">0.4</span>,</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">fill=</span> <span class="st">"lightgreen"</span>)<span class="sc">+</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-8-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>{<span class="fu">sink</span>(<span class="st">"dsr.jags"</span>); <span class="fu">cat</span>(<span class="st">"</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="st"># modeling daily nest survival on the logit scale</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.mu ~ dnorm(0, 0.33) # intercept, note this is vague (0,1) on real scale</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="st"># fixed effects for nest level covariates (all are linear on logit scale)</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="st">b.age ~ dnorm(0, 1) # nest age effect</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="st">b.dist ~ dnorm(0, 1) # distance from management edge</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="st">b.init ~ dnorm(0, 1) # nest initiation date effect</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="st"># note: I'm modeling site and year as crossed random effects - they could also be nested</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="st"># random site effects</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.area.sd ~ dunif(0.01, 1) # random site effect</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.area.tau &lt;- pow(dsr.area.sd, -2)</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="st">for (j in 1:n.areas){</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="st">  eps.area[j] ~ dnorm(0, dsr.area.tau)</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="st"># random year effects</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.yr.sd ~ dunif(0.01, 1) # random year effect</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.yr.tau &lt;- pow(dsr.yr.sd, -2)</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a><span class="st">for (i in 1:n.yrs){</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="st">  eps.yr[i] ~ dnorm(0, dsr.yr.tau)</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a><span class="st"># random species effects</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.spp.sd ~ dunif(0.01, 1) # random species effect</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a><span class="st">dsr.spp.tau &lt;- pow(dsr.spp.sd, -2)</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a><span class="st">for (i in 1:n.spp){</span></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a><span class="st">  eps.spp[i] ~ dnorm(0, dsr.spp.tau)</span></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a><span class="st">for (i in 1:n.nests){</span></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a><span class="st">  for (j in 1:expos[i]){</span></span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a><span class="st">      # daily survival is function of mean dsr, nest age effect, distance from edge,</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a><span class="st">      # initiation date, and random effects for area, year, and species</span></span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a><span class="st">      logitS[i,j] &lt;- dsr.mu + b.age*(age[i]+j-1) + b.dist*dist[i] + b.init*init[i] + </span></span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a><span class="st">        eps.area[area[i]] + eps.yr[year[i]] + eps.spp[spp[i]]</span></span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a><span class="st">      logit(S[i,j]) &lt;- logitS[i,j] # convert back to real scale</span></span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a><span class="st">      } </span></span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a><span class="st">    IS[i] &lt;- prod(S[i,1:expos[i]]) # prob of surviving entire exposure interval</span></span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a><span class="st">    survive[i] ~ dbern(IS[i]) # does nest survive this nest check interval?</span></span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a><span class="st">  } # end jags model</span></span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>,<span class="at">fill =</span> <span class="cn">TRUE</span>); <span class="fu">sink</span>()}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>parms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dsr.mu"</span>, <span class="st">"b.age"</span>, <span class="st">"b.dist"</span>, <span class="st">"b.init"</span>, </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">"dsr.area.sd"</span>, <span class="st">"dsr.yr.sd"</span>, <span class="st">"dsr.spp.sd"</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>           <span class="st">"eps.area"</span>, <span class="st">"eps.yr"</span>, <span class="st">"eps.spp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>na <span class="ot">&lt;-</span> <span class="dv">1000</span>; ni <span class="ot">&lt;-</span> <span class="dv">1100</span>; nt <span class="ot">&lt;-</span> <span class="dv">1</span>        </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>nb <span class="ot">&lt;-</span> <span class="dv">100</span>; nc <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>nest.success <span class="ot">&lt;-</span> <span class="fu">jagsUI</span>(dsr.data, <span class="at">inits =</span> <span class="cn">NULL</span>, parms, <span class="st">"dsr.jags"</span>, </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n.adapt =</span> na, <span class="at">n.chains =</span> nc, <span class="at">n.thin =</span> nt, </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n.iter =</span> ni, <span class="at">n.burnin =</span> nb, <span class="at">parallel =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Clase9_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg" class="img-fluid figure-img"></p>
+<figcaption>HN Biology Investigation Academy</figcaption>
 </figure>
 </div>
-</div>
-</div>
-</section>
 
 </main>
 <!-- /main column -->

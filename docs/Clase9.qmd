@@ -6,12 +6,16 @@ format:
     css: styles.css
 ---
 
+
+::: panel-tabset
+
 ## Supervivencia de nidos
 
 Para este analisi necesitaremos instalar el software [Jags](https://sourceforge.net/projects/mcmc-jags/)
 
 
 ## cargar paquetes
+
 
 ```{r}
 
@@ -76,40 +80,29 @@ model {
 }
 ", fill = TRUE)
 sink()
-
 ```
 
 
-```{r}
+```{r, eval=FALSE}
+
 parms <- c("dsr.mu")
-```
 
+na <- 1000
+ni <- 1100
+nt <- 1        
+nb <- 100
+nc <- 3
 
-```{r}
-# MCMC settings
-na <- 1000; ni <- 1100; nt <- 1        
-nb <- 100; nc <- 3
-```
-
-
-```{r}
-# call jags (~ 4 min)
 nest.success_nulo <- jagsUI(dsr.data, inits = NULL, parms, "dsr_null.jags", 
                    n.adapt = na, n.chains = nc, n.thin = nt, 
-                   n.iter = ni, n.burnin = nb, parallel = TRUE)
-```
+                   n.iter = ni, n.burnin = nb)
 
-```{r}
 print(nest.success_nulo, digits = 4)
 ```
 
-
-
 ##  Modelo year como predictor
 
-
 ```{r}
-
 sink("dsr_year.jags")
 cat("
 model {
@@ -129,23 +122,27 @@ model {
 }
 ", fill = TRUE)
 sink()
+```
 
-
+```{r}
 parms <- c("dsr.mu", "b.year")
+```
 
-# MCMC settings
-na <- 1000; ni <- 1100; nt <- 1        
-nb <- 100; nc <- 3
 
-# call jags (~ 4 min)
+```{r, eval=FALSE}
+na <- 1000
+ni <- 1100
+nt <- 1        
+nb <- 100
+nc <- 3
+
 nest.success_year <- jagsUI(dsr.data, inits = NULL, parms, "dsr_year.jags", 
                    n.adapt = na, n.chains = nc, n.thin = nt, 
                    n.iter = ni, n.burnin = nb, parallel = TRUE)
 ```
 
 
-```{r}
-
+```{r, eval=FALSE}
 year = 1:3
 
 dsr <- plogis(nest.success_year$mean$dsr.mu + nest.success_year$mean$b.year * year)
@@ -196,26 +193,23 @@ model {
 }
 ", fill = TRUE)
 sink()
-
-
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 parms <- c("dsr.mu", "b.year", "b.age")
 
-# MCMC settings
+ MCMC settings
 na <- 1000; ni <- 1100; nt <- 1        
 nb <- 100; nc <- 3
 
-# call jags (~ 4 min)
 nest.success_year_age <- jagsUI(dsr.data, inits = NULL, parms, "dsr_year_age.jags", 
                    n.adapt = na, n.chains = nc, n.thin = nt, 
                    n.iter = ni, n.burnin = nb, parallel = TRUE)
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 age <- 1:35
 
 dsr <- plogis(nest.success_year_age$mean$dsr.mu + nest.success_year_age$mean$b.age*age)
@@ -239,15 +233,11 @@ ggplot(Age_df_pre, aes(x= age, y =dsr)) +
   geom_line()+
   theme_classic()
 ```
-## Seleccion de modelo
-
-## Evaluacion de modelo
 
 
-## Crear funcion del modelo
+## Crear funcion del modelo mixto
 
 ```{r}
-# Shaffer's nest survival model, coded for JAGS
 {sink("dsr.jags"); cat("
 model {
 # modeling daily nest survival on the logit scale
@@ -295,30 +285,38 @@ for (i in 1:n.nests){
 ",fill = TRUE); sink()}
 ```
 
-
-
-
-## Definir parametros del modelo
-
 ```{r}
 parms <- c("dsr.mu", "b.age", "b.dist", "b.init", 
            "dsr.area.sd", "dsr.yr.sd", "dsr.spp.sd",
            "eps.area", "eps.yr", "eps.spp")
-
 ```
 
 
-## Ajustar modelo
-
-```{r}
-# MCMC settings
+```{r, eval=FALSE}
 na <- 1000; ni <- 1100; nt <- 1        
 nb <- 100; nc <- 3
 
-# call jags (~ 4 min)
-# nest.success <- jagsUI(dsr.data, inits = NULL, parms, "dsr.jags", 
-#                   n.adapt = na, n.chains = nc, n.thin = nt, 
-#                   n.iter = ni, n.burnin = nb, parallel = TRUE)
+nest.success <- jagsUI(dsr.data, inits = NULL, parms, "dsr.jags", 
+                   n.adapt = na, n.chains = nc, n.thin = nt, 
+                   n.iter = ni, n.burnin = nb, parallel = TRUE)
 ```
+
+
+:::
+
+![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
