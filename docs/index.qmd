@@ -29,9 +29,9 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 [Clase 7: Modelado de interacciones entre especies (ocupación)](Clase7.html)
 
-[Clase 8: Modelar supervivencia aparente o persistencia](Clase8.html)
+[Clase 8: Modelar supervivencia aparente o persistencia](Clase9.html)
 
-[Clase 9: Modelar supervivencia de nido](Clase9.html)
+[Clase 9: Modelar supervivencia de nido](Clase8.html)
 
 Clase 10: Repaso, Preguntas y respuestas
 

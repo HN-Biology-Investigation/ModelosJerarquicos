@@ -49,6 +49,10 @@ library(AHMbook)
 ```{r}
 data(willowWarbler)
 str(willowWarbler)
+
+willowWarbler$birds$cesID <- as.character(willowWarbler$birds$cesID)
+willowWarbler$CES$cesID <- as.character(willowWarbler$CES$cesID)
+
 ```
 
 ```{r}
