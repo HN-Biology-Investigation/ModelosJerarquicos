@@ -69,6 +69,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="Clase9_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="Clase9_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -105,12 +134,73 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Supervivencia de nidos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">cargar paquetes</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Cargar base de datos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Preparar datos para el modelo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Modelo Nulo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Modelo year como predictor</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">Modelo year + age como predictor</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-8" role="tab" aria-controls="tabset-1-8" aria-selected="false" href="">Crear funcion del modelo mixto</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Inferencia Bayesiana</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Supervivencia de nidos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">cargar paquetes</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Cargar base de datos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Preparar datos para el modelo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Modelo Nulo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">Modelo year como predictor</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-8" role="tab" aria-controls="tabset-1-8" aria-selected="false" href="">Modelo year + age como predictor</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-9-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-9" role="tab" aria-controls="tabset-1-9" aria-selected="false" href="">Crear funcion del modelo mixto</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p>Para este analisi necesitaremos instalar el software <a href="https://sourceforge.net/projects/mcmc-jags/">Jags</a></p>
+<p>Referencia: <a href="https://shop.elsevier.com/books/integrated-population-models/schaub/978-0-12-820564-8">Integrated Population Models</a> - Sección 2.4</p>
+<p>La inferencia bayesiana es un enfoque estadístico que permite actualizar el conocimiento sobre parámetros desconocidos mediante el uso del Teorema de Bayes. Este marco es fundamental en modelos de población integrados, ya que permite combinar datos de diferentes fuentes con incertidumbre.</p>
+<p><strong>1. Teorema de Bayes</strong></p>
+<p>El Teorema de Bayes es la base de la inferencia bayesiana y se expresa como:</p>
+<p><span class="math display">\[p(\theta | y) = \frac{p(y | \theta) \cdot p(\theta)}{p(y)} = \frac{p(\theta,y)}{p(y)}\]</span> Donde:</p>
+<p><span class="math inline">\(p(\theta|y)\)</span> es el objetivo de la inferencia bayesiana. Se llama distribución posterior y es la probabilidad del parámetro dado la información de los datos.</p>
+<p>La segunda cantidad es la probabilidad de los datos dado el parámetro, <span class="math inline">\(p(y|\theta)\)</span>. Esta es la verosimilitud (aunque en la regla de Bayes se escribe como <span class="math inline">\(p(y|\theta)\)</span> en lugar de <span class="math inline">\(L(\theta|y)\)</span>).</p>
+<p>La tercera cantidad es la probabilidad del parámetro, <span class="math inline">\(p(\theta)\)</span>, la cual se llama distribución a priori o simplemente “prior”.</p>
+<p>Finalmente, la última cantidad es la probabilidad de los datos, <span class="math inline">\(p(y)\)</span>. Es una constante que asegura que la regla de Bayes se integre a 1, como es requisito para una función de probabilidad. El denominador <span class="math inline">\(p(y)\)</span> es la integral del numerador sobre el parámetro <span class="math inline">\(\theta\)</span>: <span class="math inline">\(\int p(y|\theta)p(\theta)d(\theta)\)</span></p>
+<p><strong>2. Componentes de la Inferencia Bayesiana</strong></p>
+<ol type="a">
+<li>Distribución a priori (prior)</li>
+</ol>
+<p>Especifica el conocimiento previo sobre los parámetros antes de observar los datos. Puede ser:</p>
+<p>Informativa: Basada en estudios previos o conocimiento experto.</p>
+<p>No informativa o vaga: Utilizada cuando hay poco conocimiento previo, permitiendo que los datos dominen la inferencia.</p>
+<ol start="2" type="a">
+<li><p>Verosimilitud (likelihood) Define cómo los datos observados se relacionan con los parámetros del modelo. En ecología, esto podría ser un modelo de conteo, como una distribución de Poisson o binomial negativa.</p></li>
+<li><p>Distribución posterior (posterior)</p></li>
+</ol>
+<p>La distribución posterior es el producto de la verosimilitud y el prior. Representa el conocimiento actualizado sobre los parámetros después de observar los datos.</p>
+<p><strong>3. Ventajas del Enfoque Bayesiano en Modelos Ecológicos</strong></p>
+<ul>
+<li><p>Incorporación de incertidumbre: Los modelos bayesianos manejan la incertidumbre de manera explícita, tanto en los datos como en los parámetros.</p></li>
+<li><p>Flexibilidad: Permiten modelar estructuras complejas, como efectos aleatorios, jerárquicos o modelos integrados.</p></li>
+<li><p>Distribuciones completas: Se obtienen distribuciones completas de los parámetros, no solo estimaciones puntuales, lo que facilita la interpretación de la incertidumbre.</p></li>
+<li><p>Actualización del conocimiento: A medida que se obtienen nuevos datos, se puede actualizar la posterior y obtener una nueva inferencia.</p></li>
+</ul>
+<p><strong>4. Cálculo de la Distribución Posterior: Métodos Numéricos</strong></p>
+<p>En la práctica, la distribución posterior no suele tener una forma analítica simple, por lo que se utilizan métodos numéricos como:</p>
+<p>Método de Monte Carlo mediante cadenas de Markov (MCMC)</p>
+<p>El MCMC es una técnica que genera muestras de la distribución posterior y permite calcular estimaciones de los parámetros. Los pasos básicos son:</p>
+<ul>
+<li><p>Inicialización: Se elige un valor inicial para los parámetros.</p></li>
+<li><p>Generación de muestras: Se generan nuevas muestras en función de una distribución de propuesta.</p></li>
+<li><p>Aceptación/rechazo: Las muestras se aceptan o rechazan según un criterio de probabilidad.</p></li>
+<li><p>Convergencia: Una vez que la cadena converge, las muestras se consideran representativas de la distribución posterior.</p></li>
+</ul>
+<p>Herramientas como JAGS y Stan se utilizan para implementar MCMC en R.</p>
+<p><strong>5. Diagnóstico y Evaluación de Modelos Bayesianos</strong></p>
+<p>Es fundamental evaluar si el MCMC ha convergido y si las muestras son representativas. Algunos métodos comunes son:</p>
+<p>Gráficos de trazado (trace plots): Muestran cómo evolucionan las muestras y ayudan a detectar problemas de convergencia.</p>
+<p>Estadísticos de diagnóstico: Como el factor de reducción de Gelman-Rubin (<span class="math inline">\(\hat{R}\)</span>) y la autocorrelación.</p>
+<p><strong>6. Aplicación en Modelos Integrados de Población (IPMs)</strong></p>
+<p>En el contexto de los IPMs, la inferencia bayesiana permite combinar diferentes fuentes de datos (conteos, captura-recaptura, productividad) en un único marco analítico, manejando la incertidumbre en cada componente.</p>
+<p>Ejemplo básico:</p>
+<ul>
+<li><p>Datos de conteo <span class="math inline">\(N\)</span>: Distribución de Poisson.</p></li>
+<li><p>Datos de captura-recaptura: Modelo CJS.</p></li>
+<li><p>Priors informativos sobre tasas de supervivencia y fecundidad.</p></li>
+</ul>
+<p>La posterior conjunta integra todos estos elementos, proporcionando estimaciones de los parámetros clave.</p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Referencia: <a href="https://shop.elsevier.com/books/integrated-population-models/schaub/978-0-12-820564-8">Integrated Population Models</a> - Sección 4.4.6</p>
+<p>Para esta clase necesitaremos instalar el software <a href="https://sourceforge.net/projects/mcmc-jags/">Jags</a></p>
+<p>El objetivo principal de los modelos de supervivencia de nidos es la estimación del éxito de los nidos, que es la probabilidad de que al menos un polluelo sea producido por un nido iniciado. El fracaso del nido puede deberse a la depredación del nido o de uno o ambos padres, competencia por otro individuo de la misma especie o inanición de los polluelos si no reciben suficiente alimento. El éxito del nido está compuesto por los éxitos durante las fases de incubación y de cría, y los procesos que gobiernan estos éxitos pueden ser diferentes. Por lo tanto, los dos componentes del éxito general del nido suelen modelarse por separado.</p>
+<p>Los datos sobre la supervivencia de nidos se recogen de nidos activos que deben ser visitados repetidamente. Los intervalos de tiempo entre visitas no tienen que ser idénticos y pueden ser mayores a 1 día. El estado del nido se codifica como “vivo” o “muerto” y se registra en cada visita. Un nido vivo significa que contiene al menos un huevo o un polluelo vivo y que no ha sido abandonado.</p>
+<p>El éxito del nido se expresa como la proporción de nidos exitosos en nuestra muestra, que a menudo estará sesgada positivamente porque los nidos que fracasaron en una etapa temprana son menos propensos a aparecer en nuestra muestra (es decir, a ser detectados en absoluto) que los nidos que fracasaron más tarde o que tuvieron éxito. Por lo tanto, es difícil obtener una muestra de nidos que sea aleatoria con respecto al destino. Este problema ha sido reconocido desde hace mucho tiempo y Harold Mayfield fue el primero en formalizar una solución mediante el desarrollo de modelos que pueden proporcionar estimaciones no sesgadas del éxito de los nidos (Mayfield, 1961, 1975). La idea clave es que la supervivencia diaria se estima desde el momento en que un nido es detectado y entra en la muestra estudiada, y luego el éxito del nido se deriva como el producto de las probabilidades diarias de supervivencia del nido durante todo el período, que puede ser solo de incubación o también incluir el período de cría. Los modelos originales asumían probabilidades constantes de supervivencia diaria del nido y que el fracaso del nido ocurría en el punto medio entre la fecha en que el nido fue registrado por última vez como vivo y la fecha en que se detectó por primera vez el fracaso. Más tarde, los modelos se mejoraron para relajar estas suposiciones y permitir que la supervivencia diaria dependa de la edad del nido y de covariables temporales (Johnson, 1979; Hensler y Nichols, 1981; Acbischer, 1999; Dinsmore et al., 2002; Rotella et al., 2004). Además, la inclusión de efectos aleatorios de nidos permite acomodar la no independencia de la supervivencia de los nidos debido a efectos individuales o del sitio (He, 2003; Cao et al., 2008, 2009; Royle y Dorazio, 2008; Schmidt et al., 2010; Converse et al., 2013).</p>
+<p>Los datos recopilados para un estudio sobre la supervivencia de nidos incluyen la fecha de la visita a un nido <span class="math inline">\(i\)</span>, la información sobre el estado de ese nido durante la visita y posiblemente también la edad de los polluelos (al menos durante la visita cuando se encuentra el nido). Así, los datos para cada nido <span class="math inline">\(i\)</span> generalmente se resumen como la fecha en que se detectó el nido por primera vez (<span class="math inline">\(f_i\)</span>), el último día en que el nido <span class="math inline">\(i\)</span> fue encontrado vivo <span class="math inline">\(j_i\)</span>, el día en que el nido fue visitado por última vez <span class="math inline">\(k_i\)</span> y si el nido <span class="math inline">\(i\)</span> estaba vivo durante esta última visita (escrito como <span class="math inline">\(x_i = 0\)</span> para nidos fallidos y <span class="math inline">\(x_i = 1\)</span> para nidos exitosos). La forma más flexible y directa de analizar estos datos es simplemente adoptando un modelo de CJS donde descartamos el submodelo para la probabilidad de recaptura. Este enfoque fue propuesto por Royle y Dorazio (2008) y Schmidt et al.&nbsp;(2010), y se ilustra en esta clase.</p>
+<p>Hay tres desafíos en el análisis de estos datos. Primero, no todos los nidos se detectan el día 1, es decir, en la fecha de puesta del primer huevo. Por lo tanto, la estimación de la supervivencia diaria comienza en el día en que se descubre un nido, y así el modelo condiciona la primera detección. También podemos decir que nuestros datos están censurados a la izquierda porque el evento modelado (fracaso) pudo haber ocurrido antes de que el “sujeto” (en este caso, un nido) ingrese al estudio (Landes et al., 2020). En segundo lugar, a menos que los nidos se visiten diariamente, la fecha exacta del fracaso es desconocida, es decir, las fechas de fracaso observadas son típicamente censuradas por intervalos. Sin embargo, la fecha del fracaso puede estimarse desde el modelo basado en las probabilidades de supervivencia diaria sin necesidad de asumir cuándo ocurrió, como se suponía en los modelos originales de supervivencia de nidos (Johnson, 1979). Finalmente, el destino final puede no ser conocido para todos los nidos, lo que ocurre cuando un nido registrado como vivo en la última visita no se vuelve a visitar hasta la fecha de la salida de los polluelos. En este caso, los datos están censurados a la derecha, es decir, solo sabemos que el nido ha sobrevivido hasta la última fecha en que fue observado vivo. Podemos eliminar la incertidumbre resultante al no modelar el destino del nido después de la última visita.</p>
+<p>El éxito general del nido se calcula como el producto de las probabilidades diarias de supervivencia del nido durante el número de días requeridos hasta que los polluelos abandonen el nido. Para dar un ejemplo simple: con una probabilidad constante de supervivencia diaria del nido (es decir, sin efectos del tiempo y la edad del nido), el éxito total del nido se estima como <span class="math inline">\(s^T\)</span> para una especie que requiere <span class="math inline">\(T\)</span> días desde la puesta del huevo hasta el abandono del nido.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jagsUI)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -128,7 +218,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>NidosPatos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/duck_nests.csv"</span>, </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">header=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -140,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">init_stadard =</span> (init<span class="sc">-</span> <span class="fu">mean</span>(init))<span class="sc">/</span><span class="fu">sd</span>(init))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
 <p>Crearemos una lista con las covariables que pueden implementarce en el modelo</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dsr.data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n.nests =</span> <span class="fu">dim</span>(NidoPatos1)[<span class="dv">1</span>], </span>
@@ -157,7 +247,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">dist =</span> NidoPatos1<span class="sc">$</span>dist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>(<span class="st">"dsr_null.jags"</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span></span>
@@ -211,7 +301,7 @@ model {
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(nest.success_nulo, <span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>(<span class="st">"dsr_year.jags"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span></span>
@@ -292,7 +382,7 @@ model {
 <span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
+<div id="tabset-1-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-8-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>(<span class="st">"dsr_year_age.jags"</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span></span>
@@ -370,7 +460,7 @@ model {
 <span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-1-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-8-tab">
+<div id="tabset-1-9" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-9-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>{<span class="fu">sink</span>(<span class="st">"dsr.jags"</span>); <span class="fu">cat</span>(<span class="st">"</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
