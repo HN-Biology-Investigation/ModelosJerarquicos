@@ -38,167 +38,426 @@ Referencia, Capítulo 3: [Aplied Hierarchical Modeling in Ecology, Volumen 2](ht
 
 ## Datos sobre el GWWA
 
+```{r}
+encounter_matrix <- readRDS("data/GWWA_CR.rds")
+
+Hab <- readRDS("data/Hab.rds")
+```
+
+
+
+```{r, echo=FALSE, eval=FALSE, message=FALSE, warning=FALSE}
+
+library(rjags) # JAGS must be installed seperately
+library(lattice)
+library(coda)
+library(R2jags)
+library(tidyverse)
+
+gwwa.hab <- read.csv("data/RittersonGWWA/Encounter.csv")
+
+
+################ Create vector of study dates ########################
+nbdates <- c(
+  seq(as.Date("02/01/06", "%m/%d/%y"), as.Date("04/15/06", "%m/%d/%y"),
+      by="days"),
+  seq(as.Date("10/01/06", "%m/%d/%y"), as.Date("04/15/07", "%m/%d/%y"),
+      by="days"),
+  seq(as.Date("10/01/07", "%m/%d/%y"), as.Date("04/15/08", "%m/%d/%y"),
+      by="days"),
+  seq(as.Date("10/01/08", "%m/%d/%y"), as.Date("04/15/09", "%m/%d/%y"),
+      by="days"),
+  seq(as.Date("10/01/09", "%m/%d/%y"), as.Date("04/15/10", "%m/%d/%y"),
+      by="days"),  
+  seq(as.Date("10/01/10", "%m/%d/%y"), as.Date("04/15/11", "%m/%d/%y"),
+      by="days"),
+  seq(as.Date("10/01/11", "%m/%d/%y"), as.Date("04/15/12", "%m/%d/%y"),
+      by="days"),
+  seq(as.Date("10/01/12", "%m/%d/%y"), as.Date("04/15/13", "%m/%d/%y"),
+      by="days"))
+nbdates
+
+
+
+### Function to create a matrix with information about known latent stae z (Kery & Schaub, p.182)
+known.state.cjs <- function(ch){
+  state <- ch
+  for (i in 1:dim(ch)[1]){
+    n1 <- min(which(ch[i,]==1))
+    n2 <- max(which(ch[i,]==1))
+    state[i,n1:n2] <- 1
+    state[i,n1] <- NA
+  }
+  state[state==0] <- NA
+  return(state)
+}
+
+
+
+################ Season design matrix #########################
+season <- factor(ifelse(diff(nbdates) == 1, "Within", "Among"),
+                 levels=c("Within", "Among"))
+season[length(season)+1] <- 'Among'
+seasonDM <- model.matrix(~season-1)
+amongs <- which(season=="Among")
+
+season.ind <- c(rep(1, times=amongs[1]), rep(2:length(amongs),
+                                             times=diff(amongs)))
+data.frame(date=nbdates, season)
+data.frame(season,season.ind)
+
+format(nbdates, "%Y")
+
+
+str(gwwa.hab)
+levels(gwwa.hab$Colors)
+
+gwwa.hab$Date <- as.Date(gwwa.hab$Date, "%m/%d/%y")
+
+gwwa.hab <- gwwa.hab %>%
+  mutate(Day = as.numeric(Date - min(Date)))  # Day as number of days since first observation
+
+# Create the encounter matrix and capture the first site of each individual
+site_values <- c(
+  'Above MINAE' = 1, 
+  'Alexander Trejos' = 2, 
+  'Ana Fouseca' = 3,
+  'Andres Fouseca' = 4,
+  'Clara y Victor Marin' = 5, 
+  'Co-op 2nd growth' = 6,
+  'Eduardo Villegas' = 7,
+  'Federico Miranda' = 8,
+  'Hernan Gonzalez' = 9,
+  'Jam Rd entrance' = 10,
+  'Jamaica Rd (PC Ced19)' = 11,
+  'Jose Sibaja' = 12,
+  'La Jolla' = 13,
+  'Los Planes - Above Waterfall' = 14,
+  'Los Planes - Arancibia Lodge' = 15,
+  'Los Planes - Arancibia lookout' = 16,
+  'Los Planes - far upper fragment' = 17,
+  'Los Planes - lower' = 18,
+  'Los Planes - upper' = 19,
+  'Luis Angel/Gringo Cubano' = 20,
+  'Luis Urena' = 21,
+  'Marcos Gonzalez' = 22,
+  'Miguel Molino' = 23,
+  'Mirella (PC Ced18 above house)' = 24,
+  'Olher Trejos' = 25,
+  'Talapia' = 26,
+  'Tonio' = 27
+)
+
+# Adjust the encounter_matrix code to repeat these site values
+encounter_matrix <- gwwa.hab %>%
+  mutate(Survey_Interval = floor((Day - min(Day)) / 7) + 1) %>%
+  group_by(Colors, Survey_Interval) %>%
+  summarise(Encountered = ifelse(any(Encountered == "Yes"), 1, 0),
+            First_Site = first(Site), .groups = "drop") %>%
+  pivot_wider(names_from = Survey_Interval, values_from = Encountered, values_fill = list(Encountered = 0)) %>%
+  left_join(
+    tibble(First_Site = names(site_values), Site_Value = site_values),
+    by = "First_Site"
+  )
+
+
+
+hab<-read.csv("data/Hab.csv", header=TRUE)
+
+#Canopy.ht
+library(reshape2)
+
+Canopy<-hab[,c(1,7,8)]
+
+b<-melt(Canopy, id=c("Colors", "Point_num"), measured="Canopy.Height", na.rm=FALSE) #may wish to chandge na.rm arguement
+Canopy.ht<-dcast(b, ... ~ Point_num)
+
+VarNames<-c("Colors", "Variable", "initial", "point1", "point2", "point3", "point4", "point5", "point6", "point7", "point8", "point9",
+            "point10", "point11", "point12", "point13", "point14", "point15", "point16", "point17", "point18", "point19")
+colnames(Canopy.ht)<-VarNames
+head(Canopy.ht)
+
+Canopy.ht.avg<-apply(Canopy.ht[,3:22], 1, mean, na.rm=T)
+Canopy.ht.avg
+
+#vines
+plot(hab$Vine)
+Vines<-hab[,c(1,7,10)]
+b<-melt(Vines, id=c("Colors", "Point_num"), measured="Vine", na.rm=FALSE) #may wish to change na.rm arguement
+Vine.num<-dcast(b, ... ~ Point_num)
+
+VarNames<-c("Colors", "Variable", "initial", "point1", "point2", "point3", "point4", "point5", "point6", "point7", "point8", "point9",
+            "point10", "point11", "point12", "point13", "point14", "point15", "point16", "point17", "point18", "point19")
+colnames(Vine.num)<-VarNames
+head(Vine.num)
+
+Vine.avg<-apply(Vine.num[,3:21], 1, mean, na.rm=T)
+Vine.avg
+
+
+#Leaf
+
+m<-as.matrix(hab$Leaf)
+m[m=="low"]<-1
+m[m=="med"]<-2
+m[m=="high"]<-3
+m<-as.numeric(m)
+
+R<-hab[,c(1,7)]
+S<-cbind(R, m)
+
+b<-melt(S, id=c("Colors", "Point_num"), measured="m", na.rm=FALSE) #may wish to chandge na.rm arguement
+Leaf<-dcast(b, ... ~ Point_num)
+
+VarNames<-c("Colors", "Variable", "initial", "point1", "point2", "point3", "point4", "point5", "point6", "point7", "point8", "point9",
+            "point10", "point11", "point12", "point13", "point14", "point15", "point16", "point17", "point18", "point19")
+colnames(Leaf)<-VarNames
+head(Leaf)
+Leaf.avg<-apply(Leaf[,3:22], 1, mean, na.rm=T)
+Leaf.avg
+
+
+Hab <- data.frame(Canopy = Canopy.ht.avg, Vine =  Vine.avg, Leaf = Leaf.avg)
+
+
+
+```
+
+## Preparar lista
+
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(jagsUI)
+```
+
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+
+ch <- as.matrix(encounter_matrix[,3:43])
+sites <- encounter_matrix$Site_Value
+
+
+# Get sample size
+
+(nweeks <- ncol(ch))
+
+(nsites <- nrow(data.frame(encounter_matrix$Site_Value)))
+
 library(AHMbook)
 
-```
+ch2marray(ch)
+
+marr <- ch2marray(ch) 
+
+# Calculate the number of birds released each week
+
+r <- apply(marr, 1, sum)
 
 
-```{r}
-data(willowWarbler)
-str(willowWarbler)
+MARR <- array(NA, dim = c(40, nweeks,nsites))
+R <- array(NA, dim = c(40, nsites))
 
-willowWarbler$birds$cesID <- as.character(willowWarbler$birds$cesID)
-willowWarbler$CES$cesID <- as.character(willowWarbler$CES$cesID)
-
-```
-
-```{r}
-attach (willowWarbler)
-ch <- as.matrix(birds[, 1:11])
-sitevec <- birds$cesID
-```
-
-
-```{r}
-(nyear <- ncol(ch))        # Number years: 11
-(nsite <- nrow(CES))       # Number of CE sites: 193
-(nblock <- nrow(blocks))   # Number of blocks: 495
-
-```
-
-```{r}
-(marr <- ch2marray(ch))
-```
-
-```{r}
-# Calculate the number of birds released each year 1–10
-(r <- apply(marr, 1, sum))
-```
-
-```{r}
-# Create 3d (or multi-site) m-array and r array: MARR and R
-MARR <- array(NA, dim = c(10, nyear, nsite))
-R <- array(NA, dim = c(10, nsite))
-
-for(k in 1:nsite){
-  sel.part <- ch[sitevec == k, ]
-  ma <- ch2marray(sel.part)
+for(k in 1:nsites){
+  ma <- ch2marray(ch)
   MARR[,,k] <- ma
   R[,k] <- apply(ma, 1, sum)
 }
 
 
-
+str(bdata <- list(MARR = MARR, R = R, n.site = nsites, n.occ = nweeks,
+                  Canopy = Hab$Canopy, Vine = Hab$Vine, Leaf = Hab$Leaf ))
 ```
 
 
-```{r}
-# Bundle and summarize data set
-str(bdata <- list(MARR = MARR, R = R, n.site = nsite, n.occ = nyear))
-```
-## Modelo 1
+## Null model
 
-```{r}
-# Specify model in BUGS language
-cat(file = "cjs6.txt","
+```{r, warning=FALSE, message=FALSE}
+
+cat(file = "Survival1.txt", "
 model {
 
-  # Priors and linear models
-  for (s in 1:n.site){
-    for (t in 1:(n.occ-1)){
-      phi[t, s] <- ilogit(lphi[t, s]) # survival
-      p[t, s] <- ilogit(lp[t, s]) # recapture
-      lphi[t, s] <- alpha.lphi.site[s] + beta.lphi.time[t]
-      lp[t, s] <- alpha.lp.site[s] + beta.lp.time[t]
-    }
-    # Define random site effects
-    alpha.lphi.site[s] ~ dnorm(mu.lphi, tau.lphi.site)
-    alpha.lp.site[s] ~ dnorm(mu.lp, tau.lp.site)
-    mean.phi.site[s] <- ilogit(alpha.lphi.site[s])
-    mean.p.site[s] <- ilogit(alpha.lp.site[s])
-  }
-  # Define random year effects
+  # Priors for constant survival and recapture
   for (t in 1:(n.occ-1)){
-    beta.lphi.time[t] ~ dnorm(0, tau.lphi.time)
-    beta.lp.time[t] ~ dnorm(0, tau.lp.time)
-    mean.phi.time[t] <- ilogit(mu.lphi + beta.lphi.time[t])
-    mean.p.time[t] <- ilogit(mu.lp + beta.lp.time[t])
+    phi[t] <- ilogit(mu.lphi)  # constant survival
+    p[t] <- ilogit(mu.lp)      # constant recapture
   }
 
-  # Hyperpriors for hyperparams
-  mu.lphi <- logit(mean.phi)
-  mean.phi ~ dunif(0, 1)
-  mu.lp <- logit(mean.p)
-  mean.p ~ dunif(0, 1)
-  tau.lphi.site <- pow(sd.lphi.site, -2)
-  sd.lphi.site ~ dunif(0, 3)
-  tau.lp.site <- pow(sd.lp.site, -2)
-  sd.lp.site ~ dunif(0, 3)
-  tau.lphi.time <- pow(sd.lphi.time, -2)
-  sd.lphi.time ~ dunif(0, 3)
-  tau.lp.time <- pow(sd.lp.time, -2)
-  sd.lp.time ~ dunif(0, 3)
+  # Hyperpriors for global parameters (mean survival and recapture)
+  mu.lphi ~ dunif(0, 1)  # Uniform prior for mean survival
+  mu.lp ~ dunif(0, 1)    # Uniform prior for mean recapture
 
-  # Multinomial likelihood for the m-array data (JAGS style)
+  # Likelihood for the m-array data (no random effects)
   for (s in 1:n.site){
     for (t in 1:(n.occ-1)){
-      MARR[t,1:n.occ,s] ~ dmulti(pr[t, , s], R[t,s])
+      MARR[t, 1:n.occ, s] ~ dmulti(pr[t, 1:n.occ, s], R[t, s])
     }
   }
-  # Define the cell probabilities of the m-array
-  # Main diagonal
+
+  # Define the cell probabilities of the m-array (constant survival and recapture)
+  for (t in 1:(n.occ-1)){
+    q[t] <- 1 - p[t]
+  }
+
   for (s in 1:n.site){
     for (t in 1:(n.occ-1)){
-      q[t,s] <- 1-p[t,s] # Probability of non-recapture
-      pr[t,t,s] <- phi[t,s]*p[t,s]
-      # Above main diagonal
+      pr[t, t, s] <- phi[t] * p[t]  # Probability of recapture
+      
+      # Above diagonal: only calculate if j <= n.occ-1
       for (j in (t+1):(n.occ-1)){
-        pr[t,j,s] <- prod(phi[t:j,s])*prod(q[t:(j-1),s])*p[j,s]
-      } #j
-      # Below main diagonal
-      for (j in 1:(t-1)){
-        pr[t,j,s] <- 0
+        pr[t, j, s] <- prod(phi[t:j]) * prod(q[t:(j-1)]) * p[j]
       }
-    }
-  }
-  # Last column: probability of non-recapture
-  for (s in 1:n.site){
-    for (t in 1:(n.occ-1)){
-      pr[t,n.occ,s] <- 1-sum(pr[t,1:(n.occ-1),s])
+      
+      # Ensure valid probabilities for the last column (j = n.occ)
+      pr[t, n.occ, s] <- 1 - sum(pr[t, 1:(n.occ-1), s])
+
+      # Below diagonal (no recapture)
+      for (j in 1:(t-1)){
+        pr[t, j, s] <- 0
+      }
     }
   }
 }
 ")
 
-```
 
-
-```{r}
-# Initial values
-inits <- function(){list(mean.phi = runif(1), mean.p = runif(1))}
+inits <- function() {list(pNorm = runif(1,0.2, 0.8), 
+                          phiWithin=runif(2, 0.8,1), 
+                          phiAmong=runif(1, 0.2,0.8))}
 
 # Parameters monitored
-params <- c("mean.phi", "mean.p", "sd.lphi.site", "sd.lp.site",
-    "sd.lphi.time", "sd.lp.time", "mean.phi.site", "mean.p.site",
-    "mean.phi.time", "mean.p.time")
-```
+params <- c("mu.lphi", "mu.lp")
 
-
-```{r}
 # MCMC settings
 # na <- 1000 ; ni <- 30000 ; nt <- 10 ; nb <- 20000 ; nc <- 3
 na <- 100 ; ni <- 300 ; nt <- 1 ; nb <- 200 ; nc <- 3  # ~~~ for testing
 
 # Call JAGS (ART 192 min), check convergence and summarize posteriors
-out6 <- jags(bdata, inits, params, "cjs6.txt", n.adapt = na, n.chains = nc,
-    n.thin = nt, n.iter = ni, n.burnin = nb)
+
+model1 <- jags(bdata, inits, params, "Survival1.txt", n.adapt = na, n.chains = nc,
+             n.thin = nt, n.iter = ni, n.burnin = nb)
+
 ```
 
+## Canopy as predicted
+
+```{r}
+# Data structure for JAGS model
+str(bdata <- list(MARR = MARR, R = R, n.site = nsites, n.occ = nweeks,
+                  Canopy = Hab$Canopy, Vine = Hab$Vine, Leaf = Hab$Leaf))
+
+# Specify the model in BUGS language
+cat(file = "cjs_canopy_model.txt", "
+model {
+
+  # Priors and linear models
+  for (s in 1:n.site) {
+    for (t in 1:(n.occ-1)) {
+      phi[t, s] <- ilogit(lphi[t, s])  # Survival
+      p[t, s] <- ilogit(lp[t, s])      # Recapture
+
+      # Linear predictor for survival using Canopy, Vine, and Leaf as covariates
+      lphi[t, s] <- alpha.mu.lphi + beta1 * Canopy[s] + beta2 * Vine[s] + beta3 * Leaf[s]
+      
+      # Simplified recapture model (can be modified if needed)
+      lp[t, s] <- mu.lp
+    }
+
+    # Back-transform site means
+    mean.phi.site[s] <- ilogit(alpha.mu.lphi + beta1 * Canopy[s] + beta2 * Vine[s] + beta3 * Leaf[s])
+    mean.p.site[s] <- ilogit(mu.lp)
+  }
+
+  # Hyperpriors
+  alpha.mu.lphi <- logit(mean.phi)
+  mean.phi ~ dunif(0, 1)
+  mu.lp <- logit(mean.p)
+  mean.p ~ dunif(0, 1)
+
+  # Coefficients for Canopy, Vine, and Leaf
+  beta1 ~ dnorm(0, 0.1)
+  beta2 ~ dnorm(0, 0.1)
+  beta3 ~ dnorm(0, 0.1)
+
+  # Multinomial likelihood for m-array data
+  for (s in 1:n.site) {
+    for (t in 1:(n.occ-1)) {
+      MARR[t, 1:n.occ, s] ~ dmulti(pr[t, , s], R[t, s])
+    }
+  }
+
+  # Define cell probabilities for the m-array
+  for (s in 1:n.site) {
+    for (t in 1:(n.occ-1)) {
+      q[t, s] <- 1 - p[t, s]  # Probability of non-recapture
+      pr[t, t, s] <- phi[t, s] * p[t, s]
+      
+      for (j in (t+1):(n.occ-1)) {
+        pr[t, j, s] <- prod(phi[t:j, s]) * prod(q[t:(j-1), s]) * p[j, s]
+      }
+      
+      for (j in 1:(t-1)) {
+        pr[t, j, s] <- 0
+      }
+    }
+  }
+
+  # Last column: probability of non-recapture
+  for (s in 1:n.site) {
+    for (t in 1:(n.occ-1)) {
+      pr[t, n.occ, s] <- 1 - sum(pr[t, 1:(n.occ-1), s])
+    }
+  }
+}
+")
+
+inits <- function() {
+  list(
+    beta1 = rnorm(1, 0, 1),     # Initial value for Canopy effect
+    beta2 = rnorm(1, 0, 1),     # Initial value for Vine effect
+    beta3 = rnorm(1, 0, 1),     # Initial value for Leaf effect
+    mean.phi = runif(1, 0, 1),  # Mean survival on probability scale
+    mean.p = runif(1, 0, 1)     # Mean recapture on probability scale
+  )
+}
+
+parameters <- c(
+  "beta1",            # Effect of Canopy
+  "beta2",            # Effect of Vine
+  "beta3",            # Effect of Leaf
+  "mean.phi",         # Mean survival probability
+  "mean.p",           # Mean recapture probability
+  "mean.phi.site",    # Site-level survival probabilities
+  "mean.p.site"       # Site-level recapture probabilities
+)
 
 
+model2 <- jags(bdata, inits, parameters, "cjs_canopy_model.txt", n.adapt = na, n.chains = nc,
+             n.thin = nt, n.iter = ni, n.burnin = nb)
+
+model2
+```
+
+## Grafico
+
+```{r}
+Canopy <- seq(min(Hab$Canopy), max(Hab$Canopy), length =100)
+
+Canopy_df <- data.frame(Predicted = plogis(mean(model2$mean$mean.phi) +  mean(model2$mean$beta1)*Canopy),
+                        IC2.5 = plogis(mean(model2$q2.5$mean.phi) +  mean(model2$q2.5$beta1)*Canopy),
+                        IC97.5 = plogis(mean(model2$q97.5$mean.phi) +  mean(model2$q97.5$beta1)*Canopy),
+                        Canopy =  Canopy)
+
+
+ggplot(Canopy_df, aes(x= Canopy, y = Predicted))+
+  geom_line()+
+  geom_ribbon(aes(ymin= IC2.5,
+                  ymax= IC97.5),
+              alpha= 0.4, fill = "lightblue")+
+  labs(y = "Supervivencia diaria",
+       x= "Altura de canopy")+
+  theme_classic()
+
+```
 
 
 :::

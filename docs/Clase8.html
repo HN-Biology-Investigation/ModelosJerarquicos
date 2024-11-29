@@ -150,203 +150,120 @@ window.Quarto = {
 <p>Por lo tanto, que un individuo sea detectado o no depende de dos cosas: si está vivo y de la probabilidad de recaptura <span class="math inline">\(p\)</span>. En el caso más general, podemos permitir que ambos parámetros del modelo difieran según el individuo <span class="math inline">\(i\)</span> y el tiempo <span class="math inline">\(t\)</span> y, a continuación, se puede especificar una gran cantidad de patrones para ellos agregando efectos de covariables o efectos aleatorios. Un conjunto de presencia o ausencia de efectos temporales conduce a la clasificación clásica de modelos <span class="math inline">\(\phi(t)p(t)\)</span>, <span class="math inline">\(\phi(t)p(.)\)</span>, <span class="math inline">\(\phi(.)p(t)\)</span>, <span class="math inline">\(\phi(.)p(.)\)</span> clasificación de modelos con parámetros que son constantes (.) o totalmente dependientes del tiempo (<span class="math inline">\(t\)</span>) (Cooch y White, 2019).</p>
 <p>Referencia, Capítulo 3: <a href="https://www.sciencedirect.com/book/9780128237687/applied-hierarchical-modeling-in-ecology-analysis-of-distribution-abundance-and-species-richness-in-r-and-bugs">Aplied Hierarchical Modeling in Ecology, Volumen 2</a></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Datos sobre el GWWA</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Modelo 1</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Datos sobre el GWWA</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Preparar lista</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Null model</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Canopy as predicted</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Grafico</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jagsUI)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AHMbook)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(willowWarbler)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(willowWarbler)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>List of 4
- $ birds :'data.frame': 10551 obs. of  12 variables:
-  ..$ 1986 : num [1:10551] 1 1 1 1 1 1 1 1 1 1 ...
-  ..$ 1987 : num [1:10551] 0 0 0 1 0 0 0 0 0 0 ...
-  ..$ 1988 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
-  ..$ 1989 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
-  ..$ 1990 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
-  ..$ 1991 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
-  ..$ 1992 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
-  ..$ 1993 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
-  ..$ 1994 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
-  ..$ 1995 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
-  ..$ 1996 : num [1:10551] 0 0 0 0 0 0 0 0 0 0 ...
-  ..$ cesID: num [1:10551] 1 1 1 1 1 1 1 1 1 1 ...
- $ cells :'data.frame': 9667 obs. of  4 variables:
-  ..$ lon    : num [1:9667] 167500 172500 167500 172500 177500 ...
-  ..$ lat    : num [1:9667] 12500 12500 17500 17500 17500 22500 22500 22500 22500 22500 ...
-  ..$ gdd    : num [1:9667] 2136 2120 1945 1943 1956 ...
-  ..$ blockID: num [1:9667] 1 1 3 3 3 2 2 3 3 3 ...
- $ CES   :'data.frame': 193 obs. of  4 variables:
-  ..$ cesx   : num [1:193] 307500 432500 457500 312500 477500 ...
-  ..$ cesy   : num [1:193] 92500 167500 352500 227500 377500 ...
-  ..$ BlockID: num [1:193] 25 77 204 110 222 283 119 234 295 152 ...
-  ..$ CellID : num [1:193] 319 1366 4302 2266 4627 ...
- $ blocks:'data.frame': 495 obs. of  2 variables:
-  ..$ blockX: num [1:495] 175 150 175 200 150 175 200 225 250 275 ...
-  ..$ blockY: num [1:495] 0 25 25 25 50 50 50 50 50 50 ...</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">attach</span> (willowWarbler)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ch <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(birds[, <span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>])</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>sitevec <span class="ot">&lt;-</span> birds<span class="sc">$</span>cesID</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(nyear <span class="ot">&lt;-</span> <span class="fu">ncol</span>(ch))        <span class="co"># Number years: 11</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 11</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(nsite <span class="ot">&lt;-</span> <span class="fu">nrow</span>(CES))       <span class="co"># Number of CE sites: 193</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 193</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(nblock <span class="ot">&lt;-</span> <span class="fu">nrow</span>(blocks))   <span class="co"># Number of blocks: 495</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 495</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(marr <span class="ot">&lt;-</span> <span class="fu">ch2marray</span>(ch))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11]
- [1,]   55   13    1    1    0    0    0    0    0     0   622
- [2,]    0  123   17    2    1    0    0    0    0     0   652
- [3,]    0    0  143   20    4    0    0    0    0     0   855
- [4,]    0    0    0  179   16    6    0    0    0     0  1222
- [5,]    0    0    0    0  183   14    1    0    0     0  1174
- [6,]    0    0    0    0    0  161   16    5    0     0  1049
- [7,]    0    0    0    0    0    0  172   20    4     0  1087
- [8,]    0    0    0    0    0    0    0  239   41     9  1042
- [9,]    0    0    0    0    0    0    0    0  252    24  1299
-[10,]    0    0    0    0    0    0    0    0    0   247  1269</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of birds released each year 1–10</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>(r <span class="ot">&lt;-</span> <span class="fu">apply</span>(marr, <span class="dv">1</span>, sum))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1]  692  795 1022 1423 1372 1231 1283 1331 1575 1516</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create 3d (or multi-site) m-array and r array: MARR and R</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>MARR <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>, <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">10</span>, nyear, nsite))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>, <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">10</span>, nsite))</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nsite){</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  sel.part <span class="ot">&lt;-</span> ch[sitevec <span class="sc">==</span> k, ]</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  ma <span class="ot">&lt;-</span> <span class="fu">ch2marray</span>(sel.part)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  MARR[,,k] <span class="ot">&lt;-</span> ma</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  R[,k] <span class="ot">&lt;-</span> <span class="fu">apply</span>(ma, <span class="dv">1</span>, sum)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle and summarize data set</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(bdata <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">MARR =</span> MARR, <span class="at">R =</span> R, <span class="at">n.site =</span> nsite, <span class="at">n.occ =</span> nyear))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>List of 4
- $ MARR  : num [1:10, 1:11, 1:193] 1 0 0 0 0 0 0 0 0 0 ...
- $ R     : num [1:10, 1:193] 13 5 0 0 0 0 0 0 0 0 ...
- $ n.site: int 193
- $ n.occ : int 11</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>encounter_matrix <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/GWWA_CR.rds"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Hab <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/Hab.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify model in BUGS language</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="at">file =</span> <span class="st">"cjs6.txt"</span>,<span class="st">"</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="st">  # Priors and linear models</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site){</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)){</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="st">      phi[t, s] &lt;- ilogit(lphi[t, s]) # survival</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="st">      p[t, s] &lt;- ilogit(lp[t, s]) # recapture</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="st">      lphi[t, s] &lt;- alpha.lphi.site[s] + beta.lphi.time[t]</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="st">      lp[t, s] &lt;- alpha.lp.site[s] + beta.lp.time[t]</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="st">    # Define random site effects</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="st">    alpha.lphi.site[s] ~ dnorm(mu.lphi, tau.lphi.site)</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="st">    alpha.lp.site[s] ~ dnorm(mu.lp, tau.lp.site)</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="st">    mean.phi.site[s] &lt;- ilogit(alpha.lphi.site[s])</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="st">    mean.p.site[s] &lt;- ilogit(alpha.lp.site[s])</span></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="st">  # Define random year effects</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="st">  for (t in 1:(n.occ-1)){</span></span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="st">    beta.lphi.time[t] ~ dnorm(0, tau.lphi.time)</span></span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="st">    beta.lp.time[t] ~ dnorm(0, tau.lp.time)</span></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="st">    mean.phi.time[t] &lt;- ilogit(mu.lphi + beta.lphi.time[t])</span></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="st">    mean.p.time[t] &lt;- ilogit(mu.lp + beta.lp.time[t])</span></span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="st">  # Hyperpriors for hyperparams</span></span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="st">  mu.lphi &lt;- logit(mean.phi)</span></span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="st">  mean.phi ~ dunif(0, 1)</span></span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="st">  mu.lp &lt;- logit(mean.p)</span></span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="st">  mean.p ~ dunif(0, 1)</span></span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="st">  tau.lphi.site &lt;- pow(sd.lphi.site, -2)</span></span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="st">  sd.lphi.site ~ dunif(0, 3)</span></span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a><span class="st">  tau.lp.site &lt;- pow(sd.lp.site, -2)</span></span>
-<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a><span class="st">  sd.lp.site ~ dunif(0, 3)</span></span>
-<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="st">  tau.lphi.time &lt;- pow(sd.lphi.time, -2)</span></span>
-<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a><span class="st">  sd.lphi.time ~ dunif(0, 3)</span></span>
-<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a><span class="st">  tau.lp.time &lt;- pow(sd.lp.time, -2)</span></span>
-<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="st">  sd.lp.time ~ dunif(0, 3)</span></span>
-<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="st">  # Multinomial likelihood for the m-array data (JAGS style)</span></span>
-<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site){</span></span>
-<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)){</span></span>
-<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a><span class="st">      MARR[t,1:n.occ,s] ~ dmulti(pr[t, , s], R[t,s])</span></span>
-<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
-<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
-<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a><span class="st">  # Define the cell probabilities of the m-array</span></span>
-<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a><span class="st">  # Main diagonal</span></span>
-<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site){</span></span>
-<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)){</span></span>
-<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="st">      q[t,s] &lt;- 1-p[t,s] # Probability of non-recapture</span></span>
-<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a><span class="st">      pr[t,t,s] &lt;- phi[t,s]*p[t,s]</span></span>
-<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a><span class="st">      # Above main diagonal</span></span>
-<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a><span class="st">      for (j in (t+1):(n.occ-1)){</span></span>
-<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a><span class="st">        pr[t,j,s] &lt;- prod(phi[t:j,s])*prod(q[t:(j-1),s])*p[j,s]</span></span>
-<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a><span class="st">      } #j</span></span>
-<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a><span class="st">      # Below main diagonal</span></span>
-<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a><span class="st">      for (j in 1:(t-1)){</span></span>
-<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a><span class="st">        pr[t,j,s] &lt;- 0</span></span>
-<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
-<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
-<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
-<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a><span class="st">  # Last column: probability of non-recapture</span></span>
-<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site){</span></span>
-<span id="cb18-65"><a href="#cb18-65" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)){</span></span>
-<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a><span class="st">      pr[t,n.occ,s] &lt;- 1-sum(pr[t,1:(n.occ-1),s])</span></span>
-<span id="cb18-67"><a href="#cb18-67" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
-<span id="cb18-68"><a href="#cb18-68" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
-<span id="cb18-69"><a href="#cb18-69" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb18-70"><a href="#cb18-70" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jagsUI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial values</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="cf">function</span>(){<span class="fu">list</span>(<span class="at">mean.phi =</span> <span class="fu">runif</span>(<span class="dv">1</span>), <span class="at">mean.p =</span> <span class="fu">runif</span>(<span class="dv">1</span>))}</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters monitored</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean.phi"</span>, <span class="st">"mean.p"</span>, <span class="st">"sd.lphi.site"</span>, <span class="st">"sd.lp.site"</span>,</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sd.lphi.time"</span>, <span class="st">"sd.lp.time"</span>, <span class="st">"mean.phi.site"</span>, <span class="st">"mean.p.site"</span>,</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mean.phi.time"</span>, <span class="st">"mean.p.time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ch <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(encounter_matrix[,<span class="dv">3</span><span class="sc">:</span><span class="dv">43</span>])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sites <span class="ot">&lt;-</span> encounter_matrix<span class="sc">$</span>Site_Value</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get sample size</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>(nweeks <span class="ot">&lt;-</span> <span class="fu">ncol</span>(ch))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>(nsites <span class="ot">&lt;-</span> <span class="fu">nrow</span>(<span class="fu">data.frame</span>(encounter_matrix<span class="sc">$</span>Site_Value)))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AHMbook)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ch2marray</span>(ch)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>marr <span class="ot">&lt;-</span> <span class="fu">ch2marray</span>(ch) </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of birds released each week</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">apply</span>(marr, <span class="dv">1</span>, sum)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>MARR <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>, <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">40</span>, nweeks,nsites))</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>, <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">40</span>, nsites))</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nsites){</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  ma <span class="ot">&lt;-</span> <span class="fu">ch2marray</span>(ch)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  MARR[,,k] <span class="ot">&lt;-</span> ma</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  R[,k] <span class="ot">&lt;-</span> <span class="fu">apply</span>(ma, <span class="dv">1</span>, sum)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(bdata <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">MARR =</span> MARR, <span class="at">R =</span> R, <span class="at">n.site =</span> nsites, <span class="at">n.occ =</span> nweeks,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Canopy =</span> Hab<span class="sc">$</span>Canopy, <span class="at">Vine =</span> Hab<span class="sc">$</span>Vine, <span class="at">Leaf =</span> Hab<span class="sc">$</span>Leaf ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MCMC settings</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># na &lt;- 1000 ; ni &lt;- 30000 ; nt &lt;- 10 ; nb &lt;- 20000 ; nc &lt;- 3</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>na <span class="ot">&lt;-</span> <span class="dv">100</span> ; ni <span class="ot">&lt;-</span> <span class="dv">300</span> ; nt <span class="ot">&lt;-</span> <span class="dv">1</span> ; nb <span class="ot">&lt;-</span> <span class="dv">200</span> ; nc <span class="ot">&lt;-</span> <span class="dv">3</span>  <span class="co"># ~~~ for testing</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Call JAGS (ART 192 min), check convergence and summarize posteriors</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>out6 <span class="ot">&lt;-</span> <span class="fu">jags</span>(bdata, inits, params, <span class="st">"cjs6.txt"</span>, <span class="at">n.adapt =</span> na, <span class="at">n.chains =</span> nc,</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.thin =</span> nt, <span class="at">n.iter =</span> ni, <span class="at">n.burnin =</span> nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="at">file =</span> <span class="st">"Survival1.txt"</span>, <span class="st">"</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">  # Priors for constant survival and recapture</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">  for (t in 1:(n.occ-1)){</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">    phi[t] &lt;- ilogit(mu.lphi)  # constant survival</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">    p[t] &lt;- ilogit(mu.lp)      # constant recapture</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="st">  # Hyperpriors for global parameters (mean survival and recapture)</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="st">  mu.lphi ~ dunif(0, 1)  # Uniform prior for mean survival</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="st">  mu.lp ~ dunif(0, 1)    # Uniform prior for mean recapture</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="st">  # Likelihood for the m-array data (no random effects)</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site){</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)){</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="st">      MARR[t, 1:n.occ, s] ~ dmulti(pr[t, 1:n.occ, s], R[t, s])</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="st">  # Define the cell probabilities of the m-array (constant survival and recapture)</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="st">  for (t in 1:(n.occ-1)){</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="st">    q[t] &lt;- 1 - p[t]</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site){</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)){</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="st">      pr[t, t, s] &lt;- phi[t] * p[t]  # Probability of recapture</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="st">      </span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="st">      # Above diagonal: only calculate if j &lt;= n.occ-1</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="st">      for (j in (t+1):(n.occ-1)){</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="st">        pr[t, j, s] &lt;- prod(phi[t:j]) * prod(q[t:(j-1)]) * p[j]</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="st">      </span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="st">      # Ensure valid probabilities for the last column (j = n.occ)</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="st">      pr[t, n.occ, s] &lt;- 1 - sum(pr[t, 1:(n.occ-1), s])</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="st">      # Below diagonal (no recapture)</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="st">      for (j in 1:(t-1)){</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="st">        pr[t, j, s] &lt;- 0</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="cf">function</span>() {<span class="fu">list</span>(<span class="at">pNorm =</span> <span class="fu">runif</span>(<span class="dv">1</span>,<span class="fl">0.2</span>, <span class="fl">0.8</span>), </span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>                          <span class="at">phiWithin=</span><span class="fu">runif</span>(<span class="dv">2</span>, <span class="fl">0.8</span>,<span class="dv">1</span>), </span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>                          <span class="at">phiAmong=</span><span class="fu">runif</span>(<span class="dv">1</span>, <span class="fl">0.2</span>,<span class="fl">0.8</span>))}</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters monitored</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mu.lphi"</span>, <span class="st">"mu.lp"</span>)</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="co"># MCMC settings</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="co"># na &lt;- 1000 ; ni &lt;- 30000 ; nt &lt;- 10 ; nb &lt;- 20000 ; nc &lt;- 3</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>na <span class="ot">&lt;-</span> <span class="dv">100</span> ; ni <span class="ot">&lt;-</span> <span class="dv">300</span> ; nt <span class="ot">&lt;-</span> <span class="dv">1</span> ; nb <span class="ot">&lt;-</span> <span class="dv">200</span> ; nc <span class="ot">&lt;-</span> <span class="dv">3</span>  <span class="co"># ~~~ for testing</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Call JAGS (ART 192 min), check convergence and summarize posteriors</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">jags</span>(bdata, inits, params, <span class="st">"Survival1.txt"</span>, <span class="at">n.adapt =</span> na, <span class="at">n.chains =</span> nc,</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>             <span class="at">n.thin =</span> nt, <span class="at">n.iter =</span> ni, <span class="at">n.burnin =</span> nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Processing function input....... 
@@ -357,9 +274,9 @@ Compiling model graph
    Resolving undeclared variables
    Allocating nodes
 Graph information:
-   Observed stochastic nodes: 1930
-   Unobserved stochastic nodes: 412
-   Total graph size: 65699
+   Observed stochastic nodes: 1600
+   Unobserved stochastic nodes: 2
+   Total graph size: 13433
 
 Initializing model
 
@@ -376,6 +293,364 @@ Sampling from joint posterior, 100 iterations x 3 chains
 Calculating statistics....... 
 
 Done. </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data structure for JAGS model</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(bdata <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">MARR =</span> MARR, <span class="at">R =</span> R, <span class="at">n.site =</span> nsites, <span class="at">n.occ =</span> nweeks,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Canopy =</span> Hab<span class="sc">$</span>Canopy, <span class="at">Vine =</span> Hab<span class="sc">$</span>Vine, <span class="at">Leaf =</span> Hab<span class="sc">$</span>Leaf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 7
+ $ MARR  : num [1:40, 1:41, 1:40] 1 0 0 0 0 0 0 0 0 0 ...
+ $ R     : num [1:40, 1:40] 1 6 3 10 9 8 3 5 3 8 ...
+ $ n.site: int 40
+ $ n.occ : int 41
+ $ Canopy: num [1:40] 18.25 8.67 19.88 10.67 7.29 ...
+ $ Vine  : num [1:40] 1 0.636 1.429 0.333 0.833 ...
+ $ Leaf  : num [1:40] 2.12 2.25 2 1.86 1.57 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify the model in BUGS language</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="at">file =</span> <span class="st">"cjs_canopy_model.txt"</span>, <span class="st">"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="st">  # Priors and linear models</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site) {</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)) {</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="st">      phi[t, s] &lt;- ilogit(lphi[t, s])  # Survival</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="st">      p[t, s] &lt;- ilogit(lp[t, s])      # Recapture</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="st">      # Linear predictor for survival using Canopy, Vine, and Leaf as covariates</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="st">      lphi[t, s] &lt;- alpha.mu.lphi + beta1 * Canopy[s] + beta2 * Vine[s] + beta3 * Leaf[s]</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="st">      </span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="st">      # Simplified recapture model (can be modified if needed)</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="st">      lp[t, s] &lt;- mu.lp</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="st">    # Back-transform site means</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="st">    mean.phi.site[s] &lt;- ilogit(alpha.mu.lphi + beta1 * Canopy[s] + beta2 * Vine[s] + beta3 * Leaf[s])</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="st">    mean.p.site[s] &lt;- ilogit(mu.lp)</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="st">  # Hyperpriors</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="st">  alpha.mu.lphi &lt;- logit(mean.phi)</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="st">  mean.phi ~ dunif(0, 1)</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="st">  mu.lp &lt;- logit(mean.p)</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="st">  mean.p ~ dunif(0, 1)</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="st">  # Coefficients for Canopy, Vine, and Leaf</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="st">  beta1 ~ dnorm(0, 0.1)</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="st">  beta2 ~ dnorm(0, 0.1)</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="st">  beta3 ~ dnorm(0, 0.1)</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="st">  # Multinomial likelihood for m-array data</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site) {</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)) {</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="st">      MARR[t, 1:n.occ, s] ~ dmulti(pr[t, , s], R[t, s])</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="st">  # Define cell probabilities for the m-array</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site) {</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)) {</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="st">      q[t, s] &lt;- 1 - p[t, s]  # Probability of non-recapture</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a><span class="st">      pr[t, t, s] &lt;- phi[t, s] * p[t, s]</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a><span class="st">      </span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a><span class="st">      for (j in (t+1):(n.occ-1)) {</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a><span class="st">        pr[t, j, s] &lt;- prod(phi[t:j, s]) * prod(q[t:(j-1), s]) * p[j, s]</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a><span class="st">      </span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a><span class="st">      for (j in 1:(t-1)) {</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="st">        pr[t, j, s] &lt;- 0</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a><span class="st">  # Last column: probability of non-recapture</span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a><span class="st">  for (s in 1:n.site) {</span></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a><span class="st">    for (t in 1:(n.occ-1)) {</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a><span class="st">      pr[t, n.occ, s] &lt;- 1 - sum(pr[t, 1:(n.occ-1), s])</span></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta1 =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),     <span class="co"># Initial value for Canopy effect</span></span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta2 =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),     <span class="co"># Initial value for Vine effect</span></span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta3 =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),     <span class="co"># Initial value for Leaf effect</span></span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean.phi =</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),  <span class="co"># Mean survival on probability scale</span></span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean.p =</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>)     <span class="co"># Mean recapture on probability scale</span></span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>  <span class="st">"beta1"</span>,            <span class="co"># Effect of Canopy</span></span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>  <span class="st">"beta2"</span>,            <span class="co"># Effect of Vine</span></span>
+<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a>  <span class="st">"beta3"</span>,            <span class="co"># Effect of Leaf</span></span>
+<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mean.phi"</span>,         <span class="co"># Mean survival probability</span></span>
+<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mean.p"</span>,           <span class="co"># Mean recapture probability</span></span>
+<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mean.phi.site"</span>,    <span class="co"># Site-level survival probabilities</span></span>
+<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mean.p.site"</span>       <span class="co"># Site-level recapture probabilities</span></span>
+<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">jags</span>(bdata, inits, parameters, <span class="st">"cjs_canopy_model.txt"</span>, <span class="at">n.adapt =</span> na, <span class="at">n.chains =</span> nc,</span>
+<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a>             <span class="at">n.thin =</span> nt, <span class="at">n.iter =</span> ni, <span class="at">n.burnin =</span> nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Processing function input....... 
+
+Done. 
+ 
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 1600
+   Unobserved stochastic nodes: 5
+   Total graph size: 162832
+
+Initializing model
+
+Adaptive phase, 100 iterations x 3 chains 
+If no progress bar appears JAGS has decided not to adapt 
+ 
+
+ Burn-in phase, 200 iterations x 3 chains 
+ 
+
+Sampling from joint posterior, 100 iterations x 3 chains 
+ 
+
+Calculating statistics....... 
+
+Done. </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>JAGS output for model 'cjs_canopy_model.txt', generated by jagsUI.
+Estimates based on 3 chains of 300 iterations,
+adaptation = 100 iterations (sufficient),
+burn-in = 200 iterations and thin rate = 1,
+yielding 300 total samples from the joint posterior. 
+MCMC ran for 6.354 minutes at time 2024-11-29 16:02:26.837189.
+
+                       mean      sd      2.5%       50%     97.5% overlap0
+beta1                -0.001   0.017    -0.019    -0.002     0.022     TRUE
+beta2                -0.017   0.101    -0.193    -0.018     0.194     TRUE
+beta3                 0.146   0.271    -0.166     0.072     0.886     TRUE
+mean.phi              0.910   0.058     0.733     0.931     0.950    FALSE
+mean.p                0.169   0.009     0.142     0.171     0.177    FALSE
+mean.phi.site[1]      0.937   0.007     0.930     0.936     0.952    FALSE
+mean.phi.site[2]      0.939   0.007     0.930     0.939     0.957    FALSE
+mean.phi.site[3]      0.935   0.008     0.924     0.934     0.954    FALSE
+mean.phi.site[4]      0.937   0.004     0.929     0.937     0.943    FALSE
+mean.phi.site[5]      0.934   0.007     0.916     0.936     0.941    FALSE
+mean.phi.site[6]      0.940   0.012     0.925     0.939     0.979    FALSE
+mean.phi.site[7]      0.929   0.015     0.883     0.934     0.944    FALSE
+mean.phi.site[8]      0.936   0.004     0.931     0.935     0.941    FALSE
+mean.phi.site[9]      0.942   0.011     0.926     0.939     0.969    FALSE
+mean.phi.site[10]     0.937   0.003     0.933     0.937     0.944    FALSE
+mean.phi.site[11]     0.940   0.008     0.927     0.939     0.964    FALSE
+mean.phi.site[12]     0.931   0.010     0.905     0.933     0.943    FALSE
+mean.phi.site[13]     0.936   0.009     0.913     0.937     0.946    FALSE
+mean.phi.site[14]     0.938   0.005     0.928     0.938     0.950    FALSE
+mean.phi.site[15]     0.935   0.008     0.917     0.937     0.942    FALSE
+mean.phi.site[16]     0.937   0.007     0.923     0.938     0.946    FALSE
+mean.phi.site[17]     0.936   0.002     0.932     0.936     0.941    FALSE
+mean.phi.site[18]     0.934   0.008     0.916     0.935     0.944    FALSE
+mean.phi.site[19]     0.932   0.011     0.903     0.934     0.947    FALSE
+mean.phi.site[20]     0.934   0.006     0.917     0.935     0.941    FALSE
+mean.phi.site[21]     0.935   0.006     0.923     0.935     0.943    FALSE
+mean.phi.site[22]     0.938   0.010     0.927     0.936     0.973    FALSE
+mean.phi.site[23]     0.939   0.005     0.931     0.938     0.952    FALSE
+mean.phi.site[24]     0.938   0.004     0.932     0.938     0.947    FALSE
+mean.phi.site[25]     0.937   0.004     0.932     0.936     0.945    FALSE
+mean.phi.site[26]     0.934   0.007     0.911     0.935     0.941    FALSE
+mean.phi.site[27]     0.939   0.006     0.932     0.937     0.953    FALSE
+mean.phi.site[28]     0.940   0.010     0.927     0.938     0.965    FALSE
+mean.phi.site[29]     0.934   0.007     0.916     0.935     0.945    FALSE
+mean.phi.site[30]     0.931   0.013     0.891     0.935     0.942    FALSE
+mean.phi.site[31]     0.935   0.003     0.929     0.936     0.940    FALSE
+mean.phi.site[32]     0.934   0.006     0.918     0.936     0.941    FALSE
+mean.phi.site[33]     0.938   0.003     0.933     0.937     0.948    FALSE
+mean.phi.site[34]     0.936   0.004     0.931     0.936     0.947    FALSE
+mean.phi.site[35]     0.937   0.007     0.923     0.937     0.945    FALSE
+mean.phi.site[36]     0.935   0.009     0.921     0.934     0.956    FALSE
+mean.phi.site[37]     0.935   0.006     0.924     0.934     0.943    FALSE
+mean.phi.site[38]     0.937   0.005     0.932     0.937     0.950    FALSE
+mean.phi.site[39]     0.937   0.007     0.926     0.937     0.960    FALSE
+mean.phi.site[40]     0.941   0.010     0.929     0.938     0.963    FALSE
+mean.p.site[1]        0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[2]        0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[3]        0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[4]        0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[5]        0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[6]        0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[7]        0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[8]        0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[9]        0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[10]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[11]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[12]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[13]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[14]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[15]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[16]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[17]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[18]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[19]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[20]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[21]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[22]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[23]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[24]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[25]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[26]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[27]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[28]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[29]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[30]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[31]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[32]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[33]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[34]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[35]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[36]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[37]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[38]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[39]       0.169   0.009     0.142     0.171     0.177    FALSE
+mean.p.site[40]       0.169   0.009     0.142     0.171     0.177    FALSE
+deviance          16287.862 107.733 16257.183 16261.569 16511.680    FALSE
+                      f  Rhat n.eff
+beta1             0.683 1.243   144
+beta2             0.633 1.241    30
+beta3             0.693 2.001     5
+mean.phi          1.000 1.798     6
+mean.p            1.000 1.341    21
+mean.phi.site[1]  1.000 1.351    15
+mean.phi.site[2]  1.000 1.574     8
+mean.phi.site[3]  1.000 1.224   300
+mean.phi.site[4]  1.000 1.104    71
+mean.phi.site[5]  1.000 1.748     6
+mean.phi.site[6]  1.000 1.429    11
+mean.phi.site[7]  1.000 1.925     6
+mean.phi.site[8]  1.000 1.208   180
+mean.phi.site[9]  1.000 1.992     5
+mean.phi.site[10] 1.000 1.191    54
+mean.phi.site[11] 1.000 1.433    10
+mean.phi.site[12] 1.000 1.730     7
+mean.phi.site[13] 1.000 1.238   252
+mean.phi.site[14] 1.000 1.182    17
+mean.phi.site[15] 1.000 1.289    36
+mean.phi.site[16] 1.000 1.214   300
+mean.phi.site[17] 1.000 1.062    57
+mean.phi.site[18] 1.000 1.342    18
+mean.phi.site[19] 1.000 1.451    11
+mean.phi.site[20] 1.000 1.822     6
+mean.phi.site[21] 1.000 1.281    34
+mean.phi.site[22] 1.000 1.315    22
+mean.phi.site[23] 1.000 1.541     8
+mean.phi.site[24] 1.000 1.461     8
+mean.phi.site[25] 1.000 1.257    46
+mean.phi.site[26] 1.000 1.580     8
+mean.phi.site[27] 1.000 1.735     6
+mean.phi.site[28] 1.000 1.763     6
+mean.phi.site[29] 1.000 1.426    10
+mean.phi.site[30] 1.000 1.627     8
+mean.phi.site[31] 1.000 1.292    16
+mean.phi.site[32] 1.000 1.764     6
+mean.phi.site[33] 1.000 1.370    11
+mean.phi.site[34] 1.000 1.185   300
+mean.phi.site[35] 1.000 1.211   300
+mean.phi.site[36] 1.000 1.230   300
+mean.phi.site[37] 1.000 1.223    80
+mean.phi.site[38] 1.000 1.293    29
+mean.phi.site[39] 1.000 1.142    55
+mean.phi.site[40] 1.000 1.933     5
+mean.p.site[1]    1.000 1.341    21
+mean.p.site[2]    1.000 1.341    21
+mean.p.site[3]    1.000 1.341    21
+mean.p.site[4]    1.000 1.341    21
+mean.p.site[5]    1.000 1.341    21
+mean.p.site[6]    1.000 1.341    21
+mean.p.site[7]    1.000 1.341    21
+mean.p.site[8]    1.000 1.341    21
+mean.p.site[9]    1.000 1.341    21
+mean.p.site[10]   1.000 1.341    21
+mean.p.site[11]   1.000 1.341    21
+mean.p.site[12]   1.000 1.341    21
+mean.p.site[13]   1.000 1.341    21
+mean.p.site[14]   1.000 1.341    21
+mean.p.site[15]   1.000 1.341    21
+mean.p.site[16]   1.000 1.341    21
+mean.p.site[17]   1.000 1.341    21
+mean.p.site[18]   1.000 1.341    21
+mean.p.site[19]   1.000 1.341    21
+mean.p.site[20]   1.000 1.341    21
+mean.p.site[21]   1.000 1.341    21
+mean.p.site[22]   1.000 1.341    21
+mean.p.site[23]   1.000 1.341    21
+mean.p.site[24]   1.000 1.341    21
+mean.p.site[25]   1.000 1.341    21
+mean.p.site[26]   1.000 1.341    21
+mean.p.site[27]   1.000 1.341    21
+mean.p.site[28]   1.000 1.341    21
+mean.p.site[29]   1.000 1.341    21
+mean.p.site[30]   1.000 1.341    21
+mean.p.site[31]   1.000 1.341    21
+mean.p.site[32]   1.000 1.341    21
+mean.p.site[33]   1.000 1.341    21
+mean.p.site[34]   1.000 1.341    21
+mean.p.site[35]   1.000 1.341    21
+mean.p.site[36]   1.000 1.341    21
+mean.p.site[37]   1.000 1.341    21
+mean.p.site[38]   1.000 1.341    21
+mean.p.site[39]   1.000 1.341    21
+mean.p.site[40]   1.000 1.341    21
+deviance          1.000 1.409    17
+
+**WARNING** Rhat values indicate convergence failure. 
+Rhat is the potential scale reduction factor (at convergence, Rhat=1). 
+For each parameter, n.eff is a crude measure of effective sample size. 
+
+overlap0 checks if 0 falls in the parameter's 95% credible interval.
+f is the proportion of the posterior with the same sign as the mean;
+i.e., our confidence that the parameter is positive or negative.
+
+DIC info: (pD = var(deviance)/2) 
+pD = 5102.8 and DIC = 21390.62 
+DIC is an estimate of expected predictive error (lower is better).</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Canopy <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(Hab<span class="sc">$</span>Canopy), <span class="fu">max</span>(Hab<span class="sc">$</span>Canopy), <span class="at">length =</span><span class="dv">100</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>Canopy_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Predicted =</span> <span class="fu">plogis</span>(<span class="fu">mean</span>(model2<span class="sc">$</span>mean<span class="sc">$</span>mean.phi) <span class="sc">+</span>  <span class="fu">mean</span>(model2<span class="sc">$</span>mean<span class="sc">$</span>beta1)<span class="sc">*</span>Canopy),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">IC2.5 =</span> <span class="fu">plogis</span>(<span class="fu">mean</span>(model2<span class="sc">$</span>q2<span class="fl">.5</span><span class="sc">$</span>mean.phi) <span class="sc">+</span>  <span class="fu">mean</span>(model2<span class="sc">$</span>q2<span class="fl">.5</span><span class="sc">$</span>beta1)<span class="sc">*</span>Canopy),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">IC97.5 =</span> <span class="fu">plogis</span>(<span class="fu">mean</span>(model2<span class="sc">$</span>q97<span class="fl">.5</span><span class="sc">$</span>mean.phi) <span class="sc">+</span>  <span class="fu">mean</span>(model2<span class="sc">$</span>q97<span class="fl">.5</span><span class="sc">$</span>beta1)<span class="sc">*</span>Canopy),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Canopy =</span>  Canopy)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Canopy_df, <span class="fu">aes</span>(<span class="at">x=</span> Canopy, <span class="at">y =</span> Predicted))<span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin=</span> IC2<span class="fl">.5</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax=</span> IC97<span class="fl">.5</span>),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span> <span class="fl">0.4</span>, <span class="at">fill =</span> <span class="st">"lightblue"</span>)<span class="sc">+</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Supervivencia diaria"</span>,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Altura de canopy"</span>)<span class="sc">+</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Clase8_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>

@@ -1,0 +1,44 @@
+
+model {
+
+  # Priors for constant survival and recapture
+  for (t in 1:(n.occ-1)){
+    phi[t] <- ilogit(mu.lphi)  # constant survival
+    p[t] <- ilogit(mu.lp)      # constant recapture
+  }
+
+  # Hyperpriors for global parameters (mean survival and recapture)
+  mu.lphi ~ dunif(0, 1)  # Uniform prior for mean survival
+  mu.lp ~ dunif(0, 1)    # Uniform prior for mean recapture
+
+  # Likelihood for the m-array data (no random effects)
+  for (s in 1:n.site){
+    for (t in 1:(n.occ-1)){
+      MARR[t, 1:n.occ, s] ~ dmulti(pr[t, 1:n.occ, s], R[t, s])
+    }
+  }
+
+  # Define the cell probabilities of the m-array (constant survival and recapture)
+  for (t in 1:(n.occ-1)){
+    q[t] <- 1 - p[t]
+  }
+
+  for (s in 1:n.site){
+    for (t in 1:(n.occ-1)){
+      pr[t, t, s] <- phi[t] * p[t]  # Probability of recapture
+      
+      # Above diagonal: only calculate if j <= n.occ-1
+      for (j in (t+1):(n.occ-1)){
+        pr[t, j, s] <- prod(phi[t:j]) * prod(q[t:(j-1)]) * p[j]
+      }
+      
+      # Ensure valid probabilities for the last column (j = n.occ)
+      pr[t, n.occ, s] <- 1 - sum(pr[t, 1:(n.occ-1), s])
+
+      # Below diagonal (no recapture)
+      for (j in 1:(t-1)){
+        pr[t, j, s] <- 0
+      }
+    }
+  }
+}
