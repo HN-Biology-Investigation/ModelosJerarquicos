@@ -237,6 +237,9 @@ ggplot(data= Elev_pre, aes(x= elev, y= Predicted))+
   ggtitle("Abundancia explicada por la elevacion") +
   theme_classic()
 ```
+
+
+
 ```{r}
 ggplot(data= Forest_pre, aes(x= forest, y= Predicted))+
   geom_ribbon(aes(ymin= lower,
@@ -251,4 +254,4 @@ ggplot(data= Forest_pre, aes(x= forest, y= Predicted))+
 
 :::
 
-![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
+![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)
