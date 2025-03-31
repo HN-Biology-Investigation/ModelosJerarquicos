@@ -19,15 +19,15 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 [Clase 1: Modelos N-Mixture para estimar abundancia](Clase2.html)
 
-[Clase 2: Modelos N-Mixture Bayesianos para estimar abundancia](Clase2.html)
+[Clase 2: Modelos N-Mixture Bayesianos para estimar abundancia](spAbundance.html)
 
 [Clase 3: Modelar abundancia con muestreo de distancia jerárquico](Clase3.html)
 
-[Clase 4: Modelar abundancia con muestreo de distancia jerárquico Bayesiano](Clase3.html)
+[Clase 4: Modelar abundancia con muestreo de distancia jerárquico Bayesiano]()
 
 [Clase 5: Modelar densidad con muestreo de distancia jerárquico](Clase4.html)
 
-[Clase 6: Modelar densidad con muestreo de distancia jerárquico bayesiano](Clase4.html)
+[Clase 6: Modelar densidad con muestreo de distancia jerárquico bayesiano]()
 
 [Clase 7: Modelar ocupación de especies en poblaciones cerradas](Clase5.html)
 
