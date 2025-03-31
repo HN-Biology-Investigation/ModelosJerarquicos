@@ -1,0 +1,8 @@
+---
+title: "ubms: An R package for fitting hierarchical models"
+author: "David Murillo"
+format: html
+editor: visual
+---
+
+[paper](DOI: 10.1111/2041-210X.13777)
