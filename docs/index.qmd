@@ -23,15 +23,15 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 [Clase 3: Modelar abundancia con muestreo de distancia jerárquico](Clase3.html)
 
-[Clase 4: Modelar abundancia con muestreo de distancia jerárquico Bayesiano]()
+[Clase 4: Modelar abundancia con muestreo de distancia jerárquico Bayesiano](ubms.html)
 
 [Clase 5: Modelar densidad con muestreo de distancia jerárquico](Clase4.html)
 
-[Clase 6: Modelar densidad con muestreo de distancia jerárquico bayesiano]()
+[Clase 6: Modelar densidad con muestreo de distancia jerárquico bayesiano](ubms2.qmd)
 
 [Clase 7: Modelar ocupación de especies en poblaciones cerradas](Clase5.html)
 
-[Clase 8: Ocupación de especies con modelos Bayesiano en poblaciones cerradas](Clase5.html)
+[Clase 8: Ocupación de especies con modelos Bayesiano en poblaciones cerradas](spOcupancy.html)
 
 [Clase 9: El modelo Royal-Nichols y otros modelos N-Mixture no estándar](Clase6.html)
 
