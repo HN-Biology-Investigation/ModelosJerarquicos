@@ -61,7 +61,7 @@ Figura 2.1 Árbol de decisión para los modelos disponibles en el paquete de R u
 
 Voluntarios experimentados realizan un recorrido transecto irregular, específico para cada cuadrante, cuya longitud varía entre 1 y 9 km. Cada transecto se recorre tres veces durante la temporada de cría (de mediados de abril a principios de julio) utilizando el método de mapeo de territorios (Bibby et al., 2000). Los cuadrantes situados en áreas altas (por encima de la línea de árboles) se inspeccionan solo dos veces. Los recorridos comienzan al amanecer y duran en promedio cuatro horas (SD = 1 h). Los observadores registran en un mapa la ubicación de cada individuo de cada especie identificada. Posteriormente, los territorios provisionales se determinan en función de la agrupación de observaciones y, para los registros aislados, en función del conocimiento de los tamaños típicos de los territorios de cada especie.
 
-Aquí analizaremos los conteos por cuadrante del número de territorios de carbonero común (*y*) en el cuadrante *i* durante el recorrido *j* en 2013. El conjunto de datos incluye coordenadas del sitio y covariables como elevación (m), cobertura forestal (%), y longitud de la ruta (km), así como covariables observacionales como la fecha (día 1 = 1 de abril) y la duración (min) de cada recorrido.
+Aquí analizaremos los conteos por cuadrante del número de territorios de carbonero común (*Parus major*) (*y*) en el cuadrante *i* durante el recorrido *j* en 2013. El conjunto de datos incluye coordenadas del sitio y covariables como elevación (m), cobertura forestal (%), y longitud de la ruta (km), así como covariables observacionales como la fecha (día 1 = 1 de abril) y la duración (min) de cada recorrido.
 
 Los objetivos de nuestro análisis son dos:
 
