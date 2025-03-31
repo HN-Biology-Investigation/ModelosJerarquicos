@@ -1,0 +1,329 @@
+---
+title: "Clase 2: Modelos N-Mixture usando spAbundance"
+author: "David Murillo"
+format:
+  html:
+    css: styles.css
+---
+
+## Introducción a los modelos de abundancia 
+
+
+
+## **EL Paquete de R `unmarked`**
+
+
+
+## Ejercicio 
+
+Voluntarios experimentados realizan un recorrido transecto irregular, específico para cada cuadrante, cuya longitud varía entre 1 y 9 km. Cada transecto se recorre tres veces durante la temporada de cría (de mediados de abril a principios de julio) utilizando el método de mapeo de territorios (Bibby et al., 2000). Los cuadrantes situados en áreas altas (por encima de la línea de árboles) se inspeccionan solo dos veces. Los recorridos comienzan al amanecer y duran en promedio cuatro horas (SD = 1 h). Los observadores registran en un mapa la ubicación de cada individuo de cada especie identificada. Posteriormente, los territorios provisionales se determinan en función de la agrupación de observaciones y, para los registros aislados, en función del conocimiento de los tamaños típicos de los territorios de cada especie.
+
+Aquí analizaremos los conteos por cuadrante del número de territorios de carbonero común (*y*) en el cuadrante *i* durante el recorrido *j* en 2013. El conjunto de datos incluye coordenadas del sitio y covariables como elevación (m), cobertura forestal (%), y longitud de la ruta (km), así como covariables observacionales como la fecha (día 1 = 1 de abril) y la duración (min) de cada recorrido.
+
+Los objetivos de nuestro análisis son dos:
+
+- Identificar los factores ambientales que afectan la abundancia de carboneros comunes en Suiza.
+
+- Estimar el tamaño de la población de carboneros comunes en Suiza en 2013.
+
+::: panel-tabset
+
+### Cargar base de datos
+
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(spAbundance)
+```
+
+
+```{r}
+Tits <- read.csv("data/Tits.csv")
+
+```
+
+Seleccionar variables necesarias
+
+```{r}
+
+Tits <- Tits %>% 
+  select(X1, X2, X3,
+         elev, forest,
+         time.1, time.2, time.3,
+         date.1, date.2, date.3,
+         dur.1, dur.2, dur.3)
+
+head(Tits)
+```
+
+### Formatear base de datos a formato unmarked
+
+
+```{r}
+
+y <- as.matrix(Tits[,c("X1", "X2", "X3")])
+
+site.covs <- Tits[,c("elev", "forest")]
+
+obs.covs <- list(det.cov.1 = as.matrix(Tits[,c("time.1", "time.2", "time.3")]),
+                 det.cov.2 = as.matrix(Tits[,c("date.1", "date.2", "date.3")]),
+                 det.cov.3 = as.matrix(Tits[,c("dur.1", "dur.2", "dur.3")]))
+
+
+```
+
+Crear lista de datos para spAbundance
+
+```{r}
+
+tits_data <- list(y = y,
+                  abund.covs = site.covs,
+                  det.covs = obs.covs)
+
+
+```
+
+### Configuración para MCMC
+
+```{r}
+n.chains <- 3
+n.burn <- 5000
+n.thin <- 5
+n.iter <- 10000
+```
+
+
+### Modelos de detección 
+
+Modelo nulo de detección
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+
+
+model.det0 <- NMix(abund.formula = ~ 1,
+                   det.formula = ~ 1,
+                   data = tits_data,
+                   n.batch = 400,
+                   batch.length = 25,
+                   family = "Poisson",
+                   n.chains = n.chains,
+                   n.burn = n.burn,
+                   n.thin = n.thin,
+                   n.iter = n.iter)
+```
+
+
+Modelo con tiempo como covariable de detección
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+model.det_time <- NMix(abund.formula = ~ 1,
+                   det.formula = ~ det.cov.1,
+                   data = tits_data,
+                   n.batch = 400,
+                   batch.length = 25,
+                   family = "Poisson",
+                   n.chains = n.chains,
+                   n.burn = n.burn,
+                   n.thin = n.thin,
+                   n.iter = n.iter)
+```
+
+Modelo con dur como covariable de detección
+
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+model.det_date <- NMix(abund.formula = ~ 1,
+                   det.formula = ~ det.cov.2,
+                   data = tits_data,
+                   n.batch = 400,
+                   batch.length = 25,
+                   family = "Poisson",
+                   n.chains = n.chains,
+                   n.burn = n.burn,
+                   n.thin = n.thin,
+                   n.iter = n.iter)
+```
+
+Modelo con fecha como covariable de detección
+
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+model.det_dur <- NMix(abund.formula = ~ 1,
+                   det.formula = ~ det.cov.3,
+                   data = tits_data,
+                   n.batch = 400,
+                   batch.length = 25,
+                   family = "Poisson",
+                   n.chains = n.chains,
+                   n.burn = n.burn,
+                   n.thin = n.thin,
+                   n.iter = n.iter)
+```
+
+
+## Seleccion de modelo de deteccion
+
+```{r}
+
+waicAbund(model.det0)
+waicAbund(model.det_time)
+waicAbund(model.det_date)
+waicAbund(model.det_dur)
+```
+
+
+### Ajustar modelo de Abundancia
+
+Modelo nulo
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+
+model.abunNulo <- NMix(abund.formula = ~ 1,
+                    det.formula = ~ det.cov.1,  
+                    data = tits_data,
+                    n.batch = 400,
+                    batch.length = 25,
+                    family = "Poisson",
+                    n.chains = n.chains,
+                    n.burn = n.burn,
+                    n.thin = n.thin,
+                    n.iter = n.iter)
+```
+
+Modelo forest
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+
+model.abunForest <- NMix(abund.formula = ~ forest,
+                    det.formula = ~ det.cov.1,  
+                    data = tits_data,
+                    n.batch = 400,
+                    batch.length = 25,
+                    family = "Poisson",
+                    n.chains = n.chains,
+                    n.burn = n.burn,
+                    n.thin = n.thin,
+                    n.iter = n.iter)
+```
+
+
+Modelo con elevación
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+
+model.abunElev <- NMix(abund.formula = ~ elev,
+                    det.formula = ~ det.cov.1,  
+                    data = tits_data,
+                    n.batch = 400,
+                    batch.length = 25,
+                    family = "Poisson",
+                    n.chains = n.chains,
+                    n.burn = n.burn,
+                    n.thin = n.thin,
+                    n.iter = n.iter)
+```
+
+
+Modelo con forest + elevación
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+
+model.abunForest_Elev <- NMix(abund.formula = ~ forest + elev,
+                    det.formula = ~ det.cov.1,  
+                    data = tits_data,
+                    n.batch = 400,
+                    batch.length = 25,
+                    family = "Poisson",
+                    n.chains = n.chains,
+                    n.burn = n.burn,
+                    n.thin = n.thin,
+                    n.iter = n.iter)
+```
+
+
+### Seleecion Modelo de abundancia
+
+```{r, warning=FALSE, message=FALSE}
+# waicAbund(model.abunNulo) # 5734
+# waicAbund(model.abunForest) # 5730
+# waicAbund(model.abunElev)
+# waicAbund(model.abunForest_Elev)
+```
+
+
+
+### Resumen de los resultados
+
+```{r}
+summary(model.abunForest)
+```
+
+### Diagnóstico de convergencia
+
+```{r}
+plot(model.abunForest$beta.samples)
+plot(model.abunForest$alpha.samples)
+
+
+ppc.out.sp <- ppcAbund(model.abunForest, fit.stat = 'freeman-tukey', group = 1)
+summary(ppc.out.sp)
+```
+
+
+### Crear datos para predicción
+
+```{r}
+forest.pred <- data.frame(forest = seq(min(Tits$forest, na.rm = TRUE), 
+                                       max(Tits$forest, na.rm = TRUE), 
+                                       length.out = 100))
+
+X.0 <- model.matrix(~forest, data = forest.pred)
+```
+
+### Realizar predicciones
+
+```{r}
+out.forest <- predict(model.abunForest, X.0 = X.0, type = "abundance")
+
+                                 
+```
+
+```{r}
+psi.0.quants <- apply(out.forest$mu.0.samples, 2, quantile, c(0.025, 0.5, 0.975))
+```
+
+```{r}
+# First, convert your quantile matrix to a tidy data frame
+psi_df <- as.data.frame(t(psi.0.quants)) %>% 
+  tibble::rownames_to_column("forest") %>% 
+  mutate(forest = as.numeric(forest)) %>% 
+  pivot_longer(cols = -forest, names_to = "quantile", values_to = "value") %>% 
+  pivot_wider(names_from = quantile, values_from = value)
+
+# Create the plot
+ggplot(psi_df, aes(x = forest)) +
+  geom_ribbon(aes(ymin = `2.5%`, ymax = `97.5%`), 
+              fill = "#4E79A7", alpha = 0.3) +
+  geom_line(aes(y = `50%`), color = "#2E5C8A", linewidth = 1) +
+  labs(
+    x = "Forest cover",
+    y = "Abundance (ψ)",
+    title = "Estimated Abundance",
+    subtitle = "Median with 95% credible intervals"
+  ) +
+  scale_x_continuous(breaks = seq(0, 100, by = 10)) +
+  theme_minimal(base_size = 12) +
+  theme(
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(color = "gray40"),
+    axis.title = element_text(face = "bold")
+  )
+```
+
+
+
+```{r}
+:::
+
+![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
