@@ -1,5 +1,5 @@
 ---
-title: "ubms: An R package for fitting density hierarchical models"
+title: "Modelos N-Mixture Bayesianos (ubms) para estimar abundancia"
 author: "David Murillo"
 format: html
 editor: visual

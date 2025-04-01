@@ -1,5 +1,5 @@
 ---
-title: "Clase 1: Distribución, abundancia, riqueza de especies y modelos jerárquicos en ecología"
+title: "Clase 0: Distribución, abundancia, riqueza de especies y modelos jerárquicos en ecología"
 format:
   html:
     css: styles.css

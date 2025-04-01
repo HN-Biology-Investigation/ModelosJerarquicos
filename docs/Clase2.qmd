@@ -1,5 +1,5 @@
 ---
-title: "Clase 2: Modelos N-Mixture para estimar abundancia"
+title: "Clase 1: Modelos N-Mixture para estimar abundancia"
 author: "David Murillo"
 format:
   html:
