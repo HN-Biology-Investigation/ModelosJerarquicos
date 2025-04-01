@@ -20,7 +20,9 @@ Por favor, siga las indicaciones proporcionadas por el instructor y envíe su tr
 
 ## Asignación 2
 
-Por favor, siga las indicaciones proporcionadas por el instructor y envíe su trabajo en formato HTML al correo electrónico david.murillo@hnbiology.org.
+Realizar modelos N-Mixture con enfoques frecuentista y bayesiano utilizando la variable 'elev'. Generar los gráficos y compararlos visualmente.
+
+Envíe su trabajo en formato HTML al correo electrónico david.murillo@hnbiology.org
 
 
 ## Asignación 3
