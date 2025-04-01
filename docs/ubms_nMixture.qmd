@@ -1,0 +1,239 @@
+---
+title: "Clase 1.2: Modelos N-Mixture Bayesianos (ubms) para estimar abundancia"
+author: "David Murillo"
+format: html
+editor: visual
+---
+
+[paper](DOI:%2010.1111/2041-210X.13777)
+
+## Introducción al paquete ubms 
+
+El paquete [ubms]( https://doi.org/10.1111/2041-210X.13777) es una extensión de unmarked que permite el ajuste de modelos de ocupación y abundancia en un marco bayesiano. Utiliza Stan, un lenguaje de modelado probabilístico que facilita la inferencia estadística a través de MCMC (Markov Chain Monte Carlo). Algunas ventajas clave del paquete incluyen:
+
+- Ajuste de modelos de ocupación, abundancia y N-Mixture en un marco bayesiano.
+
+- Mayor flexibilidad en la especificación de priors y estructuras jerárquicas.
+
+- Mejores herramientas de diagnóstico y evaluación de la convergencia del modelo.
+
+- Integración con unmarked, facilitando la transición desde modelos frequentistas a bayesianos.
+
+::: panel-tabset
+
+### Cargar paquetes y base de datos
+
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(unmarked)
+library(ubms)
+```
+
+
+```{r}
+Tits <- read.csv("data/Tits.csv")
+
+```
+
+
+### Formatear base de datos a formato unmarked
+
+
+```{r}
+
+y <- Tits[,c("X1", "X2", "X3")]
+
+SiteVar <- Tits[,c("elev", "forest")]
+
+ObsVar <- list(Time = Tits[,c("time.1", "time.2", "time.3")],
+               Date = Tits[,c("date.1", "date.2", "date.3")],
+               Dur = Tits[,c("dur.1", "dur.2", "dur.3")])
+
+```
+
+```{r}
+
+Tits_umf <- unmarkedFramePCount(y = y, siteCovs = SiteVar, 
+                                    obsCovs= ObsVar )
+
+```
+
+
+### Ajustar modelo de deteccion
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
+
+
+ModelDetNulo <- stan_pcount(~1 ~1, data = Tits_umf,
+                         chains=3, 
+                         iter=300,
+                         warmup = 30) 
+
+ModelDetHora <- stan_pcount(~Time ~1, data = Tits_umf,
+                         chains=3, 
+                         iter=300,
+                         warmup = 30)
+
+ModelDetFecha <- stan_pcount(~Date ~1, data = Tits_umf,
+                         chains=3, 
+                         iter=300,
+                         warmup = 30)
+
+ModelDetDur <- stan_pcount(~Dur ~1, data = Tits_umf,
+                         chains=3, 
+                         iter=300,
+                         warmup = 30)
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+
+ModelDetNulo <- readRDS("ModelDetNulo")
+
+ModelDetHora <- readRDS("ModelDetHora")
+
+ModelDetFecha <- readRDS("ModelDetFecha")
+
+ModelDetDur <- readRDS("ModelDetDur")
+
+
+```
+
+### Seleccion de modelo de deteccion
+
+```{r}
+ubms::loo(ModelDetNulo)
+```
+
+::: {.callout-note}
+
+- elpd_loo (-3012.2): Es el "Expected Log Predictive Density" (ELPD), una medida de qué tan bien el modelo predice datos nuevos. Valores más altos (menos negativos) indican mejor ajuste.
+
+- p_loo (13.6): Es la cantidad efectiva de parámetros en el modelo. Un valor bajo sugiere un modelo más parsimonioso.
+
+- looic (6024.4): Es el "Leave-One-Out Information Criterion" (LOOIC), que se usa para la comparación de modelos. Al igual que AIC, valores más bajos indican mejor ajuste.
+
+- SE (113.8 para elpd_loo, 227.7 para looic): Son errores estándar de la estimación. Si estos son grandes, hay más incertidumbre en la evaluación del modelo.
+
+- All Pareto k estimates are good (k < 0.66)": Esto indica que no hay valores extremos que afecten la estabilidad de la evaluación LOO, lo que significa que la estimación es confiable.
+
+
+
+:::
+
+```{r}
+loo_nulo <- loo(ModelDetNulo)
+loo_hora <- loo(ModelDetHora)
+loo_fecha <- loo(ModelDetFecha)
+loo_dur <- loo(ModelDetDur)
+
+loo::loo_compare(loo_nulo, loo_hora, loo_fecha, loo_dur)
+```
+
+::: {.callout-note}
+
+- model2 (que es ModelDetHora, el modelo con Time como covariable de detección) tiene el mejor ajuste, porque tiene elpd_diff = 0.0, lo que indica que es el modelo de referencia con mejor predicción.
+
+- model1 (que es ModelDetNulo, el modelo sin covariables de detección) tiene un elpd_diff = -145.0, lo que significa que su ajuste es significativamente peor que ModelDetHora.
+
+- se_diff = 27.2 es la desviación estándar de la diferencia en el elpd. Como 145 es mucho mayor que 2 × 27.2 ≈ 54.4, hay una fuerte evidencia de que ModelDetHora es mejor que ModelDetNulo.
+
+:::
+
+Calcular WAIC para cada modelo
+
+```{r}
+waic_nulo <- waic(ModelDetNulo)
+waic_hora <- waic(ModelDetHora)
+waic_fecha <- waic(ModelDetFecha)
+waic_dur <- waic(ModelDetDur)
+
+loo::loo_compare(waic_nulo, waic_hora, waic_fecha, waic_dur)
+```
+
+### Ajustar modelo de Abundancia
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE, echo=TRUE}
+ModelAbundNulo <- stan_pcount(~Time ~1, data = Tits_umf,
+                         chains=3, 
+                         iter=300,
+                         warmup = 30) 
+
+ModelAbundForest <- stan_pcount(~Time ~forest, data = Tits_umf,
+                         chains=3, 
+                         iter=300,
+                         warmup = 30)
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+ModelAbundNulo <- readRDS("ModelAbundNulo")
+
+ModelAbundForest <- readRDS("ModelAbundForest")
+
+
+```
+
+### Seleccion de modelo de abundancia
+
+```{r}
+waic_nulo <- waic(ModelAbundNulo)
+waic_forest <- waic(ModelAbundForest)
+
+loo::loo_compare(waic_nulo, waic_forest)
+```
+
+```{r}
+
+ListaModelos <- ubms::fitList(ModelAbundNulo, ModelAbundForest)
+
+ubms::modSel(ListaModelos)
+```
+
+
+### Validar modelo 
+
+Diagnóstico visual de las cadenas MCMC
+
+```{r}
+traceplot(ModelAbundForest)
+```
+
+R-hat
+
+```{r}
+ModelAbundForest
+```
+
+
+### Prepar data para graficar
+
+```{r}
+Forest_df <- data.frame(forest= seq(min(0), max(100), length =100))
+
+Prediccion <-  posterior_predict(ModelAbundForest, param = "y")
+
+Prediccion <-  predict(ModelAbundForest, submodel = "state", newdata = Forest_df, appendData = TRUE)
+
+Prediccion$Forest = Forest_df$forest
+```
+
+
+### Graficar modelo
+
+```{r}
+ggplot(data = Prediccion, aes(x= Forest, y = Predicted))+
+  geom_line()+
+  geom_ribbon(aes(ymin =  `2.5%`,
+                  ymax = `97.5%`),
+              alpha = 0.4, fill = "lightblue") +
+  theme_classic()
+```
+
+
+:::
