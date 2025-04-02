@@ -69,6 +69,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="ubms_nMixture_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="ubms_nMixture_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -103,9 +132,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><a href="DOI:%2010.1111/2041-210X.13777">paper</a></p>
-<section id="introducción-al-paquete-ubms" class="level2">
-<h2 class="anchored" data-anchor-id="introducción-al-paquete-ubms">Introducción al paquete ubms</h2>
+<section id="introducción-a-la-inferencia-bayesiana" class="level2">
+<h2 class="anchored" data-anchor-id="introducción-a-la-inferencia-bayesiana">Introducción a la Inferencia Bayesiana</h2>
+<p>Principales referencias:</p>
+<p><a href="https://www.amazon.com/Bayesian-GLMs-Ecology-Carl-Smith/dp/B09LWMDD48">Bayesian GLMs in R for Ecology</a></p>
+<p><a href="https://www.sciencedirect.com/book/9780443137150/applied-statistical-modelling-for-ecologists">Applied Statistical Modelling for Ecologists</a></p>
+<p>La inferencia bayesiana es cada vez más reconocida como una herramienta esencial para modelar datos ecológicos. El enfoque bayesiano contrasta con la estadística frecuentista, que es más ampliamente utilizada. De hecho, la inferencia bayesiana antecede a la estadística frecuentista por aproximadamente 200 años y ofrece importantes ventajas, especialmente en el contexto del modelado ecológico, ya que se adapta bien a conjuntos de datos pequeños y a la toma de decisiones.</p>
+<p>La inferencia bayesiana se atribuye al Reverendo Thomas Bayes, un clérigo, filósofo y estadístico inglés del siglo XVIII. Sus ideas fueron posteriormente ampliadas por el polímata francés Pierre-Simon Laplace. La estadística frecuentista se desarrolló mucho más tarde, principalmente en el siglo XX, gracias a varias figuras, incluyendo al brillante genetista británico Sir Ronald Fisher y al matemático polaco Jerzy Spława-Neyman.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Diferencias entre el enfoque bayesiano y frecuentista</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">El Teorema de Bayes</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Introducción al paquete ubms</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Existen varias diferencias importantes entre el enfoque bayesiano y el frecuentista, especialmente en la forma en que manejan la incertidumbre</p>
+<section id="enfoque-frecuentista" class="level4">
+<h4 class="anchored" data-anchor-id="enfoque-frecuentista">Enfoque frecuentista:</h4>
+<p>En el marco frecuentista, las inferencias se basan en la probabilidad ( P) de los datos (D) dado que la hipótesis (H) es verdadera:</p>
+<p><span class="math display">\[P(D|H)\]</span></p>
+<p>Este enfoque se implementa probando los datos contra una hipótesis nula mediante la siguiente pregunta:</p>
+<p>¿Cuál es la probabilidad de obtener nuestro conjunto de datos si la hipótesis nula es verdadera?</p>
+<p>Si la probabilidad (o valor P) de que los datos respalden la hipótesis nula es pequeña, entonces se rechaza la hipótesis nula. El umbral crítico para considerar un valor P como pequeño se establece típicamente en 0.05, aunque este criterio es completamente arbitrario (y generalmente demasiado alto). Es importante destacar que si la hipótesis nula es rechazada, no es correcto concluir que la hipótesis alternativa es verdadera. Asimismo, es erróneo interpretar que, en el caso de un valor P grande, los datos apoyan la hipótesis nula.</p>
+<p>Desde una perspectiva frecuentista, solo es posible hacer afirmaciones de probabilidad sobre los datos, no sobre la hipótesis de interés. Un estadístico frecuentista trata los parámetros en un modelo como cantidades fijas pero desconocidas, a las cuales no se les asignan probabilidades. La incertidumbre se expresa únicamente como la probabilidad frecuentista de los conjuntos de datos generados a partir de muestreos repetidos hipotéticos.</p>
+<p>Si bien este enfoque es insatisfactorio en el sentido de que no permite hacer inferencias directas sobre las cantidades de interés, el enfoque frecuentista es (al menos superficialmente) objetivo, ya que las conclusiones se basan únicamente en los datos. Sin embargo, en la práctica, las decisiones relacionadas con el diseño experimental, la recolección de datos y la elección de las variables a analizar introducen inevitablemente subjetividad en cualquier análisis frecuentista.</p>
+</section>
+<section id="enfoque-bayesiano" class="level4">
+<h4 class="anchored" data-anchor-id="enfoque-bayesiano">Enfoque bayesiano</h4>
+<p>En contraste con el enfoque frecuentista, la inferencia bayesiana proporciona una medida de la probabilidad de que la hipótesis sea verdadera dado los datos; P(H|D). Como consecuencia, la inferencia bayesiana permite obtener conclusiones fundamentalmente diferentes con respecto a la probabilidad.</p>
+<p>En la inferencia bayesiana, los parámetros del modelo se tratan como variables aleatorias con cantidades conocidas, y la probabilidad es una medida directa del grado de creencia. Dado que la probabilidad es una medida de la incertidumbre, es posible hacer declaraciones claras sobre la probabilidad de cantidades desconocidas, considerando tanto los datos como la información previa existente.</p>
+<p>Así, mientras los frecuentistas trabajan con estimaciones puntuales de los parámetros, basadas en medias y varianzas, el enfoque bayesiano genera distribuciones posteriores de los parámetros considerando tanto los datos como cierta “información previa” o “priors”. El resultado final es que el enfoque bayesiano proporciona una visión más completa de la incertidumbre y permite realizar afirmaciones probabilísticas sobre los parámetros del modelo con mayor certeza.</p>
+<p>Los priors utilizados en el análisis bayesiano pueden ser vagos (“no informativos”), ligeramente explicativos (“débilmente informativos”) o bastante específicos (“informativos”), pero todos deben ser especificados en un modelo ajustado mediante inferencia bayesiana. La distribución previa es una característica clave de la inferencia bayesiana, ya que permite incorporar información existente en el análisis, algo que resulta difícil de hacer en el marco frecuentista.</p>
+<p>La selección de una distribución previa adecuada puede basarse en información de estudios publicados previamente, experiencia, opinión de expertos o modelos teóricos. Así, la información previa sirve para vincular los modelos con estudios anteriores y, de este modo, refleja el proceso científico de acumulación de información y su uso para actualizar la comprensión de un sistema.</p>
+</section>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Con la inferencia bayesiana, podemos formular la pregunta: ¿Cuál es la probabilidad de que nuestra hipótesis sea verdadera, dado los datos?</p>
+<p>Esta probabilidad se puede estimar utilizando el teorema de Bayes:</p>
+<p><span class="math display">\[p(H|D) = \frac{P(D|H) \times P(H)} {P(D)}\]</span></p>
+<p>Donde:</p>
+<ul>
+<li><p>P(H|D) es la probabilidad posterior.</p></li>
+<li><p>P(D|H) es la verosimilitud, que representa la probabilidad de los datos.</p></li>
+<li><p>P(H) es la probabilidad previa o “prior”.</p></li>
+<li><p>P(D) es la densidad de la probabilidad marginal de los datos, también llamada evidencia, que actúa como constante para todas las hipótesis.</p></li>
+</ul>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <p>El paquete <a href="https://doi.org/10.1111/2041-210X.13777">ubms</a> es una extensión de unmarked que permite el ajuste de modelos de ocupación y abundancia en un marco bayesiano. Utiliza Stan, un lenguaje de modelado probabilístico que facilita la inferencia estadística a través de MCMC (Markov Chain Monte Carlo). Algunas ventajas clave del paquete incluyen:</p>
 <ul>
 <li><p>Ajuste de modelos de ocupación, abundancia y N-Mixture en un marco bayesiano.</p></li>
@@ -113,10 +183,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Mejores herramientas de diagnóstico y evaluación de la convergencia del modelo.</p></li>
 <li><p>Integración con unmarked, facilitando la transición desde modelos frequentistas a bayesianos.</p></li>
 </ul>
+</div>
+</div>
+</div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Cargar paquetes y base de datos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Formatear base de datos a formato unmarked</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Ajustar modelo de deteccion</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Seleccion de modelo de deteccion</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Ajustar modelo de Abundancia</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Seleccion de modelo de abundancia</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">Validar modelo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-8" role="tab" aria-controls="tabset-1-8" aria-selected="false" href="">Prepar data para graficar</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-9-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-9" role="tab" aria-controls="tabset-1-9" aria-selected="false" href="">Graficar modelo</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Cargar paquetes y base de datos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Formatear base de datos a formato unmarked</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Ajustar modelo de deteccion</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">Seleccion de modelo de deteccion</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false" href="">Ajustar modelo de Abundancia</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-6" role="tab" aria-controls="tabset-2-6" aria-selected="false" href="">Seleccion de modelo de abundancia</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-7" role="tab" aria-controls="tabset-2-7" aria-selected="false" href="">Validar modelo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-8" role="tab" aria-controls="tabset-2-8" aria-selected="false" href="">Prepar data para graficar</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-9-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-9" role="tab" aria-controls="tabset-2-9" aria-selected="false" href="">Graficar modelo</a></li></ul>
 <div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(unmarked)</span>
@@ -126,7 +199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Tits <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Tits.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> Tits[,<span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span>)]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -141,7 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">obsCovs=</span> ObsVar )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ModelDetNulo <span class="ot">&lt;-</span> <span class="fu">stan_pcount</span>(<span class="sc">~</span><span class="dv">1</span> <span class="sc">~</span><span class="dv">1</span>, <span class="at">data =</span> Tits_umf,</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">3</span>, </span>
@@ -164,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>                         <span class="at">warmup =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ubms<span class="sc">::</span><span class="fu">loo</span>(ModelDetNulo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -271,7 +344,7 @@ model4 -14150.7    1713.1</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ModelAbundNulo <span class="ot">&lt;-</span> <span class="fu">stan_pcount</span>(<span class="sc">~</span>Time <span class="sc">~</span><span class="dv">1</span>, <span class="at">data =</span> Tits_umf,</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">3</span>, </span>
@@ -284,7 +357,7 @@ model4 -14150.7    1713.1</code></pre>
 <span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">warmup =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<div id="tabset-2-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-6-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>waic_nulo <span class="ot">&lt;-</span> <span class="fu">waic</span>(ModelAbundNulo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -314,7 +387,7 @@ ModelAbundForest -11926.513 9502.49744 -9052.785 647.8565 5.657260e-08</code></p
 </div>
 </div>
 </div>
-<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
+<div id="tabset-2-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-7-tab">
 <p>Diagnóstico visual de las cadenas MCMC</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">traceplot</span>(ModelAbundForest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -353,7 +426,7 @@ Runtime: 4.744 min</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-1-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-8-tab">
+<div id="tabset-2-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-8-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>Forest_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">forest=</span> <span class="fu">seq</span>(<span class="fu">min</span>(<span class="dv">0</span>), <span class="fu">max</span>(<span class="dv">100</span>), <span class="at">length =</span><span class="dv">100</span>))</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -364,7 +437,7 @@ Runtime: 4.744 min</code></pre>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>Prediccion<span class="sc">$</span>Forest <span class="ot">=</span> Forest_df<span class="sc">$</span>forest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-1-9" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-9-tab">
+<div id="tabset-2-9" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-9-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Prediccion, <span class="fu">aes</span>(<span class="at">x=</span> Forest, <span class="at">y =</span> Predicted))<span class="sc">+</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>

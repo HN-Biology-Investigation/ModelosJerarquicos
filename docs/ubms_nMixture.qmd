@@ -5,9 +5,74 @@ format: html
 editor: visual
 ---
 
-[paper](DOI:%2010.1111/2041-210X.13777)
+## Introducción a la Inferencia Bayesiana
 
-## Introducción al paquete ubms 
+Principales referencias:
+
+[Bayesian GLMs in R for Ecology](https://www.amazon.com/Bayesian-GLMs-Ecology-Carl-Smith/dp/B09LWMDD48)
+
+[Applied Statistical Modelling for Ecologists](https://www.sciencedirect.com/book/9780443137150/applied-statistical-modelling-for-ecologists)
+
+La inferencia bayesiana es cada vez más reconocida como una herramienta esencial para modelar datos ecológicos. El enfoque bayesiano contrasta con la estadística frecuentista, que es más ampliamente utilizada. De hecho, la inferencia bayesiana antecede a la estadística frecuentista por aproximadamente 200 años y ofrece importantes ventajas, especialmente en el contexto del modelado ecológico, ya que se adapta bien a conjuntos de datos pequeños y a la toma de decisiones.
+
+La inferencia bayesiana se atribuye al Reverendo Thomas Bayes, un clérigo, filósofo y estadístico inglés del siglo XVIII. Sus ideas fueron posteriormente ampliadas por el polímata francés Pierre-Simon Laplace. La estadística frecuentista se desarrolló mucho más tarde, principalmente en el siglo XX, gracias a varias figuras, incluyendo al brillante genetista británico Sir Ronald Fisher y al matemático polaco Jerzy Spława-Neyman.
+
+
+::: panel-tabset
+
+### Diferencias entre el enfoque bayesiano y frecuentista
+
+Existen varias diferencias importantes entre el enfoque bayesiano y el frecuentista, especialmente en la forma en que manejan la incertidumbre
+
+#### Enfoque frecuentista:
+
+En el marco frecuentista, las inferencias se basan en la probabilidad (
+P) de los datos (D) dado que la hipótesis (H) es verdadera: 
+
+$$P(D|H)$$
+
+Este enfoque se implementa probando los datos contra una hipótesis nula mediante la siguiente pregunta: 
+
+¿Cuál es la probabilidad de obtener nuestro conjunto de datos si la hipótesis nula es verdadera? 
+
+Si la probabilidad (o valor P) de que los datos respalden la hipótesis nula es pequeña, entonces se rechaza la hipótesis nula. El umbral crítico para considerar un valor P como pequeño se establece típicamente en 0.05, aunque este criterio es completamente arbitrario (y generalmente demasiado alto). Es importante destacar que si la hipótesis nula es rechazada, no es correcto concluir que la hipótesis alternativa es verdadera. Asimismo, es erróneo interpretar que, en el caso de un valor P grande, los datos apoyan la hipótesis nula.
+
+Desde una perspectiva frecuentista, solo es posible hacer afirmaciones de probabilidad sobre los datos, no sobre la hipótesis de interés. Un estadístico frecuentista trata los parámetros en un modelo como cantidades fijas pero desconocidas, a las cuales no se les asignan probabilidades. La incertidumbre se expresa únicamente como la probabilidad frecuentista de los conjuntos de datos generados a partir de muestreos repetidos hipotéticos.
+
+Si bien este enfoque es insatisfactorio en el sentido de que no permite hacer inferencias directas sobre las cantidades de interés, el enfoque frecuentista es (al menos superficialmente) objetivo, ya que las conclusiones se basan únicamente en los datos. Sin embargo, en la práctica, las decisiones relacionadas con el diseño experimental, la recolección de datos y la elección de las variables a analizar introducen inevitablemente subjetividad en cualquier análisis frecuentista.
+
+#### Enfoque bayesiano
+
+En contraste con el enfoque frecuentista, la inferencia bayesiana proporciona una medida de la probabilidad de que la hipótesis sea verdadera dado los datos; P(H|D). Como consecuencia, la inferencia bayesiana permite obtener conclusiones fundamentalmente diferentes con respecto a la probabilidad.
+
+En la inferencia bayesiana, los parámetros del modelo se tratan como variables aleatorias con cantidades conocidas, y la probabilidad es una medida directa del grado de creencia. Dado que la probabilidad es una medida de la incertidumbre, es posible hacer declaraciones claras sobre la probabilidad de cantidades desconocidas, considerando tanto los datos como la información previa existente.
+
+Así, mientras los frecuentistas trabajan con estimaciones puntuales de los parámetros, basadas en medias y varianzas, el enfoque bayesiano genera distribuciones posteriores de los parámetros considerando tanto los datos como cierta "información previa" o "priors". El resultado final es que el enfoque bayesiano proporciona una visión más completa de la incertidumbre y permite realizar afirmaciones probabilísticas sobre los parámetros del modelo con mayor certeza.
+
+Los priors utilizados en el análisis bayesiano pueden ser vagos ("no informativos"), ligeramente explicativos ("débilmente informativos") o bastante específicos ("informativos"), pero todos deben ser especificados en un modelo ajustado mediante inferencia bayesiana. La distribución previa es una característica clave de la inferencia bayesiana, ya que permite incorporar información existente en el análisis, algo que resulta difícil de hacer en el marco frecuentista.
+
+La selección de una distribución previa adecuada puede basarse en información de estudios publicados previamente, experiencia, opinión de expertos o modelos teóricos. Así, la información previa sirve para vincular los modelos con estudios anteriores y, de este modo, refleja el proceso científico de acumulación de información y su uso para actualizar la comprensión de un sistema.
+
+### El Teorema de Bayes
+
+Con la inferencia bayesiana, podemos formular la pregunta: ¿Cuál es la probabilidad de que nuestra hipótesis sea verdadera, dado los datos?
+
+Esta probabilidad se puede estimar utilizando el teorema de Bayes:
+
+$$p(H|D) = \frac{P(D|H) \times P(H)} {P(D)}$$
+
+Donde:
+
+- P(H|D) es la probabilidad posterior.
+
+- P(D|H) es la verosimilitud, que representa la probabilidad de los datos.
+
+- P(H) es la probabilidad previa o "prior".
+
+- P(D) es la densidad de la probabilidad marginal de los datos, también llamada evidencia, que actúa como constante para todas las hipótesis. 
+
+
+### Introducción al paquete ubms 
 
 El paquete [ubms]( https://doi.org/10.1111/2041-210X.13777) es una extensión de unmarked que permite el ajuste de modelos de ocupación y abundancia en un marco bayesiano. Utiliza Stan, un lenguaje de modelado probabilístico que facilita la inferencia estadística a través de MCMC (Markov Chain Monte Carlo). Algunas ventajas clave del paquete incluyen:
 
@@ -19,7 +84,11 @@ El paquete [ubms]( https://doi.org/10.1111/2041-210X.13777) es una extensión de
 
 - Integración con unmarked, facilitando la transición desde modelos frequentistas a bayesianos.
 
+:::
+
 ::: panel-tabset
+
+Ejercicio en clase
 
 ### Cargar paquetes y base de datos
 
