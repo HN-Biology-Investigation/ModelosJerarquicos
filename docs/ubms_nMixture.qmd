@@ -86,9 +86,9 @@ El paquete [ubms]( https://doi.org/10.1111/2041-210X.13777) es una extensión de
 
 :::
 
-::: panel-tabset
-
 Ejercicio en clase
+
+::: panel-tabset
 
 ### Cargar paquetes y base de datos
 
@@ -129,7 +129,7 @@ Tits_umf <- unmarkedFramePCount(y = y, siteCovs = SiteVar,
 ```
 
 
-### Ajustar modelo de deteccion
+### Ajustar modelo de detección
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
 
@@ -171,7 +171,7 @@ ModelDetDur <- readRDS("ModelDetDur")
 
 ```
 
-### Seleccion de modelo de deteccion
+### Selección de modelo de detección
 
 ```{r}
 ubms::loo(ModelDetNulo)
@@ -248,7 +248,7 @@ ModelAbundForest <- readRDS("ModelAbundForest")
 
 ```
 
-### Seleccion de modelo de abundancia
+### Selección de modelo de abundancia
 
 ```{r}
 waic_nulo <- waic(ModelAbundNulo)
@@ -280,7 +280,7 @@ ModelAbundForest
 ```
 
 
-### Prepar data para graficar
+### Preparara data para gráficar
 
 ```{r}
 Forest_df <- data.frame(forest= seq(min(0), max(100), length =100))
@@ -293,7 +293,7 @@ Prediccion$Forest = Forest_df$forest
 ```
 
 
-### Graficar modelo
+### Gráficar modelo
 
 ```{r}
 ggplot(data = Prediccion, aes(x= Forest, y = Predicted))+
@@ -306,3 +306,6 @@ ggplot(data = Prediccion, aes(x= Forest, y = Predicted))+
 
 
 :::
+
+
+![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)
