@@ -104,11 +104,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introducción-a-los-modelos-de-abundancia" class="level2">
-<h2 class="anchored" data-anchor-id="introducción-a-los-modelos-de-abundancia">Introducción a los modelos de abundancia</h2>
-</section>
-<section id="el-paquete-de-r-unmarked" class="level2">
-<h2 class="anchored" data-anchor-id="el-paquete-de-r-unmarked"><strong>EL Paquete de R <code>unmarked</code></strong></h2>
+<section id="introducción-a-spabundance" class="level2">
+<h2 class="anchored" data-anchor-id="introducción-a-spabundance">Introducción a spAbundance</h2>
+<p><a href="https://doi.org/10.1111/2041-210X.14332">spAbundance: An R package for single-species and multi-species spatially explicit abundance models</a></p>
+<p><a href="https://doserlab.com/files/spabundance-web/">Sitio oficial</a></p>
+<p>spAbundance ajusta modelos espaciales N-mixture univariados (es decir, de una sola especie) y multivariados (es decir, de múltiples especies), modelos jerárquicos de muestreo por distancia y modelos lineales generalizados mixtos utilizando el método de Markov Chain Monte Carlo (MCMC). Los modelos espaciales se ajustan utilizando Nearest Neighbor Gaussian Processes (NNGPs) para facilitar el ajuste del modelo en conjuntos de datos espaciales grandes.</p>
 </section>
 <section id="ejercicio" class="level2">
 <h2 class="anchored" data-anchor-id="ejercicio">Ejercicio</h2>
@@ -246,7 +246,7 @@ the largest estimated abundance value at each site in object$N.samples</code></p
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       elpd          pD        WAIC 
--2998.56396    13.48234  6024.09258 </code></pre>
+-2998.67959    13.18504  6023.72926 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">waicAbund</span>(model.det_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -255,7 +255,7 @@ the largest estimated abundance value at each site in object$N.samples</code></p
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       elpd          pD        WAIC 
--2852.10022    15.56754  5735.33552 </code></pre>
+-2851.96171    15.94424  5735.81190 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">waicAbund</span>(model.det_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -264,7 +264,7 @@ the largest estimated abundance value at each site in object$N.samples</code></p
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     elpd        pD      WAIC 
--2341.609  6809.416 18302.050 </code></pre>
+-2224.053  2320.422  9088.950 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">waicAbund</span>(model.det_dur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -273,7 +273,7 @@ the largest estimated abundance value at each site in object$N.samples</code></p
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     elpd        pD      WAIC 
--2696.341  1339.095  8070.873 </code></pre>
+-2614.576  1307.264  7843.680 </code></pre>
 </div>
 </div>
 </section>
@@ -355,17 +355,17 @@ Burn-in: 5000
 Thinning Rate: 5
 Number of Chains: 3
 Total Posterior Samples: 3000
-Run Time (min): 0.6307
+Run Time (min): 0.716
 
 Abundance (log scale): 
               Mean     SD   2.5%    50%  97.5%   Rhat ESS
-(Intercept) 2.1692 0.0353 2.0988 2.1696 2.2391 1.0699 273
-forest      0.0028 0.0007 0.0015 0.0029 0.0044 1.1413 188
+(Intercept) 2.1665 0.0380 2.0889 2.1663 2.2407 1.0045 230
+forest      0.0029 0.0007 0.0015 0.0029 0.0043 1.0092 255
 
 Detection (logit scale): 
                Mean     SD    2.5%     50%   97.5%   Rhat ESS
-(Intercept)  1.8045 0.1077  1.5770  1.8051  2.0130 1.0647 106
-det.cov.1   -0.5464 0.0372 -0.6173 -0.5460 -0.4675 1.0645 130</code></pre>
+(Intercept)  1.8194 0.1237  1.5777  1.8187  2.0670 1.0345  76
+det.cov.1   -0.5518 0.0412 -0.6330 -0.5521 -0.4698 1.0408  80</code></pre>
 </div>
 </div>
 </div>

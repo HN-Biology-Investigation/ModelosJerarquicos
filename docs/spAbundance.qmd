@@ -6,11 +6,13 @@ format:
     css: styles.css
 ---
 
-## Introducción a los modelos de abundancia 
+## Introducción a spAbundance 
 
+[spAbundance: An R package for single-species and multi-species spatially explicit abundance models](https://doi.org/10.1111/2041-210X.14332)
 
+[Sitio oficial](https://doserlab.com/files/spabundance-web/)
 
-## **EL Paquete de R `unmarked`**
+spAbundance ajusta modelos espaciales N-mixture univariados (es decir, de una sola especie) y multivariados (es decir, de múltiples especies), modelos jerárquicos de muestreo por distancia y modelos lineales generalizados mixtos utilizando el método de Markov Chain Monte Carlo (MCMC). Los modelos espaciales se ajustan utilizando Nearest Neighbor Gaussian Processes (NNGPs) para facilitar el ajuste del modelo en conjuntos de datos espaciales grandes.
 
 
 
