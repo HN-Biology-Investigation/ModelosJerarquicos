@@ -21,7 +21,7 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 [Clase 1.2: Modelos N-Mixture Bayesianos (ubms) para estimar abundancia](ubms_nMixture.html)
 
-[Clase 2: Modelos N-Mixture Bayesianos para estimar abundancia](spAbundance.html)
+[Clase 2: spAbundance para N-Mixture Bayesianos](spAbundance.html)
 
 [Clase 3: Modelar abundancia con muestreo de distancia jerárquico](Clase3.html)
 
