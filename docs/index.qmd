@@ -37,7 +37,7 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 - [Modelar densidad con muestreo de distancia jerárquico](Clase4.html)
 
-- [Modelar densidad con muestreo de distancia jerárquico bayesiano (ubms)](ubms2.qmd)
+- [Modelar densidad con muestreo de distancia jerárquico bayesiano (ubms)](ubms2.html)
 
 :::
 
