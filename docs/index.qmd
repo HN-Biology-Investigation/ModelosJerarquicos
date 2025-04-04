@@ -33,7 +33,7 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 - [Modelar abundancia con muestreo de distancia jerárquico Bayesiano (ubms)](ubms.html)
 
-- [Modelar abundancia con muestreo de distancia jerárquico Bayesiano (spAbundance)](ubms.html)
+- [Modelar abundancia con muestreo de distancia jerárquico Bayesiano (spAbundance)](DS.html)
 
 - [Modelar densidad con muestreo de distancia jerárquico](Clase4.html)
 
