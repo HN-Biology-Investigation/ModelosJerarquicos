@@ -5,4 +5,67 @@ format: html
 editor: visual
 ---
 
-[paper](DOI:%2010.1111/2041-210X.13777)
+::: panel-tabset
+### Cargar paquete
+
+```{r, warning=FALSE, message=FALSE}
+library(unmarked)
+library(tidyverse)
+library(AICcmodavg)
+```
+
+### Cargar base de datos
+
+```{r}
+data(issj)
+```
+
+### Prepara data en formato unmarked
+
+```{r}
+
+y <- as.matrix(issj[,c(1:3)])
+
+covs <- data.frame(issj[,c("elevation", "forest", "chaparral")])
+
+area <- pi*300^2 / 100^2 # area en hectareas
+
+jay_umf <- unmarkedFrameDS(y = y,
+                           siteCovs = covs,
+                           dist.breaks = c(0, 100, 200, 300),
+                           unitsIn = "m",
+                           survey = "point")
+```
+
+### Ajustar modelos
+
+```{r}
+
+jay_m1 <- distsamp(~chaparral ~chaparral + elevation,
+                   data = jay_umf, keyfun = "halfnorm",
+                   output = "abund")
+
+
+
+summary(jay_m1)
+```
+
+## Utilizando gdistsamp
+
+```{r}
+jay_gd_umf <- unmarkedFrameGDS(y = y,
+                           siteCovs = covs,
+                           numPrimary = 1,
+                           dist.breaks = c(0, 100, 200, 300),
+                           unitsIn = "m",
+                           survey = "point")
+
+jay_gd_m1 <-  gdistsamp(lambdaformula =  ~chaparral + elevation, phiformula =  ~1, pformula =  ~chaparral,
+                   data = jay_gd_umf, keyfun = "halfnorm",
+                   output = "abund", mixture = "NB")
+```
+
+```{r}
+summary(jay_gd_m1)
+```
+:::

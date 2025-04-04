@@ -15,29 +15,43 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 [Asignaciones](Asiganciones.html)
 
-[Clase 0: Introducción a Modelos Jerárquicos](Clase1.html)
+[Introducción a Modelos Jerárquicos](Clase1.html)
 
-[Clase 1: Modelos N-Mixture para estimar abundancia](Clase2.html)
+[Modelos N-Mixture para estimar abundancia](Clase2.html)
 
-[Clase 1.2: Modelos N-Mixture Bayesianos (ubms) para estimar abundancia](ubms_nMixture.html)
+::: {.callout-note}
 
-[Clase 2: spAbundance para N-Mixture Bayesianos](spAbundance.html)
+- [Modelos N-Mixture Bayesianos (ubms) para estimar abundancia](ubms_nMixture.html)
 
-[Clase 3: Modelar abundancia con muestreo de distancia jerárquico](Clase3.html)
+- [spAbundance para N-Mixture Bayesianos](spAbundance.html)
 
-[Clase 4: Modelar abundancia con muestreo de distancia jerárquico Bayesiano](ubms.html)
+:::
 
-[Clase 5: Modelar densidad con muestreo de distancia jerárquico](Clase4.html)
+[Modelar abundancia con muestreo de distancia jerárquico](Clase3.html)
 
-[Clase 6: Modelar densidad con muestreo de distancia jerárquico bayesiano](ubms2.qmd)
+::: {.callout-note}
 
-[Clase 7: Modelar ocupación de especies en poblaciones cerradas](Clase5.html)
+- [Modelar abundancia con muestreo de distancia jerárquico Bayesiano (ubms)](ubms.html)
 
-[Clase 8: Ocupación de especies con modelos Bayesiano en poblaciones cerradas](spOcupancy.html)
+- [Modelar abundancia con muestreo de distancia jerárquico Bayesiano (spAbundance)](ubms.html)
 
-[Clase 9: El modelo Royal-Nichols y otros modelos N-Mixture no estándar](Clase6.html)
+- [Modelar densidad con muestreo de distancia jerárquico](Clase4.html)
 
-[Clase 10: Modelado de interacciones entre especies (ocupación)](Clase7.html)
+- [Modelar densidad con muestreo de distancia jerárquico bayesiano (ubms)](ubms2.qmd)
+
+:::
+
+[Modelar ocupación de especies en poblaciones cerradas](Clase5.html)
+
+::: {.callout-note}
+
+- [Ocupación de especies con modelos Bayesiano en poblaciones cerradas](spOcupancy.html)
+
+:::
+
+[Modelo Royal-Nichols y otros modelos N-Mixture no estándar](Clase6.html)
+
+[Modelado de interacciones entre especies (ocupación)](Clase7.html)
 
 
 *No dude en consultarnos ante cualquier inconveniente que surja durante el curso. Puede contactarnos a través de admi@hnbiology.org.*
