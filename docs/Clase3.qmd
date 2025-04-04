@@ -115,7 +115,8 @@ jay_gd_umf <- unmarkedFrameGDS(y = y,
                            unitsIn = "m",
                            survey = "point")
 
-jay_gd_m1 <-  gdistsamp(lambdaformula =  ~chaparral + elevation, phiformula =  ~1, pformula =  ~chaparral,
+jay_gd_m1 <-  gdistsamp(lambdaformula =  ~chaparral + elevation,
+                        phiformula =  ~1, pformula =  ~chaparral,
                    data = jay_gd_umf, keyfun = "halfnorm",
                    output = "abund", mixture = "NB")
 ```
@@ -220,4 +221,4 @@ ggplot(data = elevation_pre, aes(x= elevation, y= Predicted))+
 
 :::
 
-![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
+![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)
