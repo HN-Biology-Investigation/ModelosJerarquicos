@@ -1,0 +1,65 @@
+---
+title: "Modelar abundancia con muestreo de distancia jerárquico Bayesiano (spAbundance)"
+author: "David Murillo"
+format: html
+editor: visual
+---
+
+::: panel-tabset
+### Cargar paquete
+
+```{r, warning=FALSE, message=FALSE}
+library(spAbundance)
+library(unmarked)
+library(tidyverse)
+library(loo)
+```
+
+### Cargar base de datos
+
+```{r}
+data(issj)
+```
+
+### Prepara data en formato unmarked
+
+```{r}
+
+jay_data <- list(
+  y = as.matrix(issj[, 1:3]),
+  covs = data.frame(elevation = issj$elevation, 
+                   forest = issj$forest),
+  dist.breaks = c(0, 0.1, 0.2, 0.3), 
+  offset = rep(1, nrow(issj)))
+```
+
+### Ajustar modelos
+
+```{r, warning=FALSE, message=FALSE}
+
+inits.list <- list(alpha = 0,
+                   beta = 0,
+                   kappa = 1)
+
+fm_jay <- DS(abund.formula = ~ elevation,
+             det.formula = ~ 1,
+             data = jay_data,
+             family = "Poisson",
+             inits = inits.list,
+             n.report = 100,
+             n.burn = 1000,
+             n.thin = 5,
+             n.chains = 3,
+             n.batch =10, 
+             batch.length= 1000)
+
+
+
+```
+
+```{r}
+summary(fm_jay)
+```
+
+
+:::
