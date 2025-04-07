@@ -281,7 +281,6 @@ ggplot(data = Prediccion, aes(x= Forest, y = Predicted))+
               alpha = 0.4, fill = "lightblue") +
   theme_classic()
 ```
-
-:::
+:::::
 
 ![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
