@@ -17,23 +17,20 @@ La inferencia bayesiana es cada vez más reconocida como una herramienta esencia
 
 La inferencia bayesiana se atribuye al Reverendo Thomas Bayes, un clérigo, filósofo y estadístico inglés del siglo XVIII. Sus ideas fueron posteriormente ampliadas por el polímata francés Pierre-Simon Laplace. La estadística frecuentista se desarrolló mucho más tarde, principalmente en el siglo XX, gracias a varias figuras, incluyendo al brillante genetista británico Sir Ronald Fisher y al matemático polaco Jerzy Spława-Neyman.
 
-
 ::: panel-tabset
-
 ### Diferencias entre el enfoque bayesiano y frecuentista
 
 Existen varias diferencias importantes entre el enfoque bayesiano y el frecuentista, especialmente en la forma en que manejan la incertidumbre
 
 #### Enfoque frecuentista:
 
-En el marco frecuentista, las inferencias se basan en la probabilidad (
-P) de los datos (D) dado que la hipótesis (H) es verdadera: 
+En el marco frecuentista, las inferencias se basan en la probabilidad ( P) de los datos (D) dado que la hipótesis (H) es verdadera:
 
 $$P(D|H)$$
 
-Este enfoque se implementa probando los datos contra una hipótesis nula mediante la siguiente pregunta: 
+Este enfoque se implementa probando los datos contra una hipótesis nula mediante la siguiente pregunta:
 
-¿Cuál es la probabilidad de obtener nuestro conjunto de datos si la hipótesis nula es verdadera? 
+¿Cuál es la probabilidad de obtener nuestro conjunto de datos si la hipótesis nula es verdadera?
 
 Si la probabilidad (o valor P) de que los datos respalden la hipótesis nula es pequeña, entonces se rechaza la hipótesis nula. El umbral crítico para considerar un valor P como pequeño se establece típicamente en 0.05, aunque este criterio es completamente arbitrario (y generalmente demasiado alto). Es importante destacar que si la hipótesis nula es rechazada, no es correcto concluir que la hipótesis alternativa es verdadera. Asimismo, es erróneo interpretar que, en el caso de un valor P grande, los datos apoyan la hipótesis nula.
 
@@ -43,7 +40,7 @@ Si bien este enfoque es insatisfactorio en el sentido de que no permite hacer in
 
 #### Enfoque bayesiano
 
-En contraste con el enfoque frecuentista, la inferencia bayesiana proporciona una medida de la probabilidad de que la hipótesis sea verdadera dado los datos; P(H|D). Como consecuencia, la inferencia bayesiana permite obtener conclusiones fundamentalmente diferentes con respecto a la probabilidad.
+En contraste con el enfoque frecuentista, la inferencia bayesiana proporciona una medida de la probabilidad de que la hipótesis sea verdadera dado los datos; P(H\|D). Como consecuencia, la inferencia bayesiana permite obtener conclusiones fundamentalmente diferentes con respecto a la probabilidad.
 
 En la inferencia bayesiana, los parámetros del modelo se tratan como variables aleatorias con cantidades conocidas, y la probabilidad es una medida directa del grado de creencia. Dado que la probabilidad es una medida de la incertidumbre, es posible hacer declaraciones claras sobre la probabilidad de cantidades desconocidas, considerando tanto los datos como la información previa existente.
 
@@ -63,35 +60,31 @@ $$p(H|D) = \frac{P(D|H) \times P(H)} {P(D)}$$
 
 Donde:
 
-- P(H|D) es la probabilidad posterior.
+-   P(H\|D) es la probabilidad posterior.
 
-- P(D|H) es la verosimilitud, que representa la probabilidad de los datos.
+-   P(D\|H) es la verosimilitud, que representa la probabilidad de los datos.
 
-- P(H) es la probabilidad previa o "prior".
+-   P(H) es la probabilidad previa o "prior".
 
-- P(D) es la densidad de la probabilidad marginal de los datos, también llamada evidencia, que actúa como constante para todas las hipótesis. 
+-   P(D) es la densidad de la probabilidad marginal de los datos, también llamada evidencia, que actúa como constante para todas las hipótesis.
 
+### Introducción al paquete ubms
 
-### Introducción al paquete ubms 
+El paquete [ubms](https://doi.org/10.1111/2041-210X.13777) es una extensión de unmarked que permite el ajuste de modelos de ocupación y abundancia en un marco bayesiano. Utiliza Stan, un lenguaje de modelado probabilístico que facilita la inferencia estadística a través de MCMC (Markov Chain Monte Carlo). Algunas ventajas clave del paquete incluyen:
 
-El paquete [ubms]( https://doi.org/10.1111/2041-210X.13777) es una extensión de unmarked que permite el ajuste de modelos de ocupación y abundancia en un marco bayesiano. Utiliza Stan, un lenguaje de modelado probabilístico que facilita la inferencia estadística a través de MCMC (Markov Chain Monte Carlo). Algunas ventajas clave del paquete incluyen:
+-   Ajuste de modelos de ocupación, abundancia y N-Mixture en un marco bayesiano.
 
-- Ajuste de modelos de ocupación, abundancia y N-Mixture en un marco bayesiano.
+-   Mayor flexibilidad en la especificación de priors y estructuras jerárquicas.
 
-- Mayor flexibilidad en la especificación de priors y estructuras jerárquicas.
+-   Mejores herramientas de diagnóstico y evaluación de la convergencia del modelo.
 
-- Mejores herramientas de diagnóstico y evaluación de la convergencia del modelo.
-
-- Integración con unmarked, facilitando la transición desde modelos frequentistas a bayesianos.
-
+-   Integración con unmarked, facilitando la transición desde modelos frequentistas a bayesianos.
 :::
 
 Ejercicio en clase
 
-::: panel-tabset
-
+::::: panel-tabset
 ### Cargar paquetes y base de datos
-
 
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -99,15 +92,12 @@ library(unmarked)
 library(ubms)
 ```
 
-
 ```{r}
 Tits <- read.csv("data/Tits.csv")
 
 ```
 
-
 ### Formatear base de datos a formato unmarked
-
 
 ```{r}
 
@@ -127,7 +117,6 @@ Tits_umf <- unmarkedFramePCount(y = y, siteCovs = SiteVar,
                                     obsCovs= ObsVar )
 
 ```
-
 
 ### Ajustar modelo de detección
 
@@ -155,7 +144,6 @@ ModelDetDur <- stan_pcount(~Dur ~1, data = Tits_umf,
                          warmup = 30)
 ```
 
-
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
 
@@ -177,20 +165,16 @@ ModelDetDur <- readRDS("ModelDetDur")
 ubms::loo(ModelDetNulo)
 ```
 
-::: {.callout-note}
+::: callout-note
+-   elpd_loo (-3012.2): Es el "Expected Log Predictive Density" (ELPD), una medida de qué tan bien el modelo predice datos nuevos. Valores más altos (menos negativos) indican mejor ajuste.
 
-- elpd_loo (-3012.2): Es el "Expected Log Predictive Density" (ELPD), una medida de qué tan bien el modelo predice datos nuevos. Valores más altos (menos negativos) indican mejor ajuste.
+-   p_loo (13.6): Es la cantidad efectiva de parámetros en el modelo. Un valor bajo sugiere un modelo más parsimonioso.
 
-- p_loo (13.6): Es la cantidad efectiva de parámetros en el modelo. Un valor bajo sugiere un modelo más parsimonioso.
+-   looic (6024.4): Es el "Leave-One-Out Information Criterion" (LOOIC), que se usa para la comparación de modelos. Al igual que AIC, valores más bajos indican mejor ajuste.
 
-- looic (6024.4): Es el "Leave-One-Out Information Criterion" (LOOIC), que se usa para la comparación de modelos. Al igual que AIC, valores más bajos indican mejor ajuste.
+-   SE (113.8 para elpd_loo, 227.7 para looic): Son errores estándar de la estimación. Si estos son grandes, hay más incertidumbre en la evaluación del modelo.
 
-- SE (113.8 para elpd_loo, 227.7 para looic): Son errores estándar de la estimación. Si estos son grandes, hay más incertidumbre en la evaluación del modelo.
-
-- All Pareto k estimates are good (k < 0.66)": Esto indica que no hay valores extremos que afecten la estabilidad de la evaluación LOO, lo que significa que la estimación es confiable.
-
-
-
+-   All Pareto k estimates are good (k \< 0.66)": Esto indica que no hay valores extremos que afecten la estabilidad de la evaluación LOO, lo que significa que la estimación es confiable.
 :::
 
 ```{r}
@@ -202,14 +186,12 @@ loo_dur <- loo(ModelDetDur)
 loo::loo_compare(loo_nulo, loo_hora, loo_fecha, loo_dur)
 ```
 
-::: {.callout-note}
+::: callout-note
+-   model2 (que es ModelDetHora, el modelo con Time como covariable de detección) tiene el mejor ajuste, porque tiene elpd_diff = 0.0, lo que indica que es el modelo de referencia con mejor predicción.
 
-- model2 (que es ModelDetHora, el modelo con Time como covariable de detección) tiene el mejor ajuste, porque tiene elpd_diff = 0.0, lo que indica que es el modelo de referencia con mejor predicción.
+-   model1 (que es ModelDetNulo, el modelo sin covariables de detección) tiene un elpd_diff = -145.0, lo que significa que su ajuste es significativamente peor que ModelDetHora.
 
-- model1 (que es ModelDetNulo, el modelo sin covariables de detección) tiene un elpd_diff = -145.0, lo que significa que su ajuste es significativamente peor que ModelDetHora.
-
-- se_diff = 27.2 es la desviación estándar de la diferencia en el elpd. Como 145 es mucho mayor que 2 × 27.2 ≈ 54.4, hay una fuerte evidencia de que ModelDetHora es mejor que ModelDetNulo.
-
+-   se_diff = 27.2 es la desviación estándar de la diferencia en el elpd. Como 145 es mucho mayor que 2 × 27.2 ≈ 54.4, hay una fuerte evidencia de que ModelDetHora es mejor que ModelDetNulo.
 :::
 
 Calcular WAIC para cada modelo
@@ -237,7 +219,6 @@ ModelAbundForest <- stan_pcount(~Time ~forest, data = Tits_umf,
                          warmup = 30)
 ```
 
-
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
 
@@ -264,8 +245,7 @@ ListaModelos <- ubms::fitList(ModelAbundNulo, ModelAbundForest)
 ubms::modSel(ListaModelos)
 ```
 
-
-### Validar modelo 
+### Validar modelo
 
 Diagnóstico visual de las cadenas MCMC
 
@@ -279,7 +259,6 @@ R-hat
 ModelAbundForest
 ```
 
-
 ### Preparara data para gráficar
 
 ```{r}
@@ -292,7 +271,6 @@ Prediccion <-  predict(ModelAbundForest, submodel = "state", newdata = Forest_df
 Prediccion$Forest = Forest_df$forest
 ```
 
-
 ### Gráficar modelo
 
 ```{r}
@@ -304,8 +282,6 @@ ggplot(data = Prediccion, aes(x= Forest, y = Predicted))+
   theme_classic()
 ```
 
-
 :::
 
-
-![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)
+![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)

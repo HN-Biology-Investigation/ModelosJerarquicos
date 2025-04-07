@@ -25,17 +25,28 @@ data(issj)
 ```{r}
 
 jayUMF <- unmarkedFrameDS(y=as.matrix(issj[,1:3]),
-                          siteCovs=issj[,c("elevation","forest")],
+                          siteCovs=issj[,c("elevation","forest", "chaparral")],
                           dist.breaks=c(0,0.1,0.2,0.3),
                           unitsIn="km", survey="point")
 ```
 
 ### Ajustar modelos
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, results='hide'}
 
-fm_jay <- stan_distsamp(~1~elevation, 
+
+fm_jay_nulo <- stan_distsamp(~1~1, 
+                        jayUMF,
+                        keyfun = "halfnorm",
+                        output = "abund",
+                        chains=3, 
+                        iter=300,
+                        warmup =30)
+
+fm_jay_cha <- stan_distsamp(~1~chaparral, 
                         jayUMF, 
+                        keyfun = "halfnorm",
+                        output = "abund",
                         chains=3, 
                         iter=300,
                         warmup =30)
@@ -44,9 +55,53 @@ fm_jay <- stan_distsamp(~1~elevation,
 
 ```
 
+### Seleccionar modelo mas adecuado
+
 ```{r}
-fm_jay
+ubms::waic(fm_jay_nulo)
+ubms::waic(fm_jay_cha)
 ```
+
+### Validar modelo
+
+```{r}
+traceplot(fm_jay_cha)
+```
+
+```{r}
+fm_jay_cha
+```
+### Preparara data para gráficar
+
+```{r}
+Cha_df <- data.frame(chaparral= issj$chaparral)
+
+Prediccion <-  predict(fm_jay_cha, submodel = "state", newdata = Cha_df, appendData = TRUE)
+
+Prediccion$chaparral = Cha_df$chaparral
+```
+
+### Gráficar modelo
+
+```{r}
+ggplot(data = Prediccion, aes(x= chaparral, y = Predicted))+
+  geom_line()+
+  geom_ribbon(aes(ymin =  `2.5%`,
+                  ymax = `97.5%`),
+              alpha = 0.4, fill = "lightblue") +
+  theme_classic()
+```
+
+
+### Poblacion esperada
+
+```{r}
+site_abundances <- predict(fm_jay_cha, submodel = "state", type = "response")
+total_N <- sum(site_abundances$Predicted)
+total_N
+
+```
+
 
 
 :::
