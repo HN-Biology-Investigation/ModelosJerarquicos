@@ -71,6 +71,7 @@ traceplot(fm_jay_cha)
 ```{r}
 fm_jay_cha
 ```
+
 ### Preparara data para gráficar
 
 ```{r}
@@ -92,7 +93,6 @@ ggplot(data = Prediccion, aes(x= chaparral, y = Predicted))+
   theme_classic()
 ```
 
-
 ### Poblacion esperada
 
 ```{r}
@@ -101,7 +101,4 @@ total_N <- sum(site_abundances$Predicted)
 total_N
 
 ```
-
-
-
 :::

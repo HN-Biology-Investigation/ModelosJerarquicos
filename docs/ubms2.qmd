@@ -1,8 +1,177 @@
 ---
-title: "Modelos N-Mixture Bayesianos (ubms) para estimar abundancia"
+title: "Modelar densidad con muestreo de distancia jerárquico bayesiano (ubms)"
 author: "David Murillo"
 format: html
 editor: visual
 ---
 
-[paper](DOI:%2010.1111/2041-210X.13777)
+::: panel-tabset
+
+### Cargar paquete
+
+```{r, warning=FALSE, message=FALSE}
+library(ubms)
+library(tidyverse)
+library(loo)
+```
+
+### Cargar base de datos
+
+```{r}
+library(readxl)
+
+AvesTransecto <- read_excel("data/Transectos.xlsx", sheet = 2)
+AvesTransecto <- read.delim("data/Transectos.txt")
+PaisajeMetricas <- readRDS("data/Paisaje250.rds")
+```
+
+### Procesar base de datos
+
+```{r}
+AvesTransectoLimpia <- AvesTransecto %>% 
+  filter(!is.na(Hora_I))
+```
+
+Observar que ave cuenta con mayor cantidad de observaciones
+
+```{r}
+head(AvesTransectoLimpia %>% 
+  group_by(Especie) %>% 
+  count() %>% 
+  arrange(desc(n)))
+```
+
+Filtrar algunas especies insectivoras
+
+```{r}
+Insectivoras <- AvesTransectoLimpia %>%
+  filter(Deteccion == "Visual") %>% 
+  group_by(Sitio, Distancia, Especie) %>% 
+  summarise(Abundancia = n()) %>% 
+  pivot_wider(names_from = Especie, values_from = Abundancia, values_fill = 0) %>% 
+  select(Sitio, Distancia, CARPUS, SETCIT, SETVIR, TROAED, BASCUL, MIOOLE,
+                        SETPET, BASRUF, MNIVAR, OREPER, MYOMIN, SETPEN, SETRUT,
+                        VERCHR, VERCYA) %>% 
+  mutate(Distancia_Level = cut(Distancia, 
+                     breaks = c(0, 10, 20, 30, 40, 50, 60, 70, 80, Inf), 
+                     labels = c("Level1", "Level2", "Level3", "Level4", "Level5",
+                                "Level6", "Level7", "Level8", "Level9"))) 
+
+Insectivoras$Abundancia <- rowSums(Insectivoras[, c("CARPUS", "SETCIT", "SETVIR", "TROAED",
+                                                    "BASCUL", "MIOOLE",
+                                                    "SETPET", "BASRUF", "MNIVAR", "OREPER",
+                                                    "MYOMIN", "SETPEN",
+                                                    "SETRUT", "VERCHR", "VERCYA")])
+
+Insectivoras2 <- Insectivoras %>% 
+  group_by(Sitio, Distancia_Level) %>% 
+  summarise(Abundancia = max(Abundancia, na.rm = TRUE)) %>% 
+  pivot_wider(names_from = Distancia_Level, values_from = Abundancia, values_fill = 0) %>% 
+  select(Sitio, Level1, Level2, Level3, Level4, Level5)
+
+head(Insectivoras2)
+
+table(Insectivoras$Distancia)
+```
+
+Agragar covariables de paisaje
+
+```{r}
+Insectivoras3 <- Insectivoras2 %>% 
+  mutate(Site_ID = Sitio) %>% 
+  left_join(PaisajeMetricas, by= "Site_ID") %>% 
+  filter(!is.na(Forest))
+```
+
+### Prepara data en formato unmarked
+
+```{r}
+
+y <- cbind(Insectivoras3$Level1, Insectivoras3$Level2,
+           Insectivoras3$Level3, Insectivoras3$Level4,
+           Insectivoras3$Level5)
+
+SiteCovs <- Insectivoras3[,c(8,17)]
+
+Insectivoras3$Longitud <- c(100)
+
+InsectivorasUMF <- unmarkedFrameDS(y= y ,
+                                   siteCovs = SiteCovs,
+                                   dist.breaks = seq(0, 35, by= 6),
+                                   survey = "line",
+                                   unitsIn = "m",
+                                   tlength = Insectivoras3$Longitud)
+```
+
+```{r}
+summary(InsectivorasUMF)
+```
+
+
+### Ajustar modelos
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+
+fm_nulo <- stan_distsamp(~1 ~ 1,
+                        InsectivorasUMF,
+                        keyfun = "halfnorm",
+                        output = "density",
+                        unitsOut = "ha",
+                        chains=3, 
+                        iter=300,
+                        warmup =30)
+
+fm_1 <- stan_distsamp(~1 ~ Forest, 
+                        InsectivorasUMF, 
+                        keyfun = "halfnorm",
+                        output = "density",
+                        unitsOut = "ha",
+                        chains=3, 
+                        iter=300,
+                        warmup =30)
+
+
+
+```
+
+### Seleccionar modelo mas adecuado
+
+```{r}
+ubms::waic(fm_nulo)
+ubms::waic(fm_1)
+```
+
+### Validar modelo
+
+```{r}
+traceplot(fm_1)
+```
+
+```{r}
+fm_1
+```
+
+### Preparara data para gráficar
+
+```{r}
+forest_df <- data.frame(Forest= PaisajeMetricas$Forest)
+
+Prediccion <-  predict(fm_1, submodel = "state", newdata = forest_df)
+
+Prediccion$Forest = forest_df$Forest
+```
+
+### Gráficar modelo
+
+```{r}
+ggplot(data = Prediccion, aes(x= Forest, y = Predicted))+
+  geom_line()+
+  geom_ribbon(aes(ymin =  `2.5%`,
+                  ymax = `97.5%`),
+              alpha = 0.4, fill = "lightblue") +
+  theme_classic()
+```
+
+:::
+
+![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)
