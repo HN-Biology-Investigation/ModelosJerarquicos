@@ -27,11 +27,11 @@ Envíe su trabajo en formato HTML al correo electrónico david.murillo@hnbiology
 
 ## Asignación 3
 
-Por favor, siga las indicaciones proporcionadas por el instructor y envíe su trabajo en formato HTML al correo electrónico david.murillo@hnbiology.org.
+Realizar modelos jerárquicos de distancia para estimar la densidad de aves insectívoras utilizando dos métodos: unmarked (enfoque frecuentista) y ubms (enfoque bayesiano). Enviar el trabajo en formato HTML al correo electrónico david.murillo@hnbiology.org.
 
 ## Asignación 4
 
-Por favor, siga las indicaciones proporcionadas por el instructor y envíe su trabajo en formato HTML al correo electrónico david.murillo@hnbiology.org.
+Realizar modelos occupacion de especies utilizando dos métodos: unmarked (enfoque frecuentista) y ubms (enfoque bayesiano). Enviar el trabajo en formato HTML al correo electrónico david.murillo@hnbiology.org.
 
 ## Asignación 5
 
