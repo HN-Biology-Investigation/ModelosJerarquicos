@@ -1,13 +1,169 @@
 ---
-title: "SpOcupancy"
+title: "Ocupación de especies con modelos Bayesiano en poblaciones cerradas (spOcupancy)"
 author: "David Murillo"
 format: html
 editor: visual
+css: styles.css
 ---
 
+## Modelado de ocupación y distribución de especies  
 
-## Introducción
+::: panel-tabset
 
-Este curso está diseñado para estudiantes y profesionales en áreas relacionadas con la Ecología, Conservación y Manejo de Recursos, entre otras disciplinas afines.
+### Cargar base de datos
 
-El propósito principal de este curso es servir como una guía que permita a los estudiantes desarrollar, interpretar e implementar técnicas de análisis de datos centradas en la Ecología de Poblaciones.
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(spOccupancy)
+
+ArdillaRoja <- readRDS("data/SwissSquirrels.rds")
+```
+
+### Formatear base de datos a formato spOccupancy
+
+```{r, warning=FALSE, message=FALSE}
+
+y <- as.matrix(ArdillaRoja[,c("det071", "det072", "det073")])
+
+site.covs <- ArdillaRoja[,c("ele", "forest")]
+
+obs.covs <- list(
+    det.cov.1 = as.matrix(ArdillaRoja[,c("date071", "date072", "date073")]),
+    det.cov.2 = as.matrix(ArdillaRoja[,c("dur071", "dur072", "dur073")])
+  )
+
+Ardilla_data <- list(y = y,
+                  occ.covs = site.covs,
+                  det.covs = obs.covs)
+```
+
+### Ajustar modelo de detección
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+
+ModelDet0 <- PGOcc(occ.formula = ~ 1,
+                   det.formula = ~ 1,
+                   data = Ardilla_data,
+                   n.samples = 3000,
+                   n.thin = 5,
+                   n.burn = 300,
+                   n.chains = 3)
+
+ModelDet1 <- PGOcc(occ.formula = ~ 1,
+                   det.formula = ~ det.cov.1,
+                   data = Ardilla_data,
+                   n.samples = 3000,
+                   n.thin = 5,
+                   n.burn = 300,
+                   n.chains = 3)
+
+
+```
+
+### Seleccion de modelo de detección
+
+```{r, warning=FALSE, message=FALSE}
+waicOcc(ModelDet0)
+waicOcc(ModelDet1)
+```
+
+### Ajustar modelo de ocupación
+
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+
+ModelOccu0 <- PGOcc(occ.formula = ~ 1,
+                    det.formula = ~ det.cov.1,
+                    data = Ardilla_data,
+                    n.samples = 3000,
+                    n.thin = 5,
+                    n.burn = 300,
+                    n.chains = 3)
+
+ModelOccu1 <- PGOcc(occ.formula = ~ ele,
+                    det.formula = ~ det.cov.1,
+                    data = Ardilla_data,
+                    n.samples = 3000,
+                    n.thin = 5,
+                    n.burn = 300,
+                    n.chains = 3)
+
+ModelOccu2 <- PGOcc(occ.formula = ~ forest,
+                    det.formula = ~ det.cov.1,
+                    data = Ardilla_data,
+                    n.samples = 3000,
+                    n.thin = 5,
+                    n.burn = 300,
+                    n.chains = 3)
+```
+
+### Seleccion de modelo de ocupación
+
+
+```{r}
+waicOcc(ModelOccu0)
+waicOcc(ModelOccu1)
+waicOcc(ModelOccu2)
+```
+
+### Resumen de los resultados
+
+```{r}
+summary(ModelOccu2)
+```
+
+### Bondad de ajuste
+
+```{r}
+plot(ModelOccu2$beta.samples)
+plot(ModelOccu2$alpha.samples)
+
+ppc.out.sp <- ppcOcc(ModelOccu2, fit.stat = 'freeman-tukey', group = 1)
+summary(ppc.out.sp)
+```
+
+## Prepar data para graficar ocupación
+
+```{r}
+forest.pred <- data.frame(forest = seq(min(ArdillaRoja$forest, na.rm = TRUE), 
+                                       max(ArdillaRoja$forest, na.rm = TRUE), 
+                                       length.out = 100))
+
+X.0 <- model.matrix(~forest, data = forest.pred)
+
+out.forest <- predict(ModelOccu2, X.0 = X.0, type = "occupancy")
+
+psi.0.quants <- apply(out.forest$psi.0.samples, 2, quantile, c(0.025, 0.5, 0.975))
+```
+
+```{r}
+# First, convert your quantile matrix to a tidy data frame
+psi_df <- as.data.frame(t(psi.0.quants)) %>% 
+  tibble::rownames_to_column("forest") %>% 
+  mutate(forest = as.numeric(forest)) %>% 
+  pivot_longer(cols = -forest, names_to = "quantile", values_to = "value") %>% 
+  pivot_wider(names_from = quantile, values_from = value)
+
+# Create the plot
+ggplot(psi_df, aes(x = forest)) +
+  geom_ribbon(aes(ymin = `2.5%`, ymax = `97.5%`), 
+              fill = "#4E79A7", alpha = 0.3) +
+  geom_line(aes(y = `50%`), color = "#2E5C8A", linewidth = 1) +
+  labs(
+    x = "Forest cover",
+    y = "Abundance (ψ)",
+    title = "Estimated Abundance",
+    subtitle = "Median with 95% credible intervals"
+  ) +
+  scale_x_continuous(breaks = seq(0, 100, by = 10)) +
+  theme_minimal(base_size = 12) +
+  theme(
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(color = "gray40"),
+    axis.title = element_text(face = "bold")
+  )
+```
+:::
+
+![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)
