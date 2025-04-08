@@ -45,7 +45,9 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 ::: {.callout-note}
 
-- [Ocupación de especies con modelos Bayesiano en poblaciones cerradas](spOcupancy.html)
+- [Ocupación de especies con modelos Bayesiano en poblaciones cerradas (ubms)](ubms_occ.html)
+
+- [Ocupación de especies con modelos Bayesiano en poblaciones cerradas (spOcupancy)](spOcupancy.html)
 
 :::
 

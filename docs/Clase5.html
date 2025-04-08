@@ -328,15 +328,15 @@ parboot(object = ModelOccu2, statistic = fitstats, nsim = 100, report = 1)
 
 Parametric Bootstrap Statistics:
               t0 mean(t0 - t_B) StdDev(t0 - t_B) Pr(t_B &gt; t0)
-SSE          128          1.344             6.81        0.396
-Chisq        507        -46.919            27.69        0.941
-freemanTukey 165         -0.171             7.42        0.455
+SSE          128          1.409             5.94        0.455
+Chisq        507        -48.717            27.90        0.950
+freemanTukey 165          0.211             7.03        0.525
 
 t_B quantiles:
               0% 2.5% 25% 50% 75% 97.5% 100%
-SSE          111  115 122 125 131   140  142
-Chisq        488  499 534 555 575   605  624
-freemanTukey 148  152 160 165 171   179  180
+SSE          111  114 123 127 130   137  139
+Chisq        470  505 541 555 570   607  655
+freemanTukey 144  149 160 166 169   177  179
 
 t0 = Original statistic computed from data
 t_B = Vector of bootstrap samples</code></pre>
@@ -346,8 +346,8 @@ t_B = Vector of bootstrap samples</code></pre>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cHat_pb <span class="ot">&lt;-</span> pb<span class="sc">@</span>t0[<span class="dv">2</span>] <span class="sc">/</span> <span class="fu">mean</span>(pb<span class="sc">@</span>t.star[,<span class="dv">2</span>])</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>cHat_pb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   Chisq 
-0.915266 </code></pre>
+<pre><code>    Chisq 
+0.9123043 </code></pre>
 </div>
 </div>
 </div>

@@ -260,4 +260,4 @@ ggplot() +
 
 :::
 
-![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
+![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)
