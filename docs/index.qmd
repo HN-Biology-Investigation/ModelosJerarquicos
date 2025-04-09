@@ -13,7 +13,11 @@ Este curso está diseñado para estudiantes y profesionales en áreas relacionad
 
 El propósito principal de este curso es servir como una guía que permita a los estudiantes desarrollar, interpretar e implementar técnicas de análisis de datos centradas en la Ecología de Poblaciones.
 
-[Asignaciones](Asiganciones.html)
+::: panel-tabset
+
+### [Asignaciones](Asiganciones.html)
+
+### Clases
 
 [Introducción a Modelos Jerárquicos](Clase1.html)
 
@@ -55,8 +59,46 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 [Modelado de interacciones entre especies (ocupación)](Clase7.html)
 
+### Referecias y material de lectura
+
+#### Libros
+
+[Applied Hierarchical Modeling in Ecology](https://www.sciencedirect.com/book/9780128013786/applied-hierarchical-modeling-in-ecology)
+
+[Applied Hierarchical Modeling in Ecology vol II](https://doi.org/10.1016/C2015-0-04070-9)
+
+[Applied Statistical Modelling for Ecologists](https://shop.elsevier.com/books/applied-statistical-modelling-for-ecologists/kery/978-0-443-13715-0)
+
+#### Articulos
+
+N-Mixture [Evaluating Golden-winged Warbler use of alder and aspen communities managed with shearing in the western Great Lakes](https://doi.org/10.1002/ecs2.4443)
+
+Ocupancion [Using aerial LiDAR to assess regional availability of potential habitat for a conservation dependent forest bird](https://doi.org/10.1016/j.foreco.2023.121002)
+
+Distancia Jerarquica [Distance models as a tool for modelling detection probability and density of native bumblebees]( https://doi.org/10.1111/jen.12583)
+
+Densidad [Assessing American woodcock use of habitat managed through programs targeting a declining songbird](https://doi.org/10.1002/jwmg.22457)
+
+Royle–Nichols [Performance of unmarked abundance models with data from machine-learning classification of passive acoustic recordings](https://doi.org/10.1002/ecs2.4954)
+
+#### Paquetes en R
+
+[unmarked: An R Package for Fitting Hierarchical Models of Wildlife Occurrence and Abundance](https://doi.org/10.18637/jss.v043.i10)
+
+[The unmarked R package: Twelve years of advances in occurrence and abundance modelling in ecology]( https://doi.org/10.1111/2041-210X.14123)
+
+[spAbundance: An R package for single-species and multi-species spatially explicit abundance models](https://doi.org/10.1111/2041-210X.14332)
+
+[spOccupancy: An R package for single-species, multi-species, and integrated spatial occupancy models](https://doi.org/10.1111/2041-210X.13897)
+
+[ubms: An R package for fitting hierarchical occupancy and N-mixture abundance models in a Bayesian framework](https://doi.org/10.1111/2041-210X.13777)
+
+
+
+:::
 
 *No dude en consultarnos ante cualquier inconveniente que surja durante el curso. Puede contactarnos a través de admi@hnbiology.org.*
+
 
 
 ![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)
