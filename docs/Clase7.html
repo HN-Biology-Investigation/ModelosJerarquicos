@@ -107,9 +107,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Este capítulo trata sobre el modelado de interacciones entre dos o más especies en términos de patrones observados en la ocurrencia. Las interacciones entre especies son fundamentales para la ecología, ya que pueden ser resultado de mecanismos ecológicos tan importantes como la competencia, la depredación y el mutualismo, denominados colectivamente interacciones bióticas. En sentido estricto, solo los experimentos manipulativos o las observaciones conductuales directas de individuos permiten decidir si una asociación estadística observada puede atribuirse a interacciones bióticas reales, efectos ambientales o ambos mecanismos juntos. Por ejemplo, una correlación espacial negativa en la ocurrencia o abundancia de dos especies puede deberse a una interacción antagónica, como la competencia, el parasitismo o la depredación. Alternativamente, puede ser simplemente el resultado de diferentes preferencias de hábitat de las dos especies, es decir, filtrado de hábitat. O puede ser el resultado de una combinación de ambos mecanismos. Esta es quizás la advertencia principal para la mayoría de las aplicaciones de los modelos de este capítulo: que una correlación no implica necesariamente causalidad.</p>
 <p>Cuando decimos “interacciones entre especies” en esta clase, nos referimos a una asociación o no independencia en los parámetros de múltiples especies en un modelo de ocurrencia. Es decir, utilizamos el término “interacción” en un sentido puramente descriptivo, estadístico o correlativo. Cubriremos modelos multiespecie para ocurrencia, que tienen parámetros específicos para dar cuenta de la posible no independencia entre pares de especies. Además, estos modelos nos permitirán, en diferentes grados, probar hipótesis sobre posibles mecanismos biológicos subyacentes a dicha no independencia entre múltiples especies. Algunos de estos modelos tienen un toque claramente mecanicista, pero ni siquiera ellos nos permitirán hacer inferencias sólidas sobre interacciones reales entre individuos de múltiples especies, a menos que tengamos el tipo correcto de datos (observaciones experimentales o de comportamiento). Sin embargo, los modelos de esta clase pueden ser herramientas poderosas para descubrir patrones: pueden señalar algunos pares de especies como candidatos para interacciones bióticas directas. El descubrimiento de fuertes asociaciones positivas o negativas en la abundancia o la ocurrencia (o posiblemente en otro parámetro) puede ser seguido por investigaciones más enfocadas en los posibles fundamentos mecanicistas de tales patrones. Además, si ajustamos estos modelos a los datos recopilados en el contexto de un experimento manipulativo diseñado para aislar algún mecanismo biológico, entonces nos permitirán hacer inferencias sólidas sobre los efectos de estos mecanismos. Y como siempre, si nuestros modelos muestran una asociación positiva o negativa que fue predicha en base a un conocimiento a priori sobre posibles interacciones bióticas entre estas especies, entonces esto proporciona una inferencia más sólida sobre la existencia de estas interacciones.</p>
 <p>Referencia: <a href="https://www.sciencedirect.com/book/9780128237687/applied-hierarchical-modeling-in-ecology-analysis-of-distribution-abundance-and-species-richness-in-r-and-bugs">Aplied Hierarchical Modeling in Ecology, Volumen 2</a></p>
-<p>Leer <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12587">Rota et al.&nbsp;2016</a> para mayor detalles de modelos de ocupación con multiples especies.</p>
+<p>Leer <a href="https://doi.org/10.1111/2041-210X.12587">Rota et al.&nbsp;2016</a> para mayor detalles de modelos de ocupación con multiples especies.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Cargar paquetes</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Cargar base de datos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Modelo 1</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Modelo 2</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Modelo 3</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Modelo 4</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">Modelo 5</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-8" role="tab" aria-controls="tabset-1-8" aria-selected="false" href="">Seleccion de modelo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-9-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-9" role="tab" aria-controls="tabset-1-9" aria-selected="false" href="">Predicciones</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-10-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-10" role="tab" aria-controls="tabset-1-10" aria-selected="false" href="">Prediccion Marginal</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-11-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-11" role="tab" aria-controls="tabset-1-11" aria-selected="false" href="">Grafico ocupación marginal</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-12-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-12" role="tab" aria-controls="tabset-1-12" aria-selected="false" href="">Prediccion condicional</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-13-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-13" role="tab" aria-controls="tabset-1-13" aria-selected="false" href="">Grafico condicional</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Cargar paquetes</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Cargar base de datos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Modelo Nulo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Modelo Dist</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Modelo Dist-HDens</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Seleccion de modelo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">Predicciones</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-8" role="tab" aria-controls="tabset-1-8" aria-selected="false" href="">Prediccion Marginal</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-9-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-9" role="tab" aria-controls="tabset-1-9" aria-selected="false" href="">Grafico ocupación marginal</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-10-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-10" role="tab" aria-controls="tabset-1-10" aria-selected="false" href="">Prediccion condicional</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-11-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-11" role="tab" aria-controls="tabset-1-11" aria-selected="false" href="">Grafico condicional</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
@@ -215,15 +215,10 @@ Site-level covariates:
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>occ_formulae1 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat, coyote, red fox occupancy, respectively</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modeled as constant</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">' ~ 1'</span>,<span class="st">' ~ 1'</span>,<span class="st">' ~ 1'</span>,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Two-way interactions are fixed at 0</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat:coyote, bobcat:redfox, coyote:redfox</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">3</span>),</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Fix 3-way interaction at 0</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">' ~ 1'</span>,<span class="st">' ~ 1'</span>,<span class="st">' ~ 1'</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">3</span>),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constant detection by species</span></span>
@@ -255,25 +250,16 @@ AIC: 6710.658 </code></pre>
 </div>
 <div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>occ_formulae2 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat, coyote, red fox occupancy, respectively</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modeled as a linear function of Dist</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">' ~ Dist'</span>, <span class="dv">3</span>),</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># same: ' ~ Dist',' ~ Dist',' ~ Dist',</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Two-way interactions are fixed at 0</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat:coyote, bobcat:redfox, coyote:redfox</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">3</span>),</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Fix 3-way interaction also at 0</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Detection by species</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>det_formulae2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">'~as.factor(Trail)'</span>, <span class="dv">3</span>)</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># det_formulae2 &lt;- rep('~as.factor(Trail) + date', 3)</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model 2</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>(fm2 <span class="ot">&lt;-</span> <span class="fu">occuMulti</span>(det_formulae2, occ_formulae2, umf,</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">maxit =</span> <span class="dv">500</span>, <span class="at">trace =</span> <span class="cn">TRUE</span>, <span class="at">REPORT =</span> <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>occ_formulae2 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">' ~ Dist'</span>, <span class="dv">3</span>),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">3</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>det_formulae2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">'~as.factor(Trail)'</span>, <span class="dv">3</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>(fm2 <span class="ot">&lt;-</span> <span class="fu">occuMulti</span>(det_formulae2, occ_formulae2, umf,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">maxit =</span> <span class="dv">500</span>, <span class="at">trace =</span> <span class="cn">TRUE</span>, <span class="at">REPORT =</span> <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>initial  value 4145.891058 
 iter   2 value 3564.392891
@@ -335,183 +321,16 @@ AIC: 6257.525 </code></pre>
 </div>
 <div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>occ_formulae3 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat, coyote, red fox occupancy, respectively</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modeled as constant</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">' ~ 1'</span>, <span class="dv">3</span>),</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># same: ' ~ 1',' ~ 1',' ~ 1',</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Two-way interactions are intercept-only</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat:coyote, bobcat:redfox, coyote:redfox</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">'~1'</span>, <span class="dv">3</span>),</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># same: '~1', '~1', '~1',</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Still fix 3-way interaction at 0 (for an intercept model would write: '~1')</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Detection by species</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>det_formulae3 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">'~1'</span>, <span class="dv">3</span>)</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model 3</span></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>(fm3 <span class="ot">&lt;-</span> <span class="fu">occuMulti</span>(det_formulae3, occ_formulae3, umf,</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">maxit =</span> <span class="dv">500</span>, <span class="at">trace =</span> <span class="cn">TRUE</span>, <span class="at">REPORT =</span> <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>initial  value 4145.891058 
-iter   2 value 3505.573494
-iter   3 value 3435.371493
-iter   4 value 3387.637819
-iter   5 value 3354.360193
-iter   6 value 3347.754192
-iter   7 value 3347.632929
-iter   8 value 3344.810452
-iter   9 value 3339.435728
-iter  10 value 3328.127024
-iter  11 value 3318.849371
-iter  12 value 3314.197452
-iter  13 value 3308.641333
-iter  14 value 3306.455277
-iter  15 value 3306.109440
-iter  16 value 3304.189861
-iter  17 value 3304.108916
-iter  18 value 3304.063734
-iter  19 value 3304.056400
-iter  20 value 3304.055708
-iter  20 value 3304.055707
-final  value 3304.055707 
-converged</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-occuMulti(detformulas = det_formulae3, stateformulas = occ_formulae3, 
-    data = umf, control = list(maxit = 500, trace = TRUE, REPORT = 1), 
-    maxOrder = 3L)
-
-Occupancy:
-                            Estimate    SE      z  P(&gt;|z|)
-[bobcat] (Intercept)           -1.76 0.179  -9.81 1.03e-22
-[coyote] (Intercept)           -1.30 0.137  -9.54 1.37e-21
-[redfox] (Intercept)           -2.20 0.152 -14.44 2.81e-47
-[bobcat:coyote] (Intercept)     1.72 0.262   6.56 5.48e-11
-[bobcat:redfox] (Intercept)    -1.38 0.377  -3.66 2.57e-04
-[coyote:redfox] (Intercept)     1.41 0.248   5.69 1.31e-08
-
-Detection:
-                     Estimate     SE     z  P(&gt;|z|)
-[bobcat] (Intercept)   -1.106 0.1398 -7.91 2.59e-15
-[coyote] (Intercept)   -0.331 0.0761 -4.35 1.38e-05
-[redfox] (Intercept)   -0.253 0.1183 -2.13 3.28e-02
-
-AIC: 6626.111 </code></pre>
-</div>
-</div>
-</div>
-<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>occ_formulae4 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># bobcat, coyote, red fox occupancy, respectively</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Main species effect modeled with a covariate</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep</span>(<span class="st">' ~ Dist'</span>, <span class="dv">3</span>),</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Two-way interactions are still intercept-only</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># bobcat:coyote, bobcat:redfox, coyote:redfox</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep</span>(<span class="st">'~1'</span>, <span class="dv">3</span>),</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Still fix 3-way interaction at 0</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Detection by species</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>det_formulae4 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">'~as.factor(Trail)'</span>, <span class="dv">3</span>)</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model 4</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>(fm4 <span class="ot">&lt;-</span> <span class="fu">occuMulti</span>(det_formulae4, occ_formulae4, umf,</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">maxit =</span> <span class="dv">500</span>, <span class="at">trace =</span> <span class="cn">TRUE</span>, <span class="at">REPORT =</span> <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>initial  value 4145.891058 
-iter   2 value 3497.184274
-iter   3 value 3359.919032
-iter   4 value 3200.588756
-iter   5 value 3167.151612
-iter   6 value 3150.796555
-iter   7 value 3132.720745
-iter   8 value 3128.638305
-iter   9 value 3126.384541
-iter  10 value 3124.509970
-iter  11 value 3122.437277
-iter  12 value 3121.578894
-iter  13 value 3120.372680
-iter  14 value 3117.299726
-iter  15 value 3115.120629
-iter  16 value 3111.840295
-iter  17 value 3108.852715
-iter  18 value 3108.160578
-iter  19 value 3106.379403
-iter  20 value 3104.153870
-iter  21 value 3102.503664
-iter  22 value 3098.117691
-iter  23 value 3094.888904
-iter  24 value 3093.351887
-iter  25 value 3092.489769
-iter  26 value 3092.087253
-iter  27 value 3091.900953
-iter  28 value 3091.762127
-iter  29 value 3091.733087
-iter  30 value 3091.730215
-iter  31 value 3091.729867
-iter  32 value 3091.729794
-iter  32 value 3091.729781
-final  value 3091.729781 
-converged</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-occuMulti(detformulas = det_formulae4, stateformulas = occ_formulae4, 
-    data = umf, control = list(maxit = 500, trace = TRUE, REPORT = 1), 
-    maxOrder = 3L)
-
-Occupancy:
-                            Estimate     SE     z  P(&gt;|z|)
-[bobcat] (Intercept)          -1.010 0.2393 -4.22 2.42e-05
-[bobcat] Dist                 -0.637 0.1438 -4.43 9.51e-06
-[coyote] (Intercept)          -0.529 0.1919 -2.75 5.89e-03
-[coyote] Dist                  0.160 0.0986  1.62 1.05e-01
-[redfox] (Intercept)          -1.762 0.2311 -7.62 2.47e-14
-[redfox] Dist                 -0.463 0.1271 -3.65 2.67e-04
-[bobcat:coyote] (Intercept)    1.304 0.3223  4.05 5.20e-05
-[bobcat:redfox] (Intercept)   -1.881 0.3996 -4.71 2.52e-06
-[coyote:redfox] (Intercept)    1.224 0.3179  3.85 1.18e-04
-
-Detection:
-                           Estimate    SE      z  P(&gt;|z|)
-[bobcat] (Intercept)          -2.59 0.162 -15.97 2.11e-57
-[bobcat] as.factor(Trail)1     1.89 0.171  11.08 1.60e-28
-[coyote] (Intercept)          -1.94 0.100 -19.31 4.48e-83
-[coyote] as.factor(Trail)1     2.15 0.123  17.43 4.63e-68
-[redfox] (Intercept)          -1.38 0.184  -7.50 6.46e-14
-[redfox] as.factor(Trail)1     1.61 0.219   7.34 2.10e-13
-
-AIC: 6213.46 </code></pre>
-</div>
-</div>
-</div>
-<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify models for occupancy in terms of natural parameters f</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>occ_formulae5 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat, coyote, red fox occupancy, respectively</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Main species effects all modeled with two covariates</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">' ~ Dist'</span>, <span class="dv">3</span>),</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Two-way interactions are a function of housing density</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bobcat:coyote, bobcat:redfox, coyote:redfox</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">'~HDens'</span>, <span class="dv">3</span>),</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Still fix 3-way interaction at 0</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Detection by species</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>det_formulae5 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">'~as.factor(Trail)'</span>, <span class="dv">3</span>)</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model 5</span></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>(fm5 <span class="ot">&lt;-</span> <span class="fu">occuMulti</span>(det_formulae5, occ_formulae5, umf,</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">maxit =</span> <span class="dv">500</span>, <span class="at">trace =</span> <span class="cn">TRUE</span>, <span class="at">REPORT =</span> <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>occ_formulae3 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">' ~ Dist'</span>, <span class="dv">3</span>),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">'~HDens'</span>, <span class="dv">3</span>),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>det_formulae3 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">'~as.factor(Trail)'</span>, <span class="dv">3</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>(fm3 <span class="ot">&lt;-</span> <span class="fu">occuMulti</span>(det_formulae3, occ_formulae3, umf,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">maxit =</span> <span class="dv">500</span>, <span class="at">trace =</span> <span class="cn">TRUE</span>, <span class="at">REPORT =</span> <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>initial  value 4145.891058 
 iter   2 value 3488.834951
@@ -560,7 +379,7 @@ converged</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-occuMulti(detformulas = det_formulae5, stateformulas = occ_formulae5, 
+occuMulti(detformulas = det_formulae3, stateformulas = occ_formulae3, 
     data = umf, control = list(maxit = 500, trace = TRUE, REPORT = 1), 
     maxOrder = 3L)
 
@@ -592,174 +411,165 @@ AIC: 6123.852 </code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-1-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-8-tab">
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AICcmodavg)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">aictab</span>(<span class="at">cand.set =</span>  <span class="fu">list</span>(fm1, fm2, fm3, fm4, fm5),</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">modnames =</span> <span class="fu">c</span>(<span class="st">"fm1"</span>, <span class="st">"fm2"</span>, <span class="st">"fm3"</span>, <span class="st">"fm4"</span>, <span class="st">"fm5"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AICcmodavg)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">aictab</span>(<span class="at">cand.set =</span>  <span class="fu">list</span>(fm1, fm2, fm3),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">modnames =</span> <span class="fu">c</span>(<span class="st">"fm1"</span>, <span class="st">"fm2"</span>, <span class="st">"fm3"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Model selection based on AICc:
 
      K    AICc Delta_AICc AICcWt Cum.Wt       LL
-fm5 18 6124.33       0.00      1      1 -3043.93
-fm4 15 6213.80      89.46      0      1 -3091.73
+fm3 18 6124.33       0.00      1      1 -3043.93
 fm2 12 6257.74     133.41      0      1 -3116.76
-fm3  9 6626.24     501.90      0      1 -3304.06
 fm1  6 6710.72     586.38      0      1 -3349.33</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-1-9" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-9-tab">
+<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
 <p>Predict conditional occupancy and present in a table</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> <span class="dv">0</span>, <span class="at">HDens =</span> <span class="dv">0</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>bob_none <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5, <span class="at">type =</span> <span class="st">'state'</span>, <span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'-coyote'</span>,<span class="st">'-redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> <span class="dv">0</span>, <span class="at">HDens =</span> <span class="dv">0</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>bob_none <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm3, <span class="at">type =</span> <span class="st">'state'</span>, <span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'-coyote'</span>,<span class="st">'-redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>bob_coyote <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'coyote'</span>,<span class="st">'-redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>bob_coyote <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm3,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'coyote'</span>,<span class="st">'-redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>bob_redfox <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'-coyote'</span>,<span class="st">'redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>bob_redfox <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm3,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'-coyote'</span>,<span class="st">'redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>bob_both <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'coyote'</span>,<span class="st">'redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>bob_both <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm3,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'coyote'</span>,<span class="st">'redfox'</span>), <span class="at">newdata =</span> nd, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(occtab <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="st">'Neither'</span> <span class="ot">=</span> bob_none, <span class="st">'Coyote'</span> <span class="ot">=</span> bob_coyote,</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">'Red fox'</span> <span class="ot">=</span> bob_redfox, <span class="st">'Both'</span> <span class="ot">=</span> bob_both), <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(occtab <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="st">'Neither'</span> <span class="ot">=</span> bob_none, <span class="st">'Coyote'</span> <span class="ot">=</span> bob_coyote,</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">'Red fox'</span> <span class="ot">=</span> bob_redfox, <span class="st">'Both'</span> <span class="ot">=</span> bob_both), <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        Predicted    SE lower upper
-Neither     0.240 0.048 0.157 0.343
-Coyote      0.473 0.076 0.326 0.623
-Red fox     0.063 0.031 0.025 0.141
-Both        0.161 0.051 0.085 0.284</code></pre>
+Neither     0.240 0.045 0.168 0.336
+Coyote      0.473 0.076 0.325 0.616
+Red fox     0.063 0.032 0.028 0.152
+Both        0.161 0.053 0.083 0.293</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-1-10" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-10-tab">
+<div id="tabset-1-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-8-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>Dist_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> <span class="fu">seq</span>(<span class="fu">min</span>(sitecovs<span class="sc">$</span>Dist), <span class="fu">max</span>(sitecovs<span class="sc">$</span>Dist), <span class="at">length =</span> <span class="dv">100</span>) , </span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">HDens =</span> <span class="fu">mean</span>(sitecovs<span class="sc">$</span>HDens), <span class="at">length =</span> <span class="dv">100</span>)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>HDens_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> <span class="fu">mean</span>(sitecovs<span class="sc">$</span>Dist) , </span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">HDens =</span> <span class="fu">seq</span>(<span class="fu">min</span>(sitecovs<span class="sc">$</span>HDens), <span class="fu">max</span>(sitecovs<span class="sc">$</span>HDens), <span class="at">length =</span> <span class="dv">100</span>))</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>coyote <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'coyote'</span>,</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>redfox <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'redfox'</span>,</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>bobcat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Dist_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> <span class="fu">seq</span>(<span class="fu">min</span>(sitecovs<span class="sc">$</span>Dist), <span class="fu">max</span>(sitecovs<span class="sc">$</span>Dist), <span class="at">length =</span> <span class="dv">100</span>) , </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">HDens =</span> <span class="fu">mean</span>(sitecovs<span class="sc">$</span>HDens), <span class="at">length =</span> <span class="dv">100</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>HDens_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dist =</span> <span class="fu">mean</span>(sitecovs<span class="sc">$</span>Dist) , </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">HDens =</span> <span class="fu">seq</span>(<span class="fu">min</span>(sitecovs<span class="sc">$</span>HDens), <span class="fu">max</span>(sitecovs<span class="sc">$</span>HDens), <span class="at">length =</span> <span class="dv">100</span>))</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>coyote <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm3,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'coyote'</span>,</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span> )</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>redfox <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm3,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'redfox'</span>,</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>bobcat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm3,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>coyote<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"coyote"</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>redfox<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"redfox"</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>bobcat<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"bobcat"</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>coyote<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>redfox<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>bobcat<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>Carnivores_plot <span class="ot">&lt;-</span> <span class="fu">rbind</span>(coyote, redfox, bobcat)</span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Carnivores_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>coyote<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"coyote"</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>redfox<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"redfox"</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>bobcat<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"bobcat"</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>coyote<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>redfox<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>bobcat<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>Carnivores_plot <span class="ot">&lt;-</span> <span class="fu">rbind</span>(coyote, redfox, bobcat)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Carnivores_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Predicted         SE     lower     upper Especie       Dist
-1 0.4998692 0.03515557 0.4289491 0.5691495  coyote -0.6606690
-2 0.5003237 0.03451855 0.4299179 0.5685561  coyote -0.5995281
-3 0.5007859 0.03392712 0.4317431 0.5679814  coyote -0.5383872
-4 0.5012569 0.03338356 0.4323368 0.5673684  coyote -0.4772464
-5 0.5017378 0.03289012 0.4345670 0.5675820  coyote -0.4161055
-6 0.5022295 0.03244893 0.4357249 0.5672983  coyote -0.3549646</code></pre>
+1 0.4998692 0.03494104 0.4350980 0.5749048  coyote -0.6606690
+2 0.5003237 0.03426260 0.4367531 0.5729654  coyote -0.5995281
+3 0.5007859 0.03362600 0.4380192 0.5708826  coyote -0.5383872
+4 0.5012569 0.03303355 0.4383048 0.5693133  coyote -0.4772464
+5 0.5017378 0.03248758 0.4395733 0.5681637  coyote -0.4161055
+6 0.5022295 0.03199033 0.4419435 0.5668635  coyote -0.3549646</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-1-11" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-11-tab">
+<div id="tabset-1-9" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-9-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Carnivores_plot, <span class="fu">aes</span>(<span class="at">x=</span> Dist, <span class="at">y=</span> Predicted, <span class="at">color=</span> Especie, <span class="at">fill =</span> Especie))<span class="sc">+</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span>  lower, <span class="at">ymax=</span> upper),</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span><span class="st">"ocupación Marginal"</span>,</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Distancia en radio de 5km"</span>)<span class="sc">+</span></span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Carnivores_plot, <span class="fu">aes</span>(<span class="at">x=</span> Dist, <span class="at">y=</span> Predicted, <span class="at">color=</span> Especie, <span class="at">fill =</span> Especie))<span class="sc">+</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span>  lower, <span class="at">ymax=</span> upper),</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span><span class="st">"ocupación Marginal"</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Distancia en radio de 5km"</span>)<span class="sc">+</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Clase7_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Clase7_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
-<div id="tabset-1-12" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-12-tab">
+<div id="tabset-1-10" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-10-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>bob_redfox <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'redfox'</span>), <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>bob_redfox <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm3,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'redfox'</span>), <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>bob_coyote <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm5,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'coyote'</span>), <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>bob_coyote <span class="ot">&lt;-</span> <span class="fu">predict</span>(fm3,<span class="at">type =</span> <span class="st">'state'</span>,<span class="at">species =</span> <span class="st">'bobcat'</span>,</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">c</span>(<span class="st">'coyote'</span>), <span class="at">newdata =</span> Dist_df, <span class="at">nsims =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Bootstrapping confidence intervals with 1000 samples</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>bob_coyote<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"coyote"</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>bob_redfox<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"redfox"</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>bob_coyote<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>bob_redfox<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>Bob_Condicional <span class="ot">&lt;-</span> <span class="fu">rbind</span>(bob_coyote, bob_redfox)</span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Bob_Condicional )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>bob_coyote<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"coyote"</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>bob_redfox<span class="sc">$</span>Especie <span class="ot">&lt;-</span> <span class="st">"redfox"</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>bob_coyote<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>bob_redfox<span class="sc">$</span>Dist <span class="ot">&lt;-</span> Dist_df<span class="sc">$</span>Dist</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>Bob_Condicional <span class="ot">&lt;-</span> <span class="fu">rbind</span>(bob_coyote, bob_redfox)</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Bob_Condicional )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Predicted         SE     lower     upper Especie       Dist
-1 0.4709423 0.07022777 0.3326696 0.6127248  coyote -0.6606690
-2 0.4626109 0.06934581 0.3272894 0.6043816  coyote -0.5995281
-3 0.4542876 0.06848102 0.3200321 0.5971337  coyote -0.5383872
-4 0.4459770 0.06763598 0.3132632 0.5858148  coyote -0.4772464
-5 0.4376837 0.06681315 0.3070229 0.5757406  coyote -0.4161055
-6 0.4294122 0.06601479 0.3011745 0.5675323  coyote -0.3549646</code></pre>
+1 0.4709423 0.07076386 0.3367122 0.6101995  coyote -0.6606690
+2 0.4626109 0.06993737 0.3305979 0.6020998  coyote -0.5995281
+3 0.4542876 0.06912656 0.3225870 0.5939441  coyote -0.5383872
+4 0.4459770 0.06833350 0.3154690 0.5847168  coyote -0.4772464
+5 0.4376837 0.06756014 0.3105387 0.5772070  coyote -0.4161055
+6 0.4294122 0.06680825 0.3031057 0.5681849  coyote -0.3549646</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-1-13" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-13-tab">
+<div id="tabset-1-11" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-11-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Bob_Condicional, <span class="fu">aes</span>(<span class="at">x=</span> Dist, <span class="at">y=</span> Predicted, <span class="at">color=</span> Especie, <span class="at">fill =</span> Especie))<span class="sc">+</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span>  lower, <span class="at">ymax=</span> upper),</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span><span class="st">"ocupación de Bobcat"</span>,</span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Distancia en radio de 5km"</span>) <span class="sc">+</span></span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Bob_Condicional, <span class="fu">aes</span>(<span class="at">x=</span> Dist, <span class="at">y=</span> Predicted, <span class="at">color=</span> Especie, <span class="at">fill =</span> Especie))<span class="sc">+</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span>  lower, <span class="at">ymax=</span> upper),</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span><span class="st">"ocupación de Bobcat"</span>,</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Distancia en radio de 5km"</span>) <span class="sc">+</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Clase7_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Clase7_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

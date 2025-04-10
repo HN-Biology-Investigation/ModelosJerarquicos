@@ -59,7 +59,7 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 [Modelado de interacciones entre especies (ocupación)](Clase7.html)
 
-### Referecias y material de lectura
+### Referencias y material de lectura
 
 #### Libros
 
@@ -69,17 +69,17 @@ El propósito principal de este curso es servir como una guía que permita a los
 
 [Applied Statistical Modelling for Ecologists](https://shop.elsevier.com/books/applied-statistical-modelling-for-ecologists/kery/978-0-443-13715-0)
 
-#### Articulos
+#### Artículos científicos
 
 N-Mixture [Evaluating Golden-winged Warbler use of alder and aspen communities managed with shearing in the western Great Lakes](https://doi.org/10.1002/ecs2.4443)
 
-Ocupancion [Using aerial LiDAR to assess regional availability of potential habitat for a conservation dependent forest bird](https://doi.org/10.1016/j.foreco.2023.121002)
+Ocupación de especie [Using aerial LiDAR to assess regional availability of potential habitat for a conservation dependent forest bird](https://doi.org/10.1016/j.foreco.2023.121002)
 
-Distancia Jerarquica [Distance models as a tool for modelling detection probability and density of native bumblebees]( https://doi.org/10.1111/jen.12583)
+Distancia jerárquica [Distance models as a tool for modelling detection probability and density of native bumblebees]( https://doi.org/10.1111/jen.12583)
 
 Densidad [Assessing American woodcock use of habitat managed through programs targeting a declining songbird](https://doi.org/10.1002/jwmg.22457)
 
-Royle–Nichols [Performance of unmarked abundance models with data from machine-learning classification of passive acoustic recordings](https://doi.org/10.1002/ecs2.4954)
+Modelo de ocupación Royle–Nichols [Performance of unmarked abundance models with data from machine-learning classification of passive acoustic recordings](https://doi.org/10.1002/ecs2.4954)
 
 #### Paquetes en R
 
